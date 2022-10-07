@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - SHELFIE</title>
+
+    <link rel="stylesheet" href="/src/index.css">
+    <style>
+        body>h1{
+            font-size: 4em;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="headerh1"><a href="/" >SHELFIE</a></h1>
+        <div>
+            <img class="headerimg" src="/src/img/grid.svg" alt="" onclick="if(this.src.endsWith('/src/img/grid.svg')){ this.src = '/src/img/grid-fill.svg'; document.querySelector('#menu').style.display = 'grid' }else{ this.src = '/src/img/grid.svg'; document.querySelector('#menu').style.display = 'none' }">
+            <div id="menu">
+                <div class="menu-item" onclick="window.location = '/portal/'">
+                    <img src="/src/img/box-arrow-bg-45.svg" alt="">
+                    <p>Portal</p>
+                </div>
+                <div class="menu-item" onclick="window.location = '/account/'">
+                    <img src="/src/img/person-circle.svg" alt="">
+                    <p>Account</p>
+                </div>
+                <div class="menu-item" onclick="window.location = '/features/'">
+                    <img src="/src/img/gem.svg" alt="">
+                    <p>Features</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <h1>404 - NOT FOUND</h1>
+</body>
+</html>

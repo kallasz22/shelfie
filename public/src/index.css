@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+html{
+    scrollbar-width: thin !important;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding: 0px;
+    margin: calc(1.25em + 10px + 10px + 8px) 0px 0px 0px;
+    min-height: calc(100vh -(1.25em + 10px + 10px + 8px));
+    box-sizing: border-box;
+}
+
+.buttonlink {
+    font-size: 1.25em;
+    text-decoration: none;
+    color: black;
+    border: 2px black solid;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+    transition: 0.1s;
+}
+.buttonlink:hover{
+    background-color: rgba(0, 0, 0, 0.125);
+}
+
+@media screen and (max-width: 750px) {
+    .buttonlink {
+        font-size: 1em !important;
+    }
+
+    body {
+        margin-top: calc(1em + 10px + 2px + 10px + 10px) !important;
+        min-height: calc(100vh - (1em + 10px + 2px + 10px + 10px)) !important;
+    }
+
+    #menu{
+        top: calc(1em + 10px + 2px + 10px + 10px) !important;
+    }
+}
+
+header {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: calc(1em + 10px + 2px + 10px + 10px);
+    padding: 0px 10px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    background-color: white;
+}
+
+header a, h1 {
+    margin: 0px;
+    text-decoration: none;
+    color: black;
+}
+
+.headerimg{
+    height: 2em;
+    padding: 0px;
+}
+
+#menu{
+    max-height: 100vh;
+    height: 500px;
+    max-width: 100vw;
+    width: 500px;
+    background-color: white;
+    display: none;
+    position: fixed;
+    top: calc(1.25em + 10px + 10px + 7px);
+    right: 5px;
+    border: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+    grid-template-columns: 30% 30% 30%;
+    grid-template-rows: 30% 30% 30%;
+    gap: 4.7%;
+    border-radius: 5px;
+}
+.menu-item{
+    display: grid;
+    width: 100%;
+    height: 100%;
+    border: 1px black solid;
+    justify-items: center;
+    align-items: center;
+    grid-template-rows: 75% 25%;
+    border-radius: 5px;
+}
+.menu-item:hover{
+    cursor: pointer;
+}
+.menu-item img{
+    width: 70%;
+    height: 70%;
+}
+.menu-item p{
+    font-size: 20px;
+    margin: 0px;
+}
+header>div{
+    display: flex;
+}
+.headerimg:hover{
+    cursor: pointer;
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal - SHELFIE</title>
+
+    <link rel="stylesheet" href="/src/index.css">
+
+    <style>
+        body{
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #quick-actions{
+            display: flex;
+            gap: 10px;
+        }
+        .qa-item{
+            display: grid;
+            grid-template-rows: 70% 30%;
+            justify-items: center;
+            align-items: center;
+            height: 100px;
+            border: 1px black solid;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 30px;
+            transition: 0.1s;
+        }
+        p{
+            margin: 0px;
+        }
+        .qa-item img{
+            height: 3em;
+        }
+        .qa-item:hover{
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.150);
+        }
+
+        /* .house{
+            font-size: 30px;
+        }
+        .room{
+            font-size: 25px;
+            margin-left: 15px;
+        }
+        .shelf{
+            font-size: 20px;
+            margin-left: 30px;
+        } */
+        h2{
+            margin-bottom: 5px;
+        }
+
+        #dialog-bg{
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            background-color: rgba(0, 0, 0, 0.225);
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: auto;
+            display: none;
+        }
+        textarea{
+            max-width: 100%;
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        form>h2{
+            margin: 0px;
+        }
+        .title-grid{
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .title-grid>h2{
+            margin: 0px;
+        }
+        input{
+            margin-bottom: 10px;
+        }
+        form{
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color: white;
+            display: none;
+            flex-direction: column;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 100%;
+            height: min-content;
+            max-height: calc(100vh - 20px);
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+        #new-house{
+            display: none;
+        }
+        #new-room{
+            display: none;
+        }
+        #new-shelf{
+            display: none;
+        }
+        #new-book{
+            display: none;
+        }
+
+        details{
+            padding: 10px 15px;
+            border: 1px black solid;
+            margin: 2px;
+            transition: 0.075s;
+            border-radius: 5px;
+        }
+        details summary{
+            display: list-item;
+            justify-content: space-between;
+        }
+        details summary::marker{
+            content: '▶';
+        }
+        details[open] summary::marker{
+            content: '▼';
+        }
+        details:hover{
+            background-color: rgba(0, 0, 0, 0.025);
+        }
+    </style>
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1 id="headerh1"><a href="/" >SHELFIE</a></h1>
+        <div>
+            <img class="headerimg" src="/src/img/grid.svg" alt="" onclick="if(this.src.endsWith('/src/img/grid.svg')){ this.src = '/src/img/grid-fill.svg'; document.querySelector('#menu').style.display = 'grid' }else{ this.src = '/src/img/grid.svg'; document.querySelector('#menu').style.display = 'none' }">
+            <div id="menu">
+                <div class="menu-item" onclick="window.location = '/portal/'">
+                    <img src="/src/img/box-arrow-bg-45.svg" alt="">
+                    <p>Portal</p>
+                </div>
+                <div class="menu-item" onclick="window.location = '/account/'">
+                    <img src="/src/img/person-circle.svg" alt="">
+                    <p>Account</p>
+                </div>
+                <div class="menu-item" onclick="window.location = '/features/'">
+                    <img src="/src/img/gem.svg" alt="">
+                    <p>Features</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <h1>Hello <span id="user">XY</span>, what will you do today?</h1>
+    <hr>
+    <h2>QUICK ACTIONS</h2>
+    <div id="quick-actions">
+        <div class="qa-item" id="new-book-button">
+            <img src="/src/img/journal-plus.svg" alt="">
+            <p>ADD BOOK</p>
+        </div>
+        <div class="qa-item" id="new-shelf-button">
+            <img src="/src/img/layers.svg" alt="">
+            <p>CREATE SHELF</p>
+        </div>
+        <div class="qa-item" id="new-room-button">
+            <img src="/src/img/building.svg" alt="">
+            <p>CREATE ROOM</p>
+        </div>
+        <div class="qa-item" id="new-house-button">
+            <img src="/src/img/house.svg" alt="">
+            <p>CREATE HOUSE</p>
+        </div>
+    </div>
+    <hr>
+    <div id="dialog-bg">
+        <form action="/new-house" method="post" id="new-house">
+            <div class="title-grid">
+                <img src="/src/img/house.svg" alt="">
+                <h2>ADD NEW HOUSE</h2>
+            </div>
+
+            <label for="nh_name">Name: </label>
+            <input type="text" name="nh_name">
+            <label for="nh_description">Description: </label>
+            <textarea name="nh_description" id="" cols="30" rows="10"></textarea>
+
+            <div>
+                <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#new-house').style.display = 'none';">Cancel</button>
+                <button type="submit">Add</button>
+            </div>
+        </form>
+
+        <form action="/new-room" method="post" id="new-room">
+            <div class="title-grid">
+                <img src="/src/img/building.svg" alt="">
+                <h2>ADD NEW ROOM</h2>
+            </div>
+
+            <label for="nr_name">Name: </label>
+            <input type="text" name="nr_name">
+            <label for="nr_description">Description: </label>
+            <textarea name="nr_description" id="" cols="30" rows="10"></textarea>
+            <label for="nr_house">House: </label>
+            <select name="nr_house" id="nr_house"></select>
+
+            <div>
+                <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#new-room').style.display = 'none';">Cancel</button>
+                <button type="submit">Add</button>
+            </div>
+        </form>
+
+        <form action="/new-shelf" method="post" id="new-shelf">
+            <div class="title-grid">
+                <img src="/src/img/layers.svg" alt="">
+                <h2>ADD NEW SHELF</h2>
+            </div>
+
+            <label for="ns_name">Name: </label>
+            <input type="text" name="ns_name">
+            <label for="ns_description">Description: </label>
+            <textarea name="ns_description" id="" cols="30" rows="10"></textarea>
+
+            <label for="ns_house">House: </label>
+            <select name="ns_house" id="ns_house"></select>
+            <label for="ns_room">Room: </label>
+            <select name="ns_room" id="ns_room"></select>
+
+            <div>
+                <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#new-shelf').style.display = 'none';">Cancel</button>
+                <button type="submit" id="ns_add">Add</button>
+            </div>
+        </form>
+
+        <form action="/new-book" method="post" id="new-book">
+            <div class="title-grid">
+                <img src="/src/img/journal-plus.svg" alt="">
+                <h2>ADD NEW BOOK</h2>
+            </div>
+
+            <label for="nb_writer">Writer: </label>
+            <input type="text" name="nb_writer">
+            <label for="nb_title">*Title: </label>
+            <input type="text" name="nb_title">
+            <label for="nb_description">Description: </label>
+            <textarea name="nb_description" id="" cols="30" rows="10"></textarea>
+            <label for="nb_type">Type: </label>
+            <input type="text" name="nb_type">
+            <label for="nb_publisher">Publisher: </label>
+            <input type="text" name="nb_publisher">
+            <label for="nb_yearofpublication">Year of publication: </label>
+            <input type="text" name="nb_yearOfPublication">
+            <label for="nb_notes">Notes: </label>
+            <textarea name="nb_notes" id="" cols="30" rows="10"></textarea>
+
+            <label for="nb_house">House: </label>
+            <select name="nb_house" id="nb_house"></select>
+            <label for="nb_room">Room: </label>
+            <select name="nb_room" id="nb_room"></select>
+            <label for="nb_shelf">Shelf: </label>
+            <select name="nb_shelf" id="nb_shelf"></select>
+
+            <label for="nb_pinned">Pinned: <input type="checkbox" name="nb_pinned" id=""></label>
+            
+            <div>
+                <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#new-book').style.display = 'none';">Cancel</button>
+                <button type="submit" id="nb_add">Add</button>
+            </div>
+        </form>        
+    </div>
+</body>
+</html>
