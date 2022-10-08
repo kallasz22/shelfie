@@ -219,6 +219,46 @@ app.post('/delete-book', accountOnly, async function(req, res){
     // res.redirect('/');
 });
 
+app.post('/edit-book', accountOnly, async function(req, res){
+    const user = req.user;
+
+    // console.log(req.body);
+
+    let pinned = "";
+    if (req.body.eb_pinned) {
+        pinned = true;
+    } else {
+        pinned = false;
+    }
+    
+    let i = 0;
+    while (i < user.books.length-1 && user.books[i]._id != req.body.objectID) {
+        i++;
+    }
+    if (i == user.books.length) {
+        res.send('ERROR');
+        return;
+    }
+
+    user.books[i] = {
+        writer: req.body.eb_writer,
+        title: req.body.eb_title,
+        description: req.body.eb_description,
+        type: req.body.eb_type,
+        publisher: req.body.eb_publisher,
+        yearOfPublication: req.body.eb_yearOfPublication,
+        notes: req.body.eb_notes,
+        house: req.body.eb_house,
+        room: req.body.eb_room,
+        shelf: req.body.eb_shelf,
+        pinned: pinned
+    };
+
+    await user.save();
+
+    res.redirect('/portal');
+});
+
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {

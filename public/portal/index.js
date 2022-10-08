@@ -35,6 +35,11 @@ fetch('/load')
             nb_house.innerText = house.name;
             document.querySelector('#nb_house').append(nb_house);
 
+
+            let eb_house = document.createElement('option');
+            eb_house.innerText = house.name;
+            document.querySelector('#eb_house').append(eb_house);
+
             for (let j = 0; j < house.rooms.length; j++) {
                 const room = house.rooms[j];
 
@@ -59,6 +64,12 @@ fetch('/load')
                 nb_room.id = house.name;
                 document.querySelector('#nb_room').append(nb_room);
 
+
+                let eb_room = document.createElement('option');
+                eb_room.innerText = room.name;
+                eb_room.id = house.name;
+                document.querySelector('#eb_room').append(eb_room);
+
                 for (let h = 0; h < room.shelfs.length; h++) {
                     const shelf = room.shelfs[h];
 
@@ -77,6 +88,12 @@ fetch('/load')
                     nb_shelf.id = room.name;
                     nb_shelf.innerText = shelf.name;
                     document.querySelector('#nb_shelf').append(nb_shelf);
+
+
+                    let eb_shelf = document.createElement('option');
+                    eb_shelf.id = room.name;
+                    eb_shelf.innerText = shelf.name;
+                    document.querySelector('#eb_shelf').append(eb_shelf);
                 }
             }
         }
@@ -134,10 +151,10 @@ fetch('/load')
             <p>Notes: ${book.notes}</p>
             <p>Place: ${book.house} > ${book.room} > ${book.shelf}</p>
             <p>Pinned: ${book.pinned}</p>
-
             
             <div>
-                <button class="delete">Delete</button>
+                <button class="edit-book">Edit</button>
+                <button class="delete-book">Delete</button>
             </div>
             `;
             details.id = book._id;
@@ -149,8 +166,8 @@ fetch('/load')
         roomshelfrelation('nb');
     })
     .then(function(){
-        for (let i = 0; i < document.querySelectorAll('.delete').length; i++) {
-            const element = document.querySelectorAll('.delete')[i];
+        for (let i = 0; i < document.querySelectorAll('.delete-book').length; i++) {
+            const element = document.querySelectorAll('.delete-book')[i];
             // console.log(element);
             element.addEventListener('click', function(){
                 // let hr = new XMLHttpRequest();
@@ -213,11 +230,87 @@ fetch('/load')
             
             });
         }
+        for (let i = 0; i < document.querySelectorAll('.edit-book').length; i++) {
+            const element = document.querySelectorAll('.edit-book')[i];
+            element.addEventListener('click', function(){
+                //↓example for bad code↓
+
+                document.querySelector('#eb_writer').value = this.parentElement.parentElement.children[1].innerText.split('Writer: ')[1];
+                if (this.parentElement.parentElement.children[1].innerText.split('Writer: ')[1] == undefined) {
+                    document.querySelector('#eb_writer').value = "";
+                }
+
+                document.querySelector('#eb_title').value = this.parentElement.parentElement.children[2].innerText.split('Title: ')[1];
+                if (this.parentElement.parentElement.children[2].innerText.split('Title: ')[1] == undefined) {
+                    document.querySelector('#eb_title').value = "";
+                }
+
+                document.querySelector('#eb_description').value = this.parentElement.parentElement.children[3].innerText.split('Description: ')[1];
+                if (this.parentElement.parentElement.children[3].innerText.split('Description: ')[1] == undefined) {
+                    document.querySelector('#eb_description').value = "";
+                }
+
+                document.querySelector('#eb_type').value = this.parentElement.parentElement.children[4].innerText.split('Type: ')[1];
+                if (this.parentElement.parentElement.children[4].innerText.split('Type: ')[1] == undefined) {
+                    document.querySelector('#eb_type').value = "";
+                }
+
+                document.querySelector('#eb_publisher').value = this.parentElement.parentElement.children[5].innerText.split('Publisher: ')[1];
+                if (this.parentElement.parentElement.children[5].innerText.split('Publisher: ')[1] == undefined) {
+                    document.querySelector('#eb_publisher').value = "";
+                }
+
+                document.querySelector('#eb_yearOfPublication').value = this.parentElement.parentElement.children[6].innerText.split('Year of publication: ')[1];
+                if (this.parentElement.parentElement.children[6].innerText.split('Year of publication: ')[1] == "null") {
+                    document.querySelector('#eb_yearOfPublication').value = "";
+                }
+
+                document.querySelector('#eb_notes').value = this.parentElement.parentElement.children[7].innerText.split('Notes: ')[1];
+                if (this.parentElement.parentElement.children[7].innerText.split('Notes: ')[1] == undefined) {
+                    document.querySelector('#eb_notes').value = "";
+                }
+
+                document.querySelector('#eb_house').value = this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[0];
+                if (this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[0] == undefined) {
+                    document.querySelector('#eb_house').value = "";
+                }
+                // console.log(this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[0]);
+
+                document.querySelector('#eb_room').value = this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[1];
+                if (this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[1] == undefined) {
+                    document.querySelector('#eb_room').value = "";
+                }
+                // console.log(this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[1]);
+
+                document.querySelector('#eb_shelf').value = this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[2];
+                if (this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[2] == undefined) {
+                    document.querySelector('#eb_shelf').value = "";
+                }
+                // console.log(this.parentElement.parentElement.children[8].innerText.split('Place: ')[1].split(' > ')[2]);
+
+                document.querySelector('#eb_pinned').checked = this.parentElement.parentElement.children[9].innerText.split('Pinned: ')[1];
+                if (this.parentElement.parentElement.children[9].innerText.split('Pinned: ')[1] == "false") {
+                    document.querySelector('#eb_pinned').checked = false;
+                }
+
+                document.querySelector('#eb_objectID').value = this.parentElement.parentElement.id;
+                //↑example for bad code↑
+
+                houseroomrelation('eb');
+                roomshelfrelation('eb');
+        
+                document.querySelector('#dialog-bg').style.display = 'flex';
+                document.querySelector('#edit-book').style.display = 'flex';
+            });
+        }
     });
 
 document.querySelector('#ns_house').addEventListener('change', function(){houseroomrelation('ns')});
 document.querySelector('#nb_house').addEventListener('change', function(){houseroomrelation('nb'); roomshelfrelation('nb')});
 document.querySelector('#nb_room').addEventListener('change', function(){roomshelfrelation('nb')});
+
+document.querySelector('#eb_house').addEventListener('change', function(){houseroomrelation('eb'); roomshelfrelation('eb')})
+document.querySelector('#eb_room').addEventListener('change', function(){roomshelfrelation('eb')})
 
 function houseroomrelation(which) {
     let db = 0;
@@ -239,13 +332,22 @@ function houseroomrelation(which) {
 
     if (db == document.querySelector(`#${which}_room`).children.length) {
         document.querySelector(`#${which}_room`).value = "NO ITEM";//doesnt work
-        document.querySelector(`#${which}_room`).disabled = true;  
-        document.querySelector(`#${which}_add`).disabled = true;  
-        
+        document.querySelector(`#${which}_room`).disabled = true;
+        if (document.querySelector(`#${which}_add`)) {
+            document.querySelector(`#${which}_add`).disabled = true;
+        }
+        else{
+            document.querySelector(`#${which}_edit`).disabled = true;
+        }
     }else{
         document.querySelector(`#${which}_room`).value = first_good_room;
         document.querySelector(`#${which}_room`).disabled = false;
-        document.querySelector(`#${which}_add`).disabled = false;  
+        if (document.querySelector(`#${which}_add`)) {
+            document.querySelector(`#${which}_add`).disabled = false;
+        }
+        else{
+            document.querySelector(`#${which}_edit`).disabled = false;
+        }
     }
 }
 
@@ -269,16 +371,29 @@ function roomshelfrelation(which) {
 
     if (db == document.querySelector(`#${which}_shelf`).children.length) {
         document.querySelector(`#${which}_shelf`).value = "NO ITEM";//doesnt work
-        document.querySelector(`#${which}_shelf`).disabled = true;  
-        document.querySelector(`#${which}_add`).disabled = true;  
+        document.querySelector(`#${which}_shelf`).disabled = true;
+        // document.querySelector(`#${which}_add`).disabled = true;  
+        if (document.querySelector(`#${which}_add`)) {
+            document.querySelector(`#${which}_add`).disabled = true;
+        }
+        else{
+            document.querySelector(`#${which}_edit`).disabled = true;
+        }
         
     }else{
         document.querySelector(`#${which}_shelf`).value = first_good_shelf;
         document.querySelector(`#${which}_shelf`).disabled = false;
-        document.querySelector(`#${which}_add`).disabled = false;  
+        // document.querySelector(`#${which}_add`).disabled = false;
+        if (document.querySelector(`#${which}_add`)) {
+            document.querySelector(`#${which}_add`).disabled = false;
+        }
+        else{
+            document.querySelector(`#${which}_edit`).disabled = false;
+        }
     }
 }
 
+// quick actions buttons
 document.querySelector('#new-house-button').addEventListener('click', function () {
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-house').style.display = 'flex';
@@ -298,5 +413,3 @@ document.querySelector('#new-book-button').addEventListener('click', function ()
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-book').style.display = 'flex';
 });
-
-
