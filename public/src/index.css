@@ -54,23 +54,20 @@ header {
     justify-content: space-between;
     background-color: white;
 }
-
 header a, h1 {
     margin: 0px;
     text-decoration: none;
     color: black;
 }
-
 .headerimg{
     height: 2em;
     padding: 0px;
 }
-
 #menu{
     max-height: 100vh;
-    height: 500px;
+    height: calc(5 * (30px + 20px + 10px) + 10px);
     max-width: 100vw;
-    width: 500px;
+    width: 250px;
     background-color: white;
     display: none;
     position: fixed;
@@ -79,27 +76,32 @@ header a, h1 {
     border: 1px solid black;
     padding: 10px;
     box-sizing: border-box;
-    grid-template-columns: 30% 30% 30%;
-    grid-template-rows: 30% 30% 30%;
-    gap: 4.7%;
+    /* grid-template-columns: 30% 30% 30%;
+    grid-template-rows: 30% 30% 30%; */
+    /* gap: 4.7%; */
     border-radius: 5px;
+    flex-direction: column;
+    gap: 10px;
 }
 .menu-item{
-    display: grid;
+    display: flex;
     width: 100%;
-    height: 100%;
+    height: calc(30px + 20px);
     border: 1px black solid;
     justify-items: center;
     align-items: center;
-    grid-template-rows: 75% 25%;
+    /* grid-template-columns: 15% 75%; */
+    gap: 10px;
     border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 .menu-item:hover{
     cursor: pointer;
 }
 .menu-item img{
-    width: 70%;
-    height: 70%;
+    width: 30px;
+    height: 30px;
 }
 .menu-item p{
     font-size: 20px;
