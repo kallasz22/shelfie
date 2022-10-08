@@ -77,11 +77,11 @@ const userSchema = new mongoose.Schema({
                                         },
                                         description: {
                                             type: String,
-                                            required: true
+                                            // required: true
                                         }
                                     }
                                 ],
-                                required: true
+                                // required: true
                             },
                             name: {
                                 type: String,
@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema({
                             },
                             description: {
                                 type: String,
-                                required: true
+                                // required: true
                             }
                         }
                     ]
@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema({
                 },
                 description: {
                     type: String,
-                    required: true
+                    // required: true
                 }
             }
         ]

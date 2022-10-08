@@ -124,12 +124,12 @@
             display: list-item;
             justify-content: space-between;
         }
-        details summary::marker{
+        /* details summary::marker{
             content: '▶';
         }
         details[open] summary::marker{
             content: '▼';
-        }
+        } */
         details:hover{
             background-color: rgba(0, 0, 0, 0.025);
         }
@@ -187,7 +187,7 @@
                 <h2>ADD NEW HOUSE</h2>
             </div>
 
-            <label for="nh_name">Name: </label>
+            <label for="nh_name">*Name: </label>
             <input type="text" name="nh_name">
             <label for="nh_description">Description: </label>
             <textarea name="nh_description" id="" cols="30" rows="10"></textarea>
@@ -204,7 +204,7 @@
                 <h2>ADD NEW ROOM</h2>
             </div>
 
-            <label for="nr_name">Name: </label>
+            <label for="nr_name">*Name: </label>
             <input type="text" name="nr_name">
             <label for="nr_description">Description: </label>
             <textarea name="nr_description" id="" cols="30" rows="10"></textarea>
@@ -223,7 +223,7 @@
                 <h2>ADD NEW SHELF</h2>
             </div>
 
-            <label for="ns_name">Name: </label>
+            <label for="ns_name">*Name: </label>
             <input type="text" name="ns_name">
             <label for="ns_description">Description: </label>
             <textarea name="ns_description" id="" cols="30" rows="10"></textarea>
