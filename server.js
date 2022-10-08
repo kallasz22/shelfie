@@ -5,10 +5,14 @@ const app = express();
 //database
 const mongoose = require('mongoose');
 if (process.env.dbUsername) {
-    mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`);
+    mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
+        app.listen(5000);
+    });
 } else {
     const config = require('./config.json');
-    mongoose.connect(`mongodb+srv://${config.dbUsername}:${config.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`);
+    mongoose.connect(`mongodb+srv://${config.dbUsername}:${config.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
+        app.listen(5000);
+    });
 }
 
 //bodyparser
@@ -234,5 +238,3 @@ async function accountOnly(req, res, next) {
 app.get('*', function(req, res){
     res.status(404).redirect('/404.html');
 });
-
-app.listen(5000);
