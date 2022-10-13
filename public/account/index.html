@@ -74,7 +74,7 @@
             padding: 10px;
         }
         #hidden{
-            display: grid;
+            display: none;
             
         }
 
@@ -186,6 +186,7 @@
 
             document.querySelector('#forms').style.padding = "0px";
 
+            document.querySelector('#hidden').style.display = "grid";
             document.querySelector('#user').innerText = response.user.username;
             // document.querySelector('#sign-out-button').addEventListener('click', function(){
             
