@@ -265,7 +265,7 @@ app.get('/valid-account', accountOnly, function(req, res){
         valid: true,//im not sure its required
         user: user
     }
-    res.send(JSON.stringify(obj));
+    res.type('application/json').send(JSON.stringify(obj));
 });
 
 app.get('/delete-account', accountOnly, async function(req, res){

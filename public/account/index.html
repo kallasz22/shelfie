@@ -79,7 +79,7 @@
         }
 
         #forms{
-            display: grid;
+            display: none;
             grid-template-columns: 45% 45%;
             gap: 10%;
             max-width: 750px;
@@ -174,10 +174,17 @@
         // });
         fetch('/valid-account')
         .then(function(response){
-            return response.json();
+            console.log(response);
+            if (!response.redirected) {
+                return response.json();
+            } else {
+                document.querySelector('#forms').style.display = "grid";
+                return {valid: false};
+            }
         })
         .then(function(response){
-            if (!response.valid) {
+            if (!response.valid) {//it wont happen :D
+                document.querySelector('#forms').style.display = "grid";
                 return;
             }
             // while (!loaded) {}//waiting room
