@@ -259,6 +259,21 @@ app.post('/edit-book', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
+app.get('/valid-account', accountOnly, function(req, res){
+    let user = req.user;
+    let obj = {
+        valid: true,//im not sure its required
+        user: user
+    }
+    res.send(JSON.stringify(obj));
+});
+
+app.get('/delete-account', accountOnly, async function(req, res){
+    let user = req.user;
+    await User.deleteOne({ username: user.username });
+    res.status(200).redirect('/');
+});
+
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {

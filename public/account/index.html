@@ -10,7 +10,7 @@
 
     <style>
         @media screen and (max-width: 750px) {
-            body {
+            #forms {
                 grid-template-columns: 100vw !important;
                 margin-left: calc((100vw - 520px) / 2) !important;
                 margin-right: calc((100vw - 520px) / 2) !important;
@@ -18,7 +18,7 @@
         }
 
         @media screen and (max-width: 520px) {
-            body {
+            #forms {
                 /* margin-top: calc(1em + 10px + 2px + 10px + 10px) !important; */
                 margin-left: 0px !important;
                 margin-right: 0px !important;
@@ -43,7 +43,7 @@
             }
         }
 
-        h1 {
+        #forms h1 {
             text-align: center;
         }
 
@@ -71,6 +71,14 @@
         }
 
         body {
+            padding: 10px;
+        }
+        #hidden{
+            display: grid;
+            
+        }
+
+        #forms{
             display: grid;
             grid-template-columns: 45% 45%;
             gap: 10%;
@@ -79,6 +87,23 @@
             margin-right: auto;
             padding: 10px;
             box-sizing: border-box;
+        }
+
+        #sign-out-button{
+            max-width: 100px;
+        }
+        #delete-account-button{
+            max-width: 200px;
+            color: red;
+            border: red solid 2px;
+        }
+        #button-grid{
+            display: grid;
+            grid-template-columns: 100px 200px;
+            gap: 10px;
+        }
+        h1{
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -112,23 +137,75 @@
             </div>
         </div>
     </header>
-    <form action="/signin" method="post">
-        <h1>SIGN IN</h1>
-        <label for="uresname_si">Username: </label><input type="text" name="username_si" id="">
-        <label for="password_si">Password: </label><input type="password" name="password_si" id="">
-        <!-- <div></div>
-        <div></div> -->
-        <button onclick="this.classList = 'loading'">SIGN IN</button>
-    </form>
 
-    <form action="/signup" method="post">
-        <h1>SIGN UP</h1>
-        <label for="uresname_su">Username: </label><input type="text" name="username_su" id="">
-        <label for="password_su">Password: </label><input type="password" name="password_su" id="">
-        <!-- <div></div>
-        <div></div> -->
-        <button onclick="this.classList = 'loading'">SIGN UP</button>
-    </form>
+    <div id="forms">
+        <form action="/signin" method="post" id="sign-in">
+            <h1>SIGN IN</h1>
+            <label for="uresname_si">Username: </label><input type="text" name="username_si" id="">
+            <label for="password_si">Password: </label><input type="password" name="password_si" id="">
+            <!-- <div></div>
+            <div></div> -->
+            <button onclick="this.classList = 'loading'">SIGN IN</button>
+        </form>
+    
+        <form action="/signup" method="post" id="sign-up">
+            <h1>SIGN UP</h1>
+            <label for="uresname_su">Username: </label><input type="text" name="username_su" id="">
+            <label for="password_su">Password: </label><input type="password" name="password_su" id="">
+            <!-- <div></div>
+            <div></div> -->
+            <button onclick="this.classList = 'loading'">SIGN UP</button>
+        </form>
+    </div>
+
+    <div id="hidden">
+        <h1>Good to see you today <span id="user">XY</span>!</h1>
+        <div id="button-grid">
+            <button id="sign-out-button" onclick="this.classList = 'loading'; document.cookie = 'session=; path=/'; window.location.replace('/account')">SIGN OUT</button>
+            <button id="delete-account-button">DELETE ACCOUNT</button>
+        </div>
+        
+    </div>
+
+    <script>
+        // let loaded = false;
+        // document.addEventListener('DOMContentLoaded', function(){
+        //     loaded = true;
+        // });
+        fetch('/valid-account')
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(response){
+            if (!response.valid) {
+                return;
+            }
+            // while (!loaded) {}//waiting room
+            document.querySelector('#sign-in').style.display = "none";
+            document.querySelector('#sign-up').style.display = "none";
+
+            document.querySelector('#forms').style.padding = "0px";
+
+            document.querySelector('#user').innerText = response.user.username;
+            // document.querySelector('#sign-out-button').addEventListener('click', function(){
+            
+            // });
+        });
+        document.querySelector('#delete-account-button').addEventListener('click', function(){
+            this.classList = 'loading';
+            fetch('/delete-account')
+            .then(function(response){
+                if (response.redirected) {
+                    window.location.replace(response.url);
+                }
+                else {
+                    document.querySelector('body').innerHTML = 'ERROR';
+                }
+            });
+        });
+        
+    </script>
+
 </body>
 
 </html>
