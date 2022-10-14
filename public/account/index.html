@@ -25,7 +25,7 @@
             }
 
             form {
-                width: calc(100vw - 20px) !important;
+                width: calc(100vw - 40px) !important;
             }
         }
 
@@ -174,7 +174,7 @@
         // });
         fetch('/valid-account')
         .then(function(response){
-            console.log(response);
+            // console.log(response);
             if (!response.redirected) {
                 return response.json();
             } else {

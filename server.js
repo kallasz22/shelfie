@@ -274,6 +274,20 @@ app.get('/delete-account', accountOnly, async function(req, res){
     res.status(200).redirect('/');
 });
 
+app.post('/clear-tokens', function(req, res){
+    if (process.env.tokenAuth) {
+        if (process.env.tokenAuth == req.headers.get('tokenAuth')) {
+            
+        }
+        else {
+            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.')
+        }
+    }
+    else {
+        res.send("HMMM");
+    }
+});
+
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {
