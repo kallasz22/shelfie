@@ -27,6 +27,7 @@ app.use(cookieParser());
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const User = require('./models/user');
+const user = require('./models/user');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -43,7 +44,13 @@ app.post('/signin', async function(req, res){
         }
 
         const token = crypto.randomUUID();
-        user.tokens.push(token);
+        // console.log(req.headers.cookie);
+        const tokenObj = {
+            date: Date.now(),
+            userAgent: req.headers['user-agent'],
+            token: token
+        }
+        user.tokens.push(tokenObj);
 
         await user.save();
 
@@ -274,13 +281,28 @@ app.get('/delete-account', accountOnly, async function(req, res){
     res.status(200).redirect('/');
 });
 
-app.post('/clear-tokens', function(req, res){
+app.post('/clear-tokens', async function(req, res){
     if (process.env.tokenAuth) {
-        if (process.env.tokenAuth == req.headers.get('tokenAuth')) {
-            
+        if (process.env.tokenAuth == req.headers.tokenauth) {
+            let collection = await User.find();
+            // console.log(collection);
+            for (let i = 0; i < collection.length; i++) {
+                let tokens = collection[i].tokens;
+                for (let j = 0; j < tokens.length; j++) {
+                    const element = tokens[j];
+
+                    let now = Date.now().getTime();
+                    let then = element.date.getTime();
+
+                    if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
+                        await User.findByIdAndDelete(element._id);
+                    }
+                }
+            }
         }
         else {
-            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.')
+            console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
+            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
         }
     }
     else {
@@ -295,7 +317,31 @@ async function accountOnly(req, res, next) {
         return;
     }
 
-    const user = await User.findOne({tokens: token});
+    let collection = await User.find();
+
+    let i = 0;
+    let noToken = true;
+    while (i < collection.length && noToken) {
+        let tokens = collection[i].tokens;
+        let j = 0;
+        while (j < tokens.length && tokens[j].token != token) {
+            j++;
+        }
+        if (j <tokens.length) {
+            noToken = false;
+        }
+        else {
+            i++;
+        }
+    }
+
+    const user = collection[i];
+    // console.log(user);
+    // let i = 0;
+    // while (i < ) {
+        
+    // }
+
     if (user) {
         req.user = user;
         next();
