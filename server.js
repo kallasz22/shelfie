@@ -299,10 +299,12 @@ app.post('/clear-tokens', async function(req, res){
                     }
                 }
             }
+            res.status(200).send();
         }
         else {
-            console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
+            // console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
             console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
+            res.status(500).send();
         }
     }
     else {
