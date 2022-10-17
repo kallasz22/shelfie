@@ -291,7 +291,7 @@ app.post('/clear-tokens', async function(req, res){
                 for (let j = 0; j < tokens.length; j++) {
                     const element = tokens[j];
 
-                    let now = Date.now().getTime();
+                    let now = Date.now();
                     let then = element.date.getTime();
 
                     if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
