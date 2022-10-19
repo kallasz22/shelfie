@@ -431,17 +431,20 @@
                 }
 
                 // document.querySelector('#loading').style.display = 'none';
+                
+
+
+                // document.querySelector('#sign-out-button').addEventListener('click', function(){
+                
+                // });
+            })
+            .then(function(){
                 document.querySelector('#loading').style.animation = 'loadingBGHide 1s forwards';
                 document.querySelector('#loading h1').style.animation = 'loadingH1Hide 1s forwards';
                 document.querySelector('#loading svg').style.animation = 'loadingSVGHide 1s forwards';
                 setTimeout(() => {
                     document.querySelector('#loading').style.display = 'none';
                 }, 1000);
-
-
-                // document.querySelector('#sign-out-button').addEventListener('click', function(){
-                
-                // });
             });
             document.querySelector('#delete-account-button').addEventListener('click', function(){
                 this.classList = 'loading';
