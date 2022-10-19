@@ -51,7 +51,9 @@
             font-size: 1em;
             border-radius: 5px;
             border: 2px black solid;
-            padding: 5px 0px;
+            padding: 5px 10px;
+            min-width: 150px;
+            /* display: ruby; */
         }
 
         .loading{
@@ -97,13 +99,104 @@
             color: red;
             border: red solid 2px;
         }
-        #button-grid{
-            display: grid;
-            grid-template-columns: 100px 200px;
+
+        #welcome-grid{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 10px;
         }
-        #hidden h1{
+        /* #hidden h1{
             margin-bottom: 10px;
+        } */
+
+        main{
+            padding: 0px 100px;
+        }
+
+        #active-sessions{
+            margin: 15px 0px;
+            display: grid;
+            border: 1px solid black;
+            padding: 10px;
+            padding-top: 0px;
+            gap: 10px;
+            border-radius: 10px;
+        }
+        #active-sessions details:hover{
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        #active-sessions details summary{
+            border: 1px black solid;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        #active-sessions details[open] summary{
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        #active-sessions details summary span{
+            display: inline-flex;
+            width: calc(100% - 16px);
+            align-items: center;
+            justify-content: space-between;
+        }
+        #active-sessions details summary span button{
+            margin-left: 20px;
+        }
+        #active-sessions>p{
+            margin: 0px 10px;
+            /* border: 1px solid black; */
+            display: flex;
+            width: fit-content;
+            font-size: 20px;
+            border-left: 1px solid black;
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 5px;
+            font-weight: 900;
+        }
+
+        .open{
+            display: flex;
+            padding: 10px;
+            border-left: 1px black solid;
+            border-bottom: 1px black solid;
+            border-right: 1px black solid;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            gap: 5px;
+        }
+        .open p{
+            margin: 0px;
+        }
+
+        #active-session{
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        @media screen and (max-width: 800px){
+            main{
+                padding: 0px 10px;
+            }
+        }
+        @media screen and (max-width: 450px) {
+            #welcome-grid{
+                flex-direction: column;
+            }
+            #active-sessions details summary span{
+                flex-direction: column;
+                gap: 10px;
+            }
+            .open{
+                flex-direction: column;
+            }
+            #active-sessions details summary span button{
+                margin: 0px;
+            }
         }
     </style>
 </head>
@@ -138,81 +231,137 @@
         </div>
     </header>
 
-    <div id="forms">
-        <form action="/signin" method="post" id="sign-in">
-            <h1>SIGN IN</h1>
-            <label for="uresname_si">Username: </label><input type="text" name="username_si" id="">
-            <label for="password_si">Password: </label><input type="password" name="password_si" id="">
-            <!-- <div></div>
-            <div></div> -->
-            <button onclick="this.classList = 'loading'">SIGN IN</button>
-        </form>
+    <main>
+        <div id="forms">
+            <form action="/signin" method="post" id="sign-in">
+                <h1>SIGN IN</h1>
+                <label for="uresname_si">Username: </label><input type="text" name="username_si" id="">
+                <label for="password_si">Password: </label><input type="password" name="password_si" id="">
+                <!-- <div></div>
+                <div></div> -->
+                <button onclick="this.classList = 'loading'">SIGN IN</button>
+            </form>
+        
+            <form action="/signup" method="post" id="sign-up">
+                <h1>SIGN UP</h1>
+                <label for="uresname_su">Username: </label><input type="text" name="username_su" id="">
+                <label for="password_su">Password: </label><input type="password" name="password_su" id="">
+                <!-- <div></div>
+                <div></div> -->
+                <button onclick="this.classList = 'loading'">SIGN UP</button>
+            </form>
+        </div>
     
-        <form action="/signup" method="post" id="sign-up">
-            <h1>SIGN UP</h1>
-            <label for="uresname_su">Username: </label><input type="text" name="username_su" id="">
-            <label for="password_su">Password: </label><input type="password" name="password_su" id="">
-            <!-- <div></div>
-            <div></div> -->
-            <button onclick="this.classList = 'loading'">SIGN UP</button>
-        </form>
-    </div>
+        <div id="hidden">
+            <div id="welcome-grid">
+                <h1>Hello <span id="user"><em>user</em></span>!</h1>
+                <button id="sign-out-button" onclick="this.classList = 'loading'; document.cookie = 'session=; path=/'; window.location.replace('/account')">SIGN OUT</button>
+            </div>
 
-    <div id="hidden">
-        <h1>Good to see you today <span id="user">XY</span>!</h1>
-        <div id="button-grid">
-            <button id="sign-out-button" onclick="this.classList = 'loading'; document.cookie = 'session=; path=/'; window.location.replace('/account')">SIGN OUT</button>
+            <div id="active-sessions"><p>SESSIONS</p></div>
+            
             <button id="delete-account-button">DELETE ACCOUNT</button>
         </div>
-        
-    </div>
-
-    <script>
-        // let loaded = false;
-        // document.addEventListener('DOMContentLoaded', function(){
-        //     loaded = true;
-        // });
-        fetch('/valid-account')
-        .then(function(response){
-            // console.log(response);
-            if (!response.redirected) {
-                return response.json();
-            } else {
-                document.querySelector('#forms').style.display = "grid";
-                return {valid: false};
-            }
-        })
-        .then(function(response){
-            if (!response.valid) {//it wont happen :D
-                document.querySelector('#forms').style.display = "grid";
-                return;
-            }
-            // while (!loaded) {}//waiting room
-            document.querySelector('#sign-in').style.display = "none";
-            document.querySelector('#sign-up').style.display = "none";
-
-            document.querySelector('#forms').style.padding = "0px";
-
-            document.querySelector('#hidden').style.display = "grid";
-            document.querySelector('#user').innerText = response.user.username;
-            // document.querySelector('#sign-out-button').addEventListener('click', function(){
-            
+    
+        <script>
+            // let loaded = false;
+            // document.addEventListener('DOMContentLoaded', function(){
+            //     loaded = true;
             // });
-        });
-        document.querySelector('#delete-account-button').addEventListener('click', function(){
-            this.classList = 'loading';
-            fetch('/delete-account')
+            fetch('/valid-account')
             .then(function(response){
-                if (response.redirected) {
-                    window.location.replace(response.url);
+                // console.log(response);
+                if (!response.redirected) {
+                    return response.json();
+                } else {
+                    document.querySelector('#forms').style.display = "grid";
+                    return {valid: false};
                 }
-                else {
-                    document.querySelector('body').innerHTML = 'ERROR';
+            })
+            .then(function(response){
+                if (!response.valid) {//it wont happen :D
+                    document.querySelector('#forms').style.display = "grid";
+                    return;
                 }
+                // while (!loaded) {}//waiting room
+                document.querySelector('#sign-in').style.display = "none";
+                document.querySelector('#sign-up').style.display = "none";
+    
+                document.querySelector('#forms').style.padding = "0px";
+    
+                document.querySelector('#hidden').style.display = "grid";
+                document.querySelector('#user').innerText = response.user.username;
+
+                for (let i = 0; i < response.user.tokens.length; i++) {
+                    const token = response.user.tokens[i];
+
+                    let session = document.createElement('details');
+                    
+                    session.innerHTML = 
+                    `<div class="open">
+                    <p><strong>Date: </strong>${new Date(token.date.toString())}</p>
+                    <p><strong>User-Agent: </strong>${token.userAgent}</p>
+                    </div>
+                    `;
+                    let summary = document.createElement('summary');
+                    let sum_flex = document.createElement('span');
+                    sum_flex.innerText = token.userAgent;
+                    let button = document.createElement('button');
+                    button.classList = 'delete-session-button';
+                    button.id = token._id;
+                    button.innerText = 'DELETE SESSION';
+
+                    if (document.cookie.endsWith(token.token)) {
+                        summary.id = 'active-session';
+                    }
+
+                    sum_flex.append(button);
+                    summary.append(sum_flex);
+                    session.append(summary);
+
+                    document.querySelector('#active-sessions').append(session);
+
+                    
+                    button.addEventListener('click', function(){
+                        this.classList = 'loading';
+                        fetch('/delete-token', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `objectID=${this.id}`
+                        })
+                        .then(function(mini_response){
+                            if (mini_response.redirected) {
+                                window.location.replace(mini_response.url);
+                            }
+                            else {
+                                document.querySelector('body').innerHTML = 'ERROR';
+                            }
+                        });
+                    });
+                }
+                // document.querySelector('#sign-out-button').addEventListener('click', function(){
+                
+                // });
             });
-        });
-        
-    </script>
+            document.querySelector('#delete-account-button').addEventListener('click', function(){
+                this.classList = 'loading';
+                fetch('/delete-account')
+                .then(function(response){
+                    if (response.redirected) {
+                        window.location.replace(response.url);
+                    }
+                    else {
+                        document.querySelector('body').innerHTML = 'ERROR';
+                    }
+                });
+            });
+            
+        </script>
+    </main>
+
+    
 
 </body>
 

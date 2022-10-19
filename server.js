@@ -46,7 +46,7 @@ app.post('/signin', async function(req, res){
         const token = crypto.randomUUID();
         // console.log(req.headers.cookie);
         const tokenObj = {
-            date: Date.now(),
+            date: Date(),
             userAgent: req.headers['user-agent'],
             token: token
         }
@@ -279,6 +279,25 @@ app.get('/delete-account', accountOnly, async function(req, res){
     let user = req.user;
     await User.deleteOne({ username: user.username });
     res.status(200).redirect('/');
+});
+
+app.post('/delete-token', accountOnly, async function(req, res){
+    let user = req.user;
+
+    let i = 0;
+    while (i < user.tokens.length && user.tokens[i]._id != req.body.objectID) {
+        i++;
+    }
+    if (i == user.tokens.length) {
+        res.status(404).send('ERROR');
+        return;
+    }
+
+
+    user.tokens.splice(i, 1);
+    await user.save();
+
+    res.status(200).redirect('/account');
 });
 
 app.post('/clear-tokens', async function(req, res){
