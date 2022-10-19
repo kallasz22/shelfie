@@ -53,7 +53,7 @@
             border: 2px black solid;
             padding: 5px 10px;
             min-width: 150px;
-            /* display: ruby; */
+            transition: 0.1s;
         }
 
         .loading{
@@ -126,11 +126,15 @@
         #active-sessions details:hover{
             background-color: rgba(0, 0, 0, 0.05);
         }
+        #active-sessions details {
+            transition: 0.1s;
+        }
         #active-sessions details summary{
             border: 1px black solid;
             padding: 5px 10px;
             border-radius: 5px;
         }
+
         #active-sessions details[open] summary{
             border-bottom-left-radius: 0px;
             border-bottom-right-radius: 0px;
@@ -158,6 +162,10 @@
             border-bottom-right-radius: 10px;
             padding: 5px;
             font-weight: 900;
+        }
+        button:hover{
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .open{
@@ -198,6 +206,68 @@
                 margin: 0px;
             }
         }
+
+        #loading svg{
+            width: 75px;
+        }
+        #loading{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 25px;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+        }
+        @keyframes loadingBGHide {
+            0% {
+                background-color: white;
+            }
+            50% {
+                background-color: white;
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+        @keyframes loadingH1Hide {
+            0% {
+                color: black;
+            }
+            25% {
+                color: rgba(0, 0, 0, 0.65);
+            }
+            50% {
+                color: rgba(0, 0, 0, 0.325);
+            }
+            75% {
+                color: transparent;
+            }
+            100% {
+                color: transparent;
+            }
+        }
+        @keyframes loadingSVGHide {
+            0% {
+                opacity: 1;
+            }
+            25% {
+                opacity: 0.650;
+            }
+            50% {
+                opacity: 0.325;
+            }
+            75% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -230,6 +300,24 @@
             </div>
         </div>
     </header>
+
+    <div id="loading">
+        <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 53 12" enable-background="new 0 0 0 0" xml:space="preserve">
+            <circle fill="#000000" stroke="none" cx="6" cy="6" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1" />
+            </circle>
+            <circle fill="#000000" stroke="none" cx="26" cy="6" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2" />
+            </circle>
+            <circle fill="#000000" stroke="none" cx="46" cy="6" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3" />
+            </circle>
+        </svg>
+        <h1>LOADING</h1>
+    </div>
+
+    
 
     <main>
         <div id="forms">
@@ -341,6 +429,16 @@
                         });
                     });
                 }
+
+                // document.querySelector('#loading').style.display = 'none';
+                document.querySelector('#loading').style.animation = 'loadingBGHide 1s forwards';
+                document.querySelector('#loading h1').style.animation = 'loadingH1Hide 1s forwards';
+                document.querySelector('#loading svg').style.animation = 'loadingSVGHide 1s forwards';
+                setTimeout(() => {
+                    document.querySelector('#loading').style.display = 'none';
+                }, 1000);
+
+
                 // document.querySelector('#sign-out-button').addEventListener('click', function(){
                 
                 // });
