@@ -87,7 +87,7 @@
             max-width: 750px;
             margin-left: auto;
             margin-right: auto;
-            padding: 10px;
+            /* padding: 10px; */
             box-sizing: border-box;
         }
 
@@ -343,7 +343,7 @@
         <div id="hidden">
             <div id="welcome-grid">
                 <h1>Hello <span id="user"><em>user</em></span>!</h1>
-                <button id="sign-out-button" onclick="this.classList = 'loading'; document.cookie = 'session=; path=/'; window.location.replace('/account')">SIGN OUT</button>
+                <button id="sign-out-button">SIGN OUT</button>
             </div>
 
             <div id="active-sessions"><p>SESSIONS</p></div>
@@ -446,6 +446,7 @@
                     document.querySelector('#loading').style.display = 'none';
                 }, 1000);
             });
+
             document.querySelector('#delete-account-button').addEventListener('click', function(){
                 this.classList = 'loading';
                 fetch('/delete-account')
@@ -458,6 +459,26 @@
                     }
                 });
             });
+
+            document.querySelector('#sign-out-button').addEventListener('click', function(){
+                this.classList = 'loading';
+                fetch('/delete-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `objectID=${document.querySelector('#active-session button').id}`
+                })
+                .then(function(response){
+                    if (response.redirected) {
+                       window.location.replace(response.url);
+                    }
+                    else {
+                        document.querySelector('body').innerHTML = 'ERROR';
+                    }
+                });
+            });
+
             
         </script>
     </main>
