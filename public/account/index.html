@@ -149,11 +149,10 @@
         #active-sessions details summary span button{
             margin-left: 20px;
         }
-        #active-sessions>p{
+        #active-sessions #title{
             margin: 0px 10px;
             /* border: 1px solid black; */
-            display: flex;
-            width: fit-content;
+            
             font-size: 20px;
             border-left: 1px solid black;
             border-bottom: 1px solid black;
@@ -167,7 +166,29 @@
             cursor: pointer;
             background-color: rgba(0, 0, 0, 0.2);
         }
-
+		#active-sessions #legend{
+			font-size: 18px;
+			display: flex;
+			align-items: center;
+			gap: 2px;
+		}
+		.bubble{
+			height: 15px;
+			width: 15px;
+			border-radius: 10px;
+		}
+		.grey{
+			background-color: rgba(0, 0, 0, 0.2);
+		}
+		#active-sessions>p{
+			display: flex;
+            width: fit-content;
+			margin: 0px;
+		}
+		#active-sessions>div{
+			display: flex;
+			justify-content: space-between;
+		}
         .open{
             display: flex;
             padding: 10px;
@@ -346,7 +367,16 @@
                 <button id="sign-out-button">SIGN OUT</button>
             </div>
 
-            <div id="active-sessions"><p>SESSIONS</p></div>
+            <div id="active-sessions">
+				<div>
+					<p id="title">SESSIONS</p>
+					<div id="legend">
+						<div class="bubble grey"></div> 
+						CURRENT
+					</div>
+				</div>
+				
+			</div>
             
             <button id="delete-account-button">DELETE ACCOUNT</button>
         </div>
