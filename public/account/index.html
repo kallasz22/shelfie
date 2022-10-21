@@ -149,7 +149,7 @@
         #active-sessions details summary span button{
             margin-left: 20px;
         }
-        #active-sessions #title{
+        .title{
             margin: 0px 10px;
             /* border: 1px solid black; */
             
@@ -215,10 +215,12 @@
         @media screen and (max-width: 450px) {
             #welcome-grid{
                 flex-direction: column;
+				align-items: unset;
             }
             #active-sessions details summary span{
                 flex-direction: column;
                 gap: 10px;
+				align-items: unset;
             }
             .open{
                 flex-direction: column;
@@ -226,6 +228,9 @@
             #active-sessions details summary span button{
                 margin: 0px;
             }
+			#sign-out-button{
+				max-width: unset;
+			}
         }
 
         #loading svg{
@@ -289,6 +294,34 @@
                 opacity: 0;
             }
         }
+
+		#account-settings{
+            margin: 15px 0px;
+            display: grid;
+            border: 1px solid black;
+            padding: 10px;
+            padding-top: 0px;
+            gap: 10px;
+            border-radius: 10px;
+        }
+		#account-settings p{
+			display: flex;
+            width: fit-content;
+			/* margin: 0px; */
+		}
+		#account-settings .title-grid{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+		}
+		@media screen and (max-width: 350px) {
+			#account-settings .title-grid{
+				flex-direction: column;
+				align-items: unset;
+			}
+		}
+
     </style>
 </head>
 
@@ -369,13 +402,23 @@
 
             <div id="active-sessions">
 				<div>
-					<p id="title">SESSIONS</p>
+					<p class="title">SESSIONS</p>
 					<div id="legend">
 						<div class="bubble grey"></div> 
 						CURRENT
 					</div>
 				</div>
-				
+			</div>
+
+			<div id="account-settings">
+				<div class="title-grid">
+					<p class="title">ACCOUNT</p>
+					<button id="save-acc-settings">SAVE</button>
+				</div>
+				<div>
+					<label for="acc_email">Email: </label>
+					<input type="text" name="acc_email" id="">
+				</div>
 			</div>
             
             <button id="delete-account-button">DELETE ACCOUNT</button>
