@@ -232,6 +232,9 @@
 				max-width: unset;
 			}
         }
+		#user{
+			font-weight: 500;
+		}
 
         #loading svg{
             width: 75px;
@@ -315,11 +318,30 @@
 			justify-content: space-between;
 			gap: 10px;
 		}
+		/* #account-settings .content-grid{
+			margin: 0px 10px;
+		} */
 		@media screen and (max-width: 350px) {
 			#account-settings .title-grid{
 				flex-direction: column;
 				align-items: unset;
 			}
+			#account-settings .content-grid{
+				gap: 10px;
+			}
+		}
+
+		#email-settings{
+			display: flex;
+			flex-direction: column;
+		}
+
+		#email-settings input{
+			width: calc(100% - 15px);
+			max-width: 300px;
+		}
+		#email-settings #email-code{
+			max-width: 100px;
 		}
 
     </style>
@@ -415,9 +437,22 @@
 					<p class="title">ACCOUNT</p>
 					<button id="save-acc-settings">SAVE</button>
 				</div>
-				<div>
-					<label for="acc_email">Email: </label>
-					<input type="text" name="acc_email" id="">
+				<div class="content-grid">
+					<div id="email-settings">
+						<div>
+							<label for="acc_email">Email: </label>
+							<input type="text" name="acc_email" id="">
+						</div>
+						
+						<div>
+							<label for="email_code">Code: </label>
+							<input type="text" name="email_code" id="email-code">
+						</div>
+						
+					</div>
+					
+
+
 				</div>
 			</div>
             
