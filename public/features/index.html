@@ -40,11 +40,13 @@
             padding: 5px 5px;
             /* box-sizing: border-box; */
         }
-        body{
-            padding: 10px;
-        }
         details>p{
             margin: 0px;
+        }
+        main{
+            padding: 10px;
+            height: calc(100% - calc(1em + 10px + 2px + 10px + 10px));
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -78,35 +80,38 @@
             </div>
         </div>
     </header>
-    <div>
-        <img src="/src/img/building.svg" alt="">
-        <details open>
-            <summary>ROOMS</summary>
-            <p>You can easily create rooms.</p>
-        </details>
-    </div>
-    <div>
-        <img src="/src/img/layers.svg" alt="">
-        <details open>
-            <summary>SHELFS*</summary>
-            <p>You can easily create shelfs.</p>
-        </details>
-    </div>
-    <div>
-        <img src="/src/img/cloud-slash.svg" alt="">
-        <details open>
-            <summary>OFFLINE</summary>
-            <p>It can be installed as a Progressive Web Application. So you are able to use it offline.</p>
-            <p>Just a plan!</p>
-        </details>
-    </div>
-    <div>
-        <img src="/src/img/house.svg" alt="">
-        <details open>
-            <summary>HOUSES</summary>
-            <p>Different houses can be created, so you can organize every book perfectly.</p>
-        </details>
-    </div>
+    <main>
+        <div>
+            <img src="/src/img/building.svg" alt="">
+            <details open>
+                <summary>ROOMS</summary>
+                <p>You can easily create rooms.</p>
+            </details>
+        </div>
+        <div>
+            <img src="/src/img/layers.svg" alt="">
+            <details open>
+                <summary>SHELFS*</summary>
+                <p>You can easily create shelfs.</p>
+            </details>
+        </div>
+        <div>
+            <img src="/src/img/cloud-slash.svg" alt="">
+            <details open>
+                <summary>OFFLINE</summary>
+                <p>It can be installed as a Progressive Web Application. So you are able to use it offline.</p>
+                <p>Just a plan!</p>
+            </details>
+        </div>
+        <div>
+            <img src="/src/img/house.svg" alt="">
+            <details open>
+                <summary>HOUSES</summary>
+                <p>Different houses can be created, so you can organize every book perfectly.</p>
+            </details>
+        </div>
+    </main>
+    
 </body>
 
 </html>

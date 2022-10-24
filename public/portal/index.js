@@ -158,7 +158,7 @@ fetch('/load')
             </div>
             `;
             details.id = book._id;
-            document.querySelector('body').append(details);
+            document.querySelector('main').append(details);
         }
 
         houseroomrelation('ns');

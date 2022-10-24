@@ -1,15 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-html{
+main{
     scrollbar-width: thin !important;
+}
+
+html{
+    height: 100%;
 }
 
 body {
     font-family: 'Open Sans', sans-serif;
     padding: 0px;
-    margin: calc(1.25em + 10px + 10px + 8px) 0px 0px 0px;
-    min-height: calc(100vh -(1.25em + 10px + 10px + 8px));
-    box-sizing: border-box;
+    margin: 0px;
+    /* margin: calc(1.25em + 10px + 10px + 8px) 0px 0px 0px; */
+    /* min-height: calc(100vh -(1.25em + 10px + 10px + 8px)); */
+    /* box-sizing: border-box; */
+    overflow: hidden;
+    height: 100%;
 }
 
 .buttonlink {
@@ -31,10 +38,10 @@ body {
         font-size: 1em !important;
     }
 
-    body {
+    /* body {
         margin-top: calc(1em + 10px + 2px + 10px + 10px) !important;
         min-height: calc(100vh - (1em + 10px + 2px + 10px + 10px)) !important;
-    }
+    } */
 
     #menu{
         top: calc(1em + 10px + 2px + 10px + 10px) !important;
@@ -44,10 +51,10 @@ body {
 header {
     display: flex;
     align-items: center;
-    position: fixed;
+    position: sticky;
     top: 0px;
     left: 0px;
-    width: 100vw;
+    /* width: 100vw; */
     height: calc(1em + 10px + 2px + 10px + 10px);
     padding: 0px 10px;
     box-sizing: border-box;
