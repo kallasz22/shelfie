@@ -6,12 +6,12 @@ const app = express();
 const mongoose = require('mongoose');
 if (process.env.dbUsername) {
     mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
-        app.listen($PORT);
+        app.listen(process.env.PORT);
     });
 } else {
     const config = require('./config.json');
     mongoose.connect(`mongodb+srv://${config.dbUsername}:${config.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
-        app.listen($PORT);
+        app.listen(process.env.PORT);
     });
 }
 
