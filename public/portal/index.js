@@ -12,17 +12,6 @@ fetch('/load')
         for (let i = 0; i < user.houses.length; i++) {
             const house = user.houses[i];
 
-            // let p = document.createElement('p');
-            // p.classList = 'house';
-            // p.innerText = house.name;
-            // document.querySelector('body').append(p);
-
-            // let houseElement = document.createElement('details');
-            // houseElement.classList = 'house';
-            // houseElement.innerHTML = `<summary>${house.name}</summary>`;
-            // houseElement.setAttribute('open', 'open');
-            // document.querySelector('body').append(houseElement);
-
             let nr_house = document.createElement('option');
             nr_house.innerText = house.name;
             document.querySelector('#nr_house').append(nr_house);
@@ -43,17 +32,6 @@ fetch('/load')
             for (let j = 0; j < house.rooms.length; j++) {
                 const room = house.rooms[j];
 
-                // let p = document.createElement('p');
-                // p.classList = 'room';
-                // p.innerText = room.name;
-                // document.querySelector('body').append(p);
-
-                // let roomElement = document.createElement('details');
-                // roomElement.classList = 'room';
-                // roomElement.innerHTML = `<summary>${room.name}</summary>`;
-                // roomElement.setAttribute('open', 'open');
-                // houseElement.append(roomElement);
-
                 let ns_room = document.createElement('option');
                 ns_room.innerText = room.name;
                 ns_room.id = house.name;
@@ -73,17 +51,6 @@ fetch('/load')
                 for (let h = 0; h < room.shelfs.length; h++) {
                     const shelf = room.shelfs[h];
 
-                    // let p = document.createElement('p');
-                    // p.classList = 'shelf';
-                    // p.innerText = shelf.name;
-                    // document.querySelector('body').append(p);
-
-                    // let shelfElement = document.createElement('details');
-                    // shelfElement.classList = 'shelf';
-                    // shelfElement.innerHTML = `<summary>${shelf.name}</summary>`;
-                    // shelfElement.setAttribute('open', 'open');
-                    // roomElement.append(shelfElement);
-
                     let nb_shelf = document.createElement('option');
                     nb_shelf.id = room.name;
                     nb_shelf.innerText = shelf.name;
@@ -98,46 +65,8 @@ fetch('/load')
             }
         }
 
-        /*for (let i = 0; i < user.books.length; i++) {
-            const book = user.books[i];
-
-            // console.log(document.querySelectorAll('details'));
-            let j = 0;
-            while (j < document.querySelectorAll('details').length && document.querySelectorAll('details')[j].classList != 'house' || document.querySelectorAll('details')[j].children[0].innerText != book.house) {//...length-1?
-                j++;
-            }
-
-            let findedHouse = document.querySelectorAll('details')[j];
-            // console.log(findedHouse);
-            // console.log('talált details: ', document.querySelectorAll('details')[j]);
-
-            let k = 0;
-            while (k < findedHouse.children.length-1 && (findedHouse.children[k].classList != 'room' || findedHouse.children[k].innerText != book.room)) {
-                k++;
-            }
-
-            // console.log('findedHouse.children[k]: ', findedHouse.children[k]);
-
-            let findedRoom = findedHouse.children[k];
-
-            let l = 0;
-            while (l < findedRoom.children.length-1 && (findedRoom.children[l].classList != 'shelf' || findedRoom.children[l].innerText != book.shelf)) {
-                l++;
-            }
-
-            let findedShelf = findedRoom.children[l];
-
-            let p = document.createElement('p');
-            p.innerText = book.title;
-            findedShelf.append(p);
-
-            // console.log('findedRoom.children[l]', findedRoom.children[l]);
-        }*/
-
         for (let i = 0; i < user.books.length; i++) {
             const book = user.books[i];
-
-            // console.log(book._id);
             
             let details = document.createElement('details');
             details.innerHTML = 
@@ -168,50 +97,7 @@ fetch('/load')
     .then(function(){
         for (let i = 0; i < document.querySelectorAll('.delete-book').length; i++) {
             const element = document.querySelectorAll('.delete-book')[i];
-            // console.log(element);
             element.addEventListener('click', function(){
-                // let hr = new XMLHttpRequest();
-                // hr.open('POST', '/delete-book');
-                // let formData = new FormData();
-                // formData.append('objectID', element.id);
-                // hr.send(formData);
-                // console.log('some-code');
-        
-                // let objectID = {
-                //     objectID: element.id
-                // };
-
-
-                // console.log(element.parentElement.parentElement.id);
-        
-                // fetch('/delete-book', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'text/plain;charset=utf-8'
-                //     },
-                //     body: JSON.stringify({objectID: element.parentElement.parentElement.id})
-                // })
-                // .then(function(response){
-                //     console.log(response);
-                //     if (response.redirected) {
-                //         window.location.replace(response.url);
-                //     } else {
-                //         return response.json();
-                //     }
-                // });
-
-                // let xhttp = new XMLHttpRequest();
-                // xhttp.open('POST', '/delete-book', true);
-                // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                // xhttp.send(`objectID=${element.parentElement.parentElement.id}`);
-                // // console.log('JSON.stringify({objectID: element.parentElement.parentElement.id}): ', JSON.stringify({objectID: element.parentElement.parentElement.id}));
-                // xhttp.onreadystatechange = function(){
-                //     console.log(xhttp.response);
-                //     if (xhttp.response.redirected) {
-                //         window.location.replace(xhttp.response.url);
-                //     }
-                // }
-
                 fetch('/delete-book', {
                     method: 'POST',
                     headers: {

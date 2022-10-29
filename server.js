@@ -76,8 +76,6 @@ app.post('/signup', async function(req, res){
     } else {
         res.status(404).send('USERNAME AND/OR PASSWORD IS EMPTY');
     }
-    
-    
 });
 
 app.get('/load', accountOnly, async function(req, res){
@@ -229,7 +227,7 @@ app.post('/delete-book', accountOnly, async function(req, res){
 app.post('/edit-book', accountOnly, async function(req, res){
     const user = req.user;
 
-    // console.log(req.body);
+    console.log('req.body.objectID: ', req.body.eb_objectID);
 
     let pinned = "";
     if (req.body.eb_pinned) {
@@ -239,13 +237,14 @@ app.post('/edit-book', accountOnly, async function(req, res){
     }
     
     let i = 0;
-    while (i < user.books.length-1 && user.books[i]._id != req.body.objectID) {
+    while (i <= user.books.length-1 && user.books[i]._id != req.body.eb_objectID) {
         i++;
     }
     if (i == user.books.length) {
         res.send('ERROR');
         return;
     }
+    console.log('ID found: ', user.books[i]._id);
 
     user.books[i] = {
         writer: req.body.eb_writer,
