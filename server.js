@@ -1,19 +1,15 @@
+//init dotenv
+require('dotenv').config()
+
 //init app
 const express = require('express');
 const app = express();
 
 //database
 const mongoose = require('mongoose');
-if (process.env.dbUsername) {
-    mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
-        app.listen(process.env.PORT);
-    });
-} else {
-    const config = require('./config.json');
-    mongoose.connect(`mongodb+srv://${config.dbUsername}:${config.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function(){
-        app.listen(process.env.PORT);
-    });
-}
+mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function () {
+    app.listen(process.env.PORT);
+});
 
 //bodyparser
 const bodyParser = require('body-parser');
@@ -27,7 +23,6 @@ app.use(cookieParser());
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const User = require('./models/user');
-const user = require('./models/user');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -63,20 +58,25 @@ app.post('/signin', async function(req, res){
 });
 
 app.post('/signup', async function(req, res){
-    const user = new User();
-    const existAlready = await User.findOne({username: req.body.username_su});
-    if (!existAlready) {
-        user.username = req.body.username_su;
+    if (req.body.username_su && req.body.password_su) {
+        const user = new User();
+        const existAlready = await User.findOne({ username: req.body.username_su });
+        if (!existAlready) {
+            user.username = req.body.username_su;
 
-        const hash = await bcrypt.hash(req.body.password_su, 10);
-        user.password = hash;
-        
-        user.houses.push({name: 'Default house', description: 'The default house. Automatically created.', rooms: {name: 'Default room', description: 'The default room. Automatically created.', shelfs: {name: 'Default shelf', description: 'The default shelf. Automatically created.'}}});
-        await user.save();
-        res.redirect('/account');
+            const hash = await bcrypt.hash(req.body.password_su, 10);
+            user.password = hash;
+
+            user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
+            await user.save();
+            res.redirect('/account');
+        } else {
+            res.status(404).send('USERNAME IS ALREADY USED');
+        }
     } else {
-        res.status(404).send('USERNAME IS ALREADY USED');
+        res.status(404).send('USERNAME AND/OR PASSWORD IS EMPTY');
     }
+    
     
 });
 
@@ -357,11 +357,6 @@ async function accountOnly(req, res, next) {
     }
 
     const user = collection[i];
-    // console.log(user);
-    // let i = 0;
-    // while (i < ) {
-        
-    // }
 
     if (user) {
         req.user = user;
