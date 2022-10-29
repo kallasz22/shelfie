@@ -227,7 +227,7 @@ app.post('/delete-book', accountOnly, async function(req, res){
 app.post('/edit-book', accountOnly, async function(req, res){
     const user = req.user;
 
-    console.log('req.body.objectID: ', req.body.eb_objectID);
+    // console.log('req.body.objectID: ', req.body.eb_objectID);
 
     let pinned = "";
     if (req.body.eb_pinned) {
@@ -244,7 +244,7 @@ app.post('/edit-book', accountOnly, async function(req, res){
         res.send('ERROR');
         return;
     }
-    console.log('ID found: ', user.books[i]._id);
+    // console.log('ID found: ', user.books[i]._id);
 
     user.books[i] = {
         writer: req.body.eb_writer,
