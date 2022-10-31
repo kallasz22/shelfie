@@ -290,6 +290,26 @@ app.post('/delete-account', accountOnly, async function(req, res){
     res.status(200).redirect('/');
 });
 
+app.post('/change-password', accountOnly, async function(req, res){
+    let user = req.user;
+    const pwC = await bcrypt.compare(req.body.cp_currentPassword, user.password);
+
+    if(!pwC){
+        res.send('WRONG PASSWORD');
+        return;
+    }
+    if (!req.body.cp_newPassword) {
+        res.send('WRONG NEW PASSWORD');
+        return;
+    }
+    const hash = await bcrypt.hash(req.body.cp_newPassword, 10);
+    user.password = hash;
+    user.tokens.splice(0, user.tokens.length);
+
+    await user.save();
+    res.redirect('/account');
+})
+
 app.post('/delete-token', accountOnly, async function(req, res){
     let user = req.user;
 

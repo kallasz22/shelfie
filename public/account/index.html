@@ -153,7 +153,7 @@
         .title{
             margin: 0px 10px;
             /* border: 1px solid black; */
-            
+            width: fit-content;
             font-size: 20px;
             border-left: 1px solid black;
             border-bottom: 1px solid black;
@@ -236,10 +236,11 @@
                 flex-direction: column;
                 align-items: flex-start !important;
             }
-            #delete-account-button{
-                width: 100%;
-                max-width: unset;
+            .content-grid > details > summary > span > button{
+                width: 100% !important;
+                max-width: unset !important;
             }
+            
             .button-grid{
                 flex-direction: column;
                 gap: 10px;
@@ -354,6 +355,11 @@
             margin: 0px;
             display: block;
         }
+        .content-grid{
+            gap: 10px;
+            display: flex;
+            flex-direction: column;
+        }
         .content-grid details>p{
             padding: 10px;
             border: 1px solid black;
@@ -411,6 +417,25 @@
             justify-content: center;
             padding: 20px;
             box-sizing: border-box;
+        }
+        #change-password-challenge{
+            display: none;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            flex-direction: column;
+            max-width: 500px;
+            /* max-height: 500px; */
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        #change-password-challenge .button-grid{
+            display: flex;
+            justify-content: space-between;
+        }
+        #change-password-challenge h3, p, input{
+            margin: 0px;
         }
     </style>
 </head>
@@ -517,6 +542,20 @@
                     </form>
                 </div>
 
+                <div id="change-password-challenge">
+                    <h3>CHANGE PASSWORD</h3>
+                    <p>Please type in your current password to confirm, that you want to change your password.</p>
+                    <form action="/change-password" method="post">
+                    <label for="cp_currentPassword">Current password: </label>
+                    <input type="password" name="cp_currentPassword">
+                    <label for="cp_newPassword">New password: </label>
+                    <input type="password" name="cp_newPassword">
+                    <div class="button-grid">
+                        <button id="cp_cancel" type="button">CANCEL</button>
+                        <button id="real-change-password-button" type="submit">CHANGE PASSWORD</button>
+                    </div>
+                    </form>
+                </div>
             </div>
 			<div id="account-settings">
 				<div class="title-grid">
@@ -533,7 +572,15 @@
                         </summary>
                         <p>With deleting your account, you delete <strong>all</strong> your data stored in our system. <strong>With proceeding you accept that data cannot be restored.</strong> You will lose access to the system. You can sign back any time.</p>
                     </details>
-					
+					<details>
+                        <summary>
+                            <span>
+                                <p>CHANGE PASSWORD</p>
+                                <button id="change-password-button">CHANGE PASSWORD</button>
+                            </span>
+                        </summary>
+                        <p><strong>If you change your password, the system will delete every session.</strong></p>
+                    </details>
 				</div>
 			</div>
             
@@ -637,23 +684,21 @@
             });
 
             document.querySelector('#delete-account-button').addEventListener('click', function(){
-                // this.classList = 'loading';
                 document.querySelector('#background').style.display = 'flex';
                 document.querySelector('#delete-account-challenge').style.display = 'flex';
-                // fetch('/delete-account')
-                // .then(function(response){
-                //     if (response.redirected) {
-                //         window.location.replace(response.url);
-                //     }
-                //     else {
-                //         document.querySelector('body').innerHTML = 'ERROR';
-                //     }
-                // });
+            });
+            document.querySelector('#change-password-button').addEventListener('click', function(){
+                document.querySelector('#background').style.display = 'flex';
+                document.querySelector('#change-password-challenge').style.display = 'flex';
             });
 
             document.querySelector('#da-cancel').addEventListener('click', function(){
                 document.querySelector('#background').style.display = 'none';
                 document.querySelector('#delete-account-challenge').style.display = 'none';
+            });
+            document.querySelector('#cp_cancel').addEventListener('click', function(){
+                document.querySelector('#background').style.display = 'none';
+                document.querySelector('#change-password-challenge').style.display = 'none';
             });
 
             document.querySelector('#sign-out-button').addEventListener('click', function(){
