@@ -274,8 +274,18 @@ app.get('/valid-account', accountOnly, function(req, res){
     res.type('application/json').send(JSON.stringify(obj));
 });
 
-app.get('/delete-account', accountOnly, async function(req, res){
+app.post('/delete-account', accountOnly, async function(req, res){
     let user = req.user;
+    if (user.username != req.body.da_username) {
+        res.send('WRONG USERNAME');
+        return;
+    }
+    const pwC = await bcrypt.compare(req.body.da_password, user.password);
+
+    if(!pwC){
+        res.send('WRONG PASSWORD');
+        return;
+    }
     await User.deleteOne({ username: user.username });
     res.status(200).redirect('/');
 });

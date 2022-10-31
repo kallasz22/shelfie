@@ -24,7 +24,7 @@
                 margin-right: 0px !important;
             }
 
-            form {
+            #forms > form {
                 width: calc(100vw - 20px) !important;
             }
         }
@@ -90,7 +90,7 @@
         #sign-out-button{
             max-width: 100px;
         }
-        #delete-account-button{
+        #delete-account-button, #real-delete-account-button{
             max-width: 200px;
             color: red;
             border: red solid 2px;
@@ -240,6 +240,16 @@
                 width: 100%;
                 max-width: unset;
             }
+            .button-grid{
+                flex-direction: column;
+                gap: 10px;
+            }
+            #delete-account-challenge{
+                max-height: 310px !important;
+            }
+            #real-delete-account-button{
+                max-width: none;
+            }
         }
 		#user{
 			font-weight: 500;
@@ -370,7 +380,38 @@
             border-bottom-right-radius: 0px;
             border-bottom: unset;
         }
-
+        #delete-account-challenge{
+            display: none;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            flex-direction: column;
+            max-width: 500px;
+            max-height: 260px;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        #delete-account-challenge .button-grid{
+            display: flex;
+            justify-content: space-between;
+        }
+        #delete-account-challenge h3, p, input{
+            margin: 0px;
+        }
+        #background{
+            background-color: rgba(0, 0, 0, 0.200);
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 
@@ -458,7 +499,25 @@
 					</div>
 				</div>
 			</div>
+            <div id="background">
+                <div id="delete-account-challenge">
+                    <h3>DELETE ACCOUNT</h3>
+                    <p>Please type in your username and password to confirm, that you want to delete your account.</p>
+                    
+                    <form action="/delete-account" method="post">
+                    <label for="da_username">Username: </label>
+                    <input type="text" name="da_username">
+                    <label for="da_password">Password: </label>
+                    <input type="password" name="da_password">
+                    <div class="button-grid">
+                        <button id="da-cancel" type="button">CANCEL</button>
+                        <button id="real-delete-account-button" type="submit">DELETE ACCOUNT</button>
+                    </div>
+                    
+                    </form>
+                </div>
 
+            </div>
 			<div id="account-settings">
 				<div class="title-grid">
 					<p class="title">ACCOUNT</p>
@@ -477,6 +536,7 @@
 					
 				</div>
 			</div>
+            
             
         </div>
     
@@ -577,16 +637,23 @@
             });
 
             document.querySelector('#delete-account-button').addEventListener('click', function(){
-                this.classList = 'loading';
-                fetch('/delete-account')
-                .then(function(response){
-                    if (response.redirected) {
-                        window.location.replace(response.url);
-                    }
-                    else {
-                        document.querySelector('body').innerHTML = 'ERROR';
-                    }
-                });
+                // this.classList = 'loading';
+                document.querySelector('#background').style.display = 'flex';
+                document.querySelector('#delete-account-challenge').style.display = 'flex';
+                // fetch('/delete-account')
+                // .then(function(response){
+                //     if (response.redirected) {
+                //         window.location.replace(response.url);
+                //     }
+                //     else {
+                //         document.querySelector('body').innerHTML = 'ERROR';
+                //     }
+                // });
+            });
+
+            document.querySelector('#da-cancel').addEventListener('click', function(){
+                document.querySelector('#background').style.display = 'none';
+                document.querySelector('#delete-account-challenge').style.display = 'none';
             });
 
             document.querySelector('#sign-out-button').addEventListener('click', function(){
