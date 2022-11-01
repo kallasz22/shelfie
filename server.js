@@ -308,7 +308,32 @@ app.post('/change-password', accountOnly, async function(req, res){
 
     await user.save();
     res.redirect('/account');
-})
+});
+
+app.post('/change-username', accountOnly, async function(req, res){
+    let user = req.user;
+    const pwC = await bcrypt.compare(req.body.cu_password, user.password);
+
+    if(!pwC){
+        res.send('WRONG PASSWORD');
+        return;
+    }
+
+    const existAlready = await User.findOne({ username: req.body.cu_username });
+    if (existAlready) {
+        res.send('USERNAME IS ALREADY USED');
+        return;
+    }
+    if (!req.body.cu_username) {
+        res.send("USERNAME CAN'T BE EMPTY");
+        return;
+    }
+    user.username = req.body.cu_username;
+    user.tokens.splice(0, user.tokens.length);
+
+    await user.save();
+    res.redirect('/account');
+});
 
 app.post('/delete-token', accountOnly, async function(req, res){
     let user = req.user;

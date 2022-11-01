@@ -437,6 +437,25 @@
         #change-password-challenge h3, p, input{
             margin: 0px;
         }
+        #change-username-challenge{
+            display: none;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            flex-direction: column;
+            max-width: 500px;
+            /* max-height: 500px; */
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        #change-username-challenge .button-grid{
+            display: flex;
+            justify-content: space-between;
+        }
+        #change-username-challenge h3, p, input{
+            margin: 0px;
+        }
     </style>
 </head>
 
@@ -556,6 +575,21 @@
                     </div>
                     </form>
                 </div>
+
+                <div id="change-username-challenge">
+                    <h3>CHANGE USERNAME</h3>
+                    <p>Please type in your current password to confirm, that you want to change your username.</p>
+                    <form action="/change-username" method="post">
+                    <label for="cu_password">Password: </label>
+                    <input type="password" name="cu_password">
+                    <label for="cu_username">Username: </label>
+                    <input type="text" name="cu_username">
+                    <div class="button-grid">
+                        <button id="cu_cancel" type="button">CANCEL</button>
+                        <button id="real-change-username-button" type="submit">CHANGE USERNAME</button>
+                    </div>
+                    </form>
+                </div>
             </div>
 			<div id="account-settings">
 				<div class="title-grid">
@@ -580,6 +614,15 @@
                             </span>
                         </summary>
                         <p><strong>If you change your password, the system will delete every session.</strong></p>
+                    </details>
+                    <details>
+                        <summary>
+                            <span>
+                                <p>CHANGE USERNAME</p>
+                                <button id="change-username-button">CHANGE USERNAME</button>
+                            </span>
+                        </summary>
+                        <p><strong>If you change your username, the system will delete every session.</strong></p>
                     </details>
 				</div>
 			</div>
@@ -691,6 +734,10 @@
                 document.querySelector('#background').style.display = 'flex';
                 document.querySelector('#change-password-challenge').style.display = 'flex';
             });
+            document.querySelector('#change-username-button').addEventListener('click', function(){
+                document.querySelector('#background').style.display = 'flex';
+                document.querySelector('#change-username-challenge').style.display = 'flex';
+            });
 
             document.querySelector('#da-cancel').addEventListener('click', function(){
                 document.querySelector('#background').style.display = 'none';
@@ -699,6 +746,10 @@
             document.querySelector('#cp_cancel').addEventListener('click', function(){
                 document.querySelector('#background').style.display = 'none';
                 document.querySelector('#change-password-challenge').style.display = 'none';
+            });
+            document.querySelector('#cu_cancel').addEventListener('click', function(){
+                document.querySelector('#background').style.display = 'none';
+                document.querySelector('#change-username-challenge').style.display = 'none';
             });
 
             document.querySelector('#sign-out-button').addEventListener('click', function(){
