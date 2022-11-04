@@ -12,7 +12,7 @@
         details {
             border: 1px solid black;
             border-radius: 5px;
-            padding: 0.5em 0.5em 0;
+            /* padding: 0.5em 0.5em 0; */
             margin: 0px 10px;
             margin-bottom: 15px;
             width: 100%;
@@ -20,16 +20,16 @@
         }
         summary {
             font-weight: bold;
-            margin: -0.5em -0.5em 0;
+            /* margin: -0.5em -0.5em 0; */
             padding: 0.5em;
             font-size: 18px;
         }
         details[open] {
-            padding: 0.5em;
+            /* padding: 0.5em; */
         }
         details[open] summary {
-            border-bottom: 1px solid black;
-            margin-bottom: 0.5em;
+            /* border-bottom: 1px solid black; */
+            /* margin-bottom: 0.5em; */
         }
         div{
             display: flex;
@@ -40,13 +40,21 @@
             padding: 5px 5px;
             /* box-sizing: border-box; */
         }
-        details>p{
+        details .open p{
             margin: 0px;
         }
         main{
             padding: 10px;
             height: calc(100% - calc(1em + 10px + 2px + 10px + 10px));
             box-sizing: border-box;
+            overflow-y: scroll;
+        }
+        .open{
+            border-top: 1px solid black;
+            width: 100%;
+            padding: 10px 10px;
+            display: flex;
+            flex-direction: column;
         }
     </style>
 </head>
@@ -85,29 +93,37 @@
             <img src="/src/img/building.svg" alt="">
             <details open>
                 <summary>ROOMS</summary>
-                <p>You can easily create rooms.</p>
+                <div class="open">
+                    <p>You can easily create rooms.</p>
+                </div>
             </details>
         </div>
         <div>
             <img src="/src/img/layers.svg" alt="">
             <details open>
                 <summary>SHELFS*</summary>
-                <p>You can easily create shelfs.</p>
+                <div class="open">
+                    <p>You can easily create shelfs.</p>
+                </div>
             </details>
         </div>
         <div>
             <img src="/src/img/cloud-slash.svg" alt="">
             <details open>
                 <summary>OFFLINE</summary>
-                <p>It can be installed as a Progressive Web Application. So you are able to use it offline.</p>
-                <p>Just a plan!</p>
+                <div class="open">
+                    <p>It can be installed as a Progressive Web Application. So you are able to use it offline.</p>
+                    <p>Just a plan!</p>
+                </div>
             </details>
         </div>
         <div>
             <img src="/src/img/house.svg" alt="">
             <details open>
                 <summary>HOUSES</summary>
-                <p>Different houses can be created, so you can organize every book perfectly.</p>
+                <div class="open">
+                    <p>Different houses can be created, so you can organize every book perfectly.</p>
+                </div>
             </details>
         </div>
     </main>
