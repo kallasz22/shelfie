@@ -1,9 +1,9 @@
 fetch('load')
-    .then(function (response) {
+    .then(async function (response) {
         if (response.redirected) {
             window.location.replace(response.url);
         } else {
-            let user = response.json();
+            let user = await response.json();
             document.querySelector('#user').innerText = user.username;
 
             for (let i = 0; i < user.houses.length; i++) {
