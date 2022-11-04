@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+/* @import url('/opensans/static/OpenSans/OpenSans-Regular.ttf'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'); */
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 main{
     scrollbar-width: thin !important;
