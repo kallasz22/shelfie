@@ -3,96 +3,94 @@ fetch('load')
         if (response.redirected) {
             window.location.replace(response.url);
         } else {
-            return response.json();
-        }
-    })
-    .then(function (user) {
-        document.querySelector('#user').innerText = user.username;
+            let user = response.json();
+            document.querySelector('#user').innerText = user.username;
 
-        for (let i = 0; i < user.houses.length; i++) {
-            const house = user.houses[i];
+            for (let i = 0; i < user.houses.length; i++) {
+                const house = user.houses[i];
 
-            let nr_house = document.createElement('option');
-            nr_house.innerText = house.name;
-            document.querySelector('#nr_house').append(nr_house);
-            
-            let ns_house = document.createElement('option');
-            ns_house.innerText = house.name;
-            document.querySelector('#ns_house').append(ns_house);
+                let nr_house = document.createElement('option');
+                nr_house.innerText = house.name;
+                document.querySelector('#nr_house').append(nr_house);
 
-            let nb_house = document.createElement('option');
-            nb_house.innerText = house.name;
-            document.querySelector('#nb_house').append(nb_house);
+                let ns_house = document.createElement('option');
+                ns_house.innerText = house.name;
+                document.querySelector('#ns_house').append(ns_house);
+
+                let nb_house = document.createElement('option');
+                nb_house.innerText = house.name;
+                document.querySelector('#nb_house').append(nb_house);
 
 
-            let eb_house = document.createElement('option');
-            eb_house.innerText = house.name;
-            document.querySelector('#eb_house').append(eb_house);
+                let eb_house = document.createElement('option');
+                eb_house.innerText = house.name;
+                document.querySelector('#eb_house').append(eb_house);
 
-            for (let j = 0; j < house.rooms.length; j++) {
-                const room = house.rooms[j];
+                for (let j = 0; j < house.rooms.length; j++) {
+                    const room = house.rooms[j];
 
-                let ns_room = document.createElement('option');
-                ns_room.innerText = room.name;
-                ns_room.id = house.name;
-                document.querySelector('#ns_room').append(ns_room);
+                    let ns_room = document.createElement('option');
+                    ns_room.innerText = room.name;
+                    ns_room.id = house.name;
+                    document.querySelector('#ns_room').append(ns_room);
 
-                let nb_room = document.createElement('option');
-                nb_room.innerText = room.name;
-                nb_room.id = house.name;
-                document.querySelector('#nb_room').append(nb_room);
-
-
-                let eb_room = document.createElement('option');
-                eb_room.innerText = room.name;
-                eb_room.id = house.name;
-                document.querySelector('#eb_room').append(eb_room);
-
-                for (let h = 0; h < room.shelfs.length; h++) {
-                    const shelf = room.shelfs[h];
-
-                    let nb_shelf = document.createElement('option');
-                    nb_shelf.id = room.name;
-                    nb_shelf.innerText = shelf.name;
-                    document.querySelector('#nb_shelf').append(nb_shelf);
+                    let nb_room = document.createElement('option');
+                    nb_room.innerText = room.name;
+                    nb_room.id = house.name;
+                    document.querySelector('#nb_room').append(nb_room);
 
 
-                    let eb_shelf = document.createElement('option');
-                    eb_shelf.id = room.name;
-                    eb_shelf.innerText = shelf.name;
-                    document.querySelector('#eb_shelf').append(eb_shelf);
+                    let eb_room = document.createElement('option');
+                    eb_room.innerText = room.name;
+                    eb_room.id = house.name;
+                    document.querySelector('#eb_room').append(eb_room);
+
+                    for (let h = 0; h < room.shelfs.length; h++) {
+                        const shelf = room.shelfs[h];
+
+                        let nb_shelf = document.createElement('option');
+                        nb_shelf.id = room.name;
+                        nb_shelf.innerText = shelf.name;
+                        document.querySelector('#nb_shelf').append(nb_shelf);
+
+
+                        let eb_shelf = document.createElement('option');
+                        eb_shelf.id = room.name;
+                        eb_shelf.innerText = shelf.name;
+                        document.querySelector('#eb_shelf').append(eb_shelf);
+                    }
                 }
             }
-        }
 
-        for (let i = 0; i < user.books.length; i++) {
-            const book = user.books[i];
-            
-            let details = document.createElement('details');
-            details.innerHTML = 
-            `<summary>${book.title}</summary>
-            <p>Writer: ${book.writer}</p>
-            <p>Title: ${book.title}</p>
-            <p>Description: ${book.description}</p>
-            <p>Type: ${book.type}</p>
-            <p>Publisher: ${book.publisher}</p>
-            <p>Year of publication: ${book.yearOfPublication}</p>
-            <p>Notes: ${book.notes}</p>
-            <p>Place: ${book.house} > ${book.room} > ${book.shelf}</p>
-            <p>Pinned: ${book.pinned}</p>
-            
-            <div>
-                <button class="edit-book">Edit</button>
-                <button class="delete-book">Delete</button>
-            </div>
-            `;
-            details.id = book._id;
-            document.querySelector('main').append(details);
-        }
+            for (let i = 0; i < user.books.length; i++) {
+                const book = user.books[i];
 
-        houseroomrelation('ns');
-        houseroomrelation('nb');
-        roomshelfrelation('nb');
+                let details = document.createElement('details');
+                details.innerHTML =
+                    `<summary>${book.title}</summary>
+                    <p>Writer: ${book.writer}</p>
+                    <p>Title: ${book.title}</p>
+                    <p>Description: ${book.description}</p>
+                    <p>Type: ${book.type}</p>
+                    <p>Publisher: ${book.publisher}</p>
+                    <p>Year of publication: ${book.yearOfPublication}</p>
+                    <p>Notes: ${book.notes}</p>
+                    <p>Place: ${book.house} > ${book.room} > ${book.shelf}</p>
+                    <p>Pinned: ${book.pinned}</p>
+            
+                    <div>
+                        <button class="edit-book">Edit</button>
+                        <button class="delete-book">Delete</button>
+                    </div>
+                    `;
+                details.id = book._id;
+                document.querySelector('main').append(details);
+            }
+
+            houseroomrelation('ns');
+            houseroomrelation('nb');
+            roomshelfrelation('nb');
+        }
     })
     .then(function(){
         for (let i = 0; i < document.querySelectorAll('.delete-book').length; i++) {
