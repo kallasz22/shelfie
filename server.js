@@ -1,5 +1,5 @@
 //init dotenv
-require('dotenv').config()
+require('dotenv').config();
 
 //init app
 const express = require('express');
@@ -26,7 +26,7 @@ const User = require('./models/user');
 
 app.use(express.static(__dirname + '/public'));
 
-app.post('/signin', async function(req, res){
+app.post('/account/signin', async function(req, res){
     const user = await User.findOne({
         username: req.body.username_si
     });
@@ -57,7 +57,7 @@ app.post('/signin', async function(req, res){
     }
 });
 
-app.post('/signup', async function(req, res){
+app.post('/account/signup', async function(req, res){
     if (req.body.username_su && req.body.password_su) {
         const user = new User();
         const existAlready = await User.findOne({ username: req.body.username_su });
