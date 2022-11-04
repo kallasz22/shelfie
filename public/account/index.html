@@ -547,54 +547,52 @@
                 <div id="delete-account-challenge">
                     <h3>DELETE ACCOUNT</h3>
                     <p>Please type in your username and password to confirm, that you want to delete your account.</p>
-                    
-                    <form action="/delete-account" method="post">
-                    <label for="da_username">Username: </label>
-                    <input type="text" name="da_username">
-                    <label for="da_password">Password: </label>
-                    <input type="password" name="da_password">
-                    <div class="button-grid">
-                        <button id="da-cancel" type="button">CANCEL</button>
-                        <button id="real-delete-account-button" type="submit">DELETE ACCOUNT</button>
-                    </div>
-                    
+                    <form action="deleteaccount" method="post">
+                        <label for="da_username">Username: </label>
+                        <input type="text" name="da_username">
+                        <label for="da_password">Password: </label>
+                        <input type="password" name="da_password">
+                        <div class="button-grid">
+                            <button id="da-cancel" type="button">CANCEL</button>
+                            <button id="real-delete-account-button" type="submit">DELETE ACCOUNT</button>
+                        </div>
                     </form>
                 </div>
 
                 <div id="change-password-challenge">
                     <h3>CHANGE PASSWORD</h3>
                     <p>Please type in your current password to confirm, that you want to change your password.</p>
-                    <form action="/change-password" method="post">
-                    <label for="cp_currentPassword">Current password: </label>
-                    <input type="password" name="cp_currentPassword">
-                    <label for="cp_newPassword">New password: </label>
-                    <input type="password" name="cp_newPassword">
-                    <div class="button-grid">
-                        <button id="cp_cancel" type="button">CANCEL</button>
-                        <button id="real-change-password-button" type="submit">CHANGE PASSWORD</button>
-                    </div>
+                    <form action="changepassword" method="post">
+                        <label for="cp_currentPassword">Current password: </label>
+                        <input type="password" name="cp_currentPassword">
+                        <label for="cp_newPassword">New password: </label>
+                        <input type="password" name="cp_newPassword">
+                        <div class="button-grid">
+                            <button id="cp_cancel" type="button">CANCEL</button>
+                            <button id="real-change-password-button" type="submit">CHANGE PASSWORD</button>
+                        </div>
                     </form>
                 </div>
 
                 <div id="change-username-challenge">
                     <h3>CHANGE USERNAME</h3>
                     <p>Please type in your current password to confirm, that you want to change your username.</p>
-                    <form action="/change-username" method="post">
-                    <label for="cu_password">Password: </label>
-                    <input type="password" name="cu_password">
-                    <label for="cu_username">Username: </label>
-                    <input type="text" name="cu_username">
-                    <div class="button-grid">
-                        <button id="cu_cancel" type="button">CANCEL</button>
-                        <button id="real-change-username-button" type="submit">CHANGE USERNAME</button>
-                    </div>
+                    <form action="changeusername" method="post">
+                        <label for="cu_password">Password: </label>
+                        <input type="password" name="cu_password">
+                        <label for="cu_username">Username: </label>
+                        <input type="text" name="cu_username">
+                        <div class="button-grid">
+                            <button id="cu_cancel" type="button">CANCEL</button>
+                            <button id="real-change-username-button" type="submit">CHANGE USERNAME</button>
+                        </div>
                     </form>
                 </div>
             </div>
 			<div id="account-settings">
 				<div class="title-grid">
 					<p class="title">ACCOUNT</p>
-					<button id="save-acc-settings">SAVE</button>
+					<!-- <button id="save-acc-settings">SAVE</button> -->
 				</div>
 				<div class="content-grid">
                     <details>
@@ -631,11 +629,7 @@
         </div>
     
         <script>
-            // let loaded = false;
-            // document.addEventListener('DOMContentLoaded', function(){
-            //     loaded = true;
-            // });
-            fetch('/valid-account')
+            fetch('load')
             .then(function(response){
                 // console.log(response);
                 if (!response.redirected) {
@@ -691,7 +685,7 @@
                     
                     button.addEventListener('click', function(){
                         this.classList = 'loading';
-                        fetch('/delete-token', {
+                        fetch('deletetoken', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -708,14 +702,6 @@
                         });
                     });
                 }
-
-                // document.querySelector('#loading').style.display = 'none';
-                
-
-
-                // document.querySelector('#sign-out-button').addEventListener('click', function(){
-                
-                // });
             })
             .then(function(){
                 document.querySelector('#loading').style.animation = 'loadingBGHide 1s forwards';
@@ -754,7 +740,7 @@
 
             document.querySelector('#sign-out-button').addEventListener('click', function(){
                 this.classList = 'loading';
-                fetch('/delete-token', {
+                fetch('deletetoken', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'

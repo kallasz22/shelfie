@@ -78,12 +78,12 @@ app.post('/account/signup', async function(req, res){
     }
 });
 
-app.get('/load', accountOnly, async function(req, res){
+app.get('/portal/load', accountOnly, async function(req, res){
     const user = await req.user;
     res.type('application/json').send(JSON.stringify(user));
 });
 
-app.post('/new-house', accountOnly, async function(req, res){
+app.post('/portal/newhouse', accountOnly, async function(req, res){
     const user = req.user;
 
     user.houses.push({
@@ -94,7 +94,7 @@ app.post('/new-house', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/new-room', accountOnly, async function(req, res){
+app.post('/portal/newroom', accountOnly, async function(req, res){
     const user = req.user;
     
     let i = 0;
@@ -116,7 +116,7 @@ app.post('/new-room', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/new-shelf', accountOnly, async function(req, res){
+app.post('/portal/newshelf', accountOnly, async function(req, res){
     const user = req.user;
 
     let i = 0;
@@ -146,7 +146,7 @@ app.post('/new-shelf', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/new-book', accountOnly, async function(req, res){
+app.post('/portal/newbook', accountOnly, async function(req, res){
     const user = req.user;
 
     // let i = 0;
@@ -204,7 +204,7 @@ app.post('/new-book', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/delete-book', accountOnly, async function(req, res){
+app.post('/portal/deletebook', accountOnly, async function(req, res){
     // console.log(req.body.objectID);
     const user = req.user;
 
@@ -224,7 +224,7 @@ app.post('/delete-book', accountOnly, async function(req, res){
     // res.redirect('/');
 });
 
-app.post('/edit-book', accountOnly, async function(req, res){
+app.post('/portal/editbook', accountOnly, async function(req, res){
     const user = req.user;
 
     // console.log('req.body.objectID: ', req.body.eb_objectID);
@@ -265,7 +265,7 @@ app.post('/edit-book', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.get('/valid-account', accountOnly, function(req, res){
+app.get('/account/load', accountOnly, function(req, res){
     let user = req.user;
     let obj = {
         valid: true,//im not sure its required
@@ -274,7 +274,7 @@ app.get('/valid-account', accountOnly, function(req, res){
     res.type('application/json').send(JSON.stringify(obj));
 });
 
-app.post('/delete-account', accountOnly, async function(req, res){
+app.post('/account/deleteaccount', accountOnly, async function(req, res){
     let user = req.user;
     if (user.username != req.body.da_username) {
         res.send('WRONG USERNAME');
@@ -290,7 +290,7 @@ app.post('/delete-account', accountOnly, async function(req, res){
     res.status(200).redirect('/');
 });
 
-app.post('/change-password', accountOnly, async function(req, res){
+app.post('/account/changepassword', accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cp_currentPassword, user.password);
 
@@ -310,7 +310,7 @@ app.post('/change-password', accountOnly, async function(req, res){
     res.redirect('/account');
 });
 
-app.post('/change-username', accountOnly, async function(req, res){
+app.post('/account/changeusername', accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cu_password, user.password);
 
@@ -335,7 +335,7 @@ app.post('/change-username', accountOnly, async function(req, res){
     res.redirect('/account');
 });
 
-app.post('/delete-token', accountOnly, async function(req, res){
+app.post('/account/deletetoken', accountOnly, async function(req, res){
     let user = req.user;
 
     let i = 0;
@@ -354,36 +354,36 @@ app.post('/delete-token', accountOnly, async function(req, res){
     res.status(200).redirect('/account');
 });
 
-app.post('/clear-tokens', async function(req, res){
-    if (process.env.tokenAuth) {
-        if (process.env.tokenAuth == req.headers.tokenauth) {
-            let collection = await User.find();
-            // console.log(collection);
-            for (let i = 0; i < collection.length; i++) {
-                let tokens = collection[i].tokens;
-                for (let j = 0; j < tokens.length; j++) {
-                    const element = tokens[j];
+// app.post('/clear-tokens', async function(req, res){
+//     if (process.env.tokenAuth) {
+//         if (process.env.tokenAuth == req.headers.tokenauth) {
+//             let collection = await User.find();
+//             // console.log(collection);
+//             for (let i = 0; i < collection.length; i++) {
+//                 let tokens = collection[i].tokens;
+//                 for (let j = 0; j < tokens.length; j++) {
+//                     const element = tokens[j];
 
-                    let now = Date.now();
-                    let then = element.date.getTime();
+//                     let now = Date.now();
+//                     let then = element.date.getTime();
 
-                    if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
-                        await User.findByIdAndDelete(element._id);
-                    }
-                }
-            }
-            res.status(200).send();
-        }
-        else {
-            // console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
-            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
-            res.status(500).send();
-        }
-    }
-    else {
-        res.send("HMMM");
-    }
-});
+//                     if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
+//                         await User.findByIdAndDelete(element._id);
+//                     }
+//                 }
+//             }
+//             res.status(200).send();
+//         }
+//         else {
+//             // console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
+//             console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
+//             res.status(500).send();
+//         }
+//     }
+//     else {
+//         res.send("HMMM");
+//     }
+// });
 
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;

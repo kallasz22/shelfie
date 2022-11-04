@@ -1,4 +1,4 @@
-fetch('/load')
+fetch('load')
     .then(function (response) {
         if (response.redirected) {
             window.location.replace(response.url);
@@ -98,7 +98,7 @@ fetch('/load')
         for (let i = 0; i < document.querySelectorAll('.delete-book').length; i++) {
             const element = document.querySelectorAll('.delete-book')[i];
             element.addEventListener('click', function(){
-                fetch('/delete-book', {
+                fetch('deletebook', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
