@@ -58,6 +58,10 @@ app.post('/account/signin', async function(req, res){
 });
 
 app.post('/account/signup', async function(req, res){
+    if (!req.body.username_su.replace(/\s/g, '').length) {
+        res.send('INVALID USERNAME!');
+        return;
+    }
     if (req.body.username_su && req.body.password_su) {
         const user = new User();
         const existAlready = await User.findOne({ username: req.body.username_su });

@@ -297,3 +297,16 @@ document.querySelector('#new-book-button').addEventListener('click', function ()
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-book').style.display = 'flex';
 });
+
+function seeinput(nx, yz) {
+    if (!document.querySelector(`#${nx}_${yz}`).value) {
+        document.querySelector(`#${nx}_add`).disabled = true;
+    }
+    else{
+        document.querySelector(`#${nx}_add`).disabled = false;
+    }
+}
+
+document.querySelector('#nh_name').addEventListener('input', function(){
+    seeinput('nh', 'name');
+});
