@@ -183,6 +183,8 @@ fetch('load')
                 houseroomrelation('eb');
                 roomshelfrelation('eb');
         
+                seeinput('eb', 'title', 'edit');
+
                 document.querySelector('#dialog-bg').style.display = 'flex';
                 document.querySelector('#edit-book').style.display = 'flex';
             });
@@ -277,36 +279,58 @@ function roomshelfrelation(which) {
     }
 }
 
+function seeinput(n_e_x, yz, add_or_edit) {
+    if (!document.querySelector(`#${n_e_x}_${yz}`).value) {
+        document.querySelector(`#${n_e_x}_${add_or_edit}`).disabled = true;
+    }
+    else{
+        document.querySelector(`#${n_e_x}_${add_or_edit}`).disabled = false;
+    }
+}
+
 // quick actions buttons
 document.querySelector('#new-house-button').addEventListener('click', function () {
+    seeinput('nh', 'name', 'add');
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-house').style.display = 'flex';
 });
 
 document.querySelector('#new-room-button').addEventListener('click', function () {
+    seeinput('nr', 'name', 'add');
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-room').style.display = 'flex';
 });
 
 document.querySelector('#new-shelf-button').addEventListener('click', function () {
+    seeinput('ns', 'name', 'add');
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-shelf').style.display = 'flex';
 });
 
 document.querySelector('#new-book-button').addEventListener('click', function () {
+    seeinput('nb', 'title', 'add');
     document.querySelector('#dialog-bg').style.display = 'flex';
     document.querySelector('#new-book').style.display = 'flex';
 });
 
-function seeinput(nx, yz) {
-    if (!document.querySelector(`#${nx}_${yz}`).value) {
-        document.querySelector(`#${nx}_add`).disabled = true;
-    }
-    else{
-        document.querySelector(`#${nx}_add`).disabled = false;
-    }
-}
 
 document.querySelector('#nh_name').addEventListener('input', function(){
-    seeinput('nh', 'name');
+    seeinput('nh', 'name', 'add');
 });
+
+document.querySelector('#nr_name').addEventListener('input', function(){
+    seeinput('nr', 'name', 'add');
+});
+
+document.querySelector('#ns_name').addEventListener('input', function(){
+    seeinput('ns', 'name', 'add');
+});
+
+document.querySelector('#nb_title').addEventListener('input', function(){
+    seeinput('nb', 'title', 'add');
+});
+
+
+document.querySelector('#eb_title').addEventListener('input', function () {
+    seeinput('eb', 'title', 'edit');
+})
