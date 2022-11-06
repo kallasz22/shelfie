@@ -84,6 +84,11 @@ app.get('/portal/load', accountOnly, async function(req, res){
 });
 
 app.post('/portal/newhouse', accountOnly, async function(req, res){
+    if (!req.body.nh_name) {
+        res.send('A NAME IS ESSENTIAL');
+        return;
+    }
+
     const user = req.user;
 
     user.houses.push({
@@ -95,6 +100,11 @@ app.post('/portal/newhouse', accountOnly, async function(req, res){
 });
 
 app.post('/portal/newroom', accountOnly, async function(req, res){
+    if (!req.body.nr_name) {
+        res.send('A NAME IS ESSENTIAL');
+        return;
+    }
+
     const user = req.user;
     
     let i = 0;
@@ -117,6 +127,11 @@ app.post('/portal/newroom', accountOnly, async function(req, res){
 });
 
 app.post('/portal/newshelf', accountOnly, async function(req, res){
+    if (!req.body.ns_name) {
+        res.send('A NAME IS ESSENTIAL');
+        return;
+    }
+
     const user = req.user;
 
     let i = 0;
@@ -147,6 +162,11 @@ app.post('/portal/newshelf', accountOnly, async function(req, res){
 });
 
 app.post('/portal/newbook', accountOnly, async function(req, res){
+    if (!req.body.nb_title) {
+        res.send('A TITLE IS ESSENTIAL');
+        return;
+    }
+
     const user = req.user;
 
     // let i = 0;
