@@ -8,6 +8,20 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "Spline Sans";
+    src: url('/fonts/SplineSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lexend";
+    src: url('/fonts/Lexend-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 main, #menu{
     scrollbar-width: thin !important;
 }
@@ -17,7 +31,7 @@ html{
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     padding: 0px;
     margin: 0px;
     /* margin: calc(1.25em + 10px + 10px + 8px) 0px 0px 0px; */

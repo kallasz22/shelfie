@@ -333,4 +333,4 @@ document.querySelector('#nb_title').addEventListener('input', function(){
 
 document.querySelector('#eb_title').addEventListener('input', function () {
     seeinput('eb', 'title', 'edit');
-})
+});
