@@ -21,6 +21,26 @@
                 background-image: none !important;
             }
         }
+        @media screen and (max-width: 450px) {
+            body{
+                background-image: url('/src/img/Bubble.svg') !important;
+                background-size: calc(100% - 100px), auto !important;
+                background-position: center calc(100vh - (100vh - 90%)) !important;
+            }
+            main{
+                justify-content: unset !important;
+                padding-top: 10% !important;
+            }
+        }
+        @media screen and (max-height: 660px) {
+            main{
+                padding-top: 10px !important;
+                justify-content: center !important;
+            }
+            body{
+                background-image: none !important;
+            }
+        }
         @media screen and (max-height: 440px) {
             body{
                 background-image: none !important;
