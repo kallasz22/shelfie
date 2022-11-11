@@ -1,20 +1,3 @@
-/* @import url('/opensans/static/OpenSans/OpenSans-Regular.ttf'); */
-/* @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'); */
-
-@font-face {
-    font-family: "Open Sans";
-    src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Spline Sans";
-    src: url('/fonts/SplineSans-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 @font-face {
     font-family: "Lexend";
     src: url('/fonts/Lexend-Regular.ttf') format('truetype');
@@ -31,7 +14,6 @@ html{
 }
 
 body {
-    font-family: 'Lexend', sans-serif;
     padding: 0px;
     margin: 0px;
     /* margin: calc(1.25em + 10px + 10px + 8px) 0px 0px 0px; */
@@ -39,6 +21,10 @@ body {
     /* box-sizing: border-box; */
     overflow: hidden;
     height: 100%;
+}
+
+body, button, input, select, textarea {
+    font-family: 'Lexend', sans-serif !important;
 }
 
 .buttonlink {
@@ -59,15 +45,6 @@ body {
     .buttonlink {
         font-size: 1em !important;
     }
-
-    /* body {
-        margin-top: calc(1em + 10px + 2px + 10px + 10px) !important;
-        min-height: calc(100vh - (1em + 10px + 2px + 10px + 10px)) !important;
-    } */
-
-    #menu{
-        top: calc(1em + 10px + 2px + 10px + 10px) !important;
-    }
 }
 
 header {
@@ -83,7 +60,7 @@ header {
     justify-content: space-between;
     background-color: white;
 }
-header a, h1 {
+header h1 > a {
     margin: 0px;
     text-decoration: none;
     color: black;
@@ -92,58 +69,109 @@ header a, h1 {
     height: 2em;
     padding: 0px;
 }
-#menu{
-    max-height: 100vh;
-    height: calc(5 * (30px + 20px + 10px) + 10px);
-    max-width: 100vw;
-    width: 250px;
-    background-color: white;
-    display: none;
-    position: fixed;
-    top: calc(1.25em + 10px + 10px + 7px);
-    right: 5px;
-    border: 1px solid black;
-    padding: 10px;
-    box-sizing: border-box;
-    /* grid-template-columns: 30% 30% 30%;
-    grid-template-rows: 30% 30% 30%; */
-    /* gap: 4.7%; */
-    border-radius: 5px;
-    flex-direction: column;
-    gap: 10px;
-    box-shadow: 0px 0px 5px black;
-    max-height: calc(100% - 60px);
-    overflow-y: auto;
-}
-.menu-item{
-    display: flex;
-    width: 100%;
-    height: calc(30px + 20px);
-    border: 1px black solid;
-    justify-items: center;
-    align-items: center;
-    /* grid-template-columns: 15% 75%; */
-    gap: 10px;
-    border-radius: 5px;
-    padding: 10px;
-    box-sizing: border-box;
-    transition: 0.1s;
-}
-.menu-item:hover{
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-.menu-item img{
-    width: 30px;
-    height: 30px;
-}
-.menu-item p{
-    font-size: 20px;
-    margin: 0px;
-}
-header>div{
-    display: flex;
-}
 .headerimg:hover{
     cursor: pointer;
+}
+
+
+/*HEADER*/
+:root{
+    --menu-width: 500px;
+}
+.BG{
+    /* display: none; */
+    background-color: rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: calc(2em + 16px);
+    right: -100vw;
+    width: 100vw;
+    height: 100%;
+}
+
+@keyframes menuShow {
+    0% {
+        right: calc(-1 * var(--menu-width));
+    }
+    100% {
+        right: 0px;
+    }
+}
+@keyframes BGShow {
+    0% {
+        right: -100vw;
+    }
+    100% {
+        right: 0px;
+    }
+}
+@keyframes menuHide {
+    0% {
+        right: 0px;
+    }
+    100% {
+        right: calc(-1 * var(--menu-width));
+    }
+}
+@keyframes BGHide {
+    0% {
+        right: 0vw;
+    }
+    100% {
+        right: -100vw;
+    }
+}
+
+#menu{
+    display: grid;
+    position: fixed;
+    top: calc(2em + 16px);
+    right: calc(-1 * var(--menu-width));
+    max-width: var(--menu-width);
+    background-color: white;
+    height: calc(100% - 2em - 16px);
+    width: 100%;
+    grid-template-areas: 
+    /* "header   header" */
+    "account  notifications"
+    "portal   portal"
+    "feedback github";
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto auto 50px;
+}
+.header{
+    grid-area: header;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 30px;
+}
+.account{
+    grid-area: account;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.notifications{
+    grid-area: notifications;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.portal{
+    grid-area: portal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.feedback{
+    grid-area: feedback;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.github{
+    grid-area: github;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
