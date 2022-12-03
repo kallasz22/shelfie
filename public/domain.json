@@ -1,4 +1,4 @@
 {
-    "server":"http://localhost:5000",
-    "origin":"https://designdesign.shelfie.tk"
+    "server":"http://backend.shelfie.tk",
+    "origin":"https://shelfie.tk"
 }
