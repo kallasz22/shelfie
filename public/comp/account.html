@@ -1,0 +1,418 @@
+<main>
+    <div id="title-grid" class="title-grid">
+        <button onclick="changeView('sessions')" id="sessions-btn" state="">SESSIONS</button>
+        <button onclick="changeView('profile')" id="profile-btn" state="">PROFILE</button>
+        <button onclick="changeView('privacy')" id="privacy-btn" state="">PRIVACY</button>
+    </div>
+
+    <div id="sessions" class="content-box">sessions</div>
+    <div id="profile" class="content-box">profile</div>
+    <div id="privacy" class="content-box">privacy</div>
+
+    <div id="sign-in-up">
+        <div id="siu-box">
+            <div id="siu-title-grid" class="title-grid">
+                <button id="sign-in-btn" state="" onclick="changeView('sign-in')">SIGN IN</button>
+                <button id="sign-up-btn" state="" onclick="changeView('sign-up')">SIGN UP</button>
+            </div>
+            <form id="sign-in" class="siu-form">
+                <h2>SIGN IN</h2>
+                <label for="username_si">USERNAME</label>
+                <input type="text" name="username_si" id="username_si" state="">
+                <label for="password_si">PASSWORD</label>
+                <input type="password" name="password_si" id="password_si" state="">
+                <div id="rem7">
+                    <input type="checkbox" name="remember7_si" id="remember7_si">
+                    <label for="remember7_si" id="rem7_si-label">REMEMBER ME FOR 7 DAYS</label>
+                </div>
+                <p id="si-error" class="error"></p>
+                <button type="button" selector="siu-btn" onclick="signIn()" id="si-btn" state="">
+                    SIGN IN 
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
+            </form>
+            <form id="sign-up" class="siu-form">
+                <h2>SIGN UP</h2>
+                <label for="username_su">USERNAME</label>
+                <input type="text" name="username_su" id="username_su" state="">
+                <div id="su-pw-div">
+                    <label for="password_su">PASSWORD</label>
+                    <input type="password" name="password_su" id="password_su" state="">
+                    <label for="password_again_su">PASSWORD AGAIN</label>
+                    <input type="password" name="password_again_su" id="password_again_su" state="">
+                </div>
+                <p class="error" id="su-error"></p>
+                <button type="button" selector="siu-btn" onclick="signUp()" id="su-btn" state="">
+                    SIGN UP
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script id="script">
+    function changeView(view, replace) {
+        if (view == "sign-in" || view == "sign-up") {
+            document.querySelector('#sign-in-up').style.display = 'flex';
+            document.querySelector('#title-grid').style.display = 'none';
+        }
+        else {
+            document.querySelector('#sign-in-up').style.display = 'none';
+            document.querySelector('#title-grid').style.display = 'flex';
+        }
+        const views = ["sessions", "profile", "privacy", "sign-in", "sign-up"];
+        for (let i = 0; i < views.length; i++) {
+            if (views[i] == view) {
+                document.querySelector(`#${views[i]}`).style.display = 'flex';
+                document.querySelector(`#${views[i]}-btn`).attributes.state.nodeValue = "active";
+            } else {
+                document.querySelector(`#${views[i]}`).style.display = 'none';
+                document.querySelector(`#${views[i]}-btn`).attributes.state.nodeValue = "";
+            }
+        }
+        if (!url.popstate) {
+            if (replace) {
+                url.replaceUrl(`/?${url.page()}&v=${view}`);
+            }
+            else if (view != url.searchParams().get('v')){
+                url.changeUrl(`/?${url.page()}&v=${view}`);
+            }
+        }
+        
+        let temp = view[0].toUpperCase() + view.slice(1);
+        document.title = `${temp}:Account - SHELFIE`;
+    }
+
+    function initView() {
+        let searchParams = new URLSearchParams(window.location.search);
+        if (cookies.get('token') != "") {
+            if (searchParams.has('v') && searchParams.get('v') != 'sign-up' && searchParams.get('v') != 'sign-in') {
+                changeView(searchParams.get('v'), true);
+            } else {
+                changeView('sessions');
+            }
+        } else {
+            if (searchParams.has('v') && searchParams.get('v') == 'sign-up') {
+                changeView(searchParams.get('v'), true);
+            } else {
+                changeView('sign-in');
+            }
+        }
+    }
+
+    function validateString(text) {
+        const allowedChars = {
+            array: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "/", "*", "%", "=", "(", ")", "[", "]", "<", ">", "#", "&", "@", "{", "}", "!", "?", ".", ":", ";", "_", ","],
+            in: function (char) {
+                return allowedChars.array.includes(char.toLowerCase());
+            }
+        }
+
+        if (text == "") {
+            return false;
+        }
+
+        let a = text.split('');
+        let i = 0;
+        while (i < a.length && allowedChars.in(a[i])) {
+            i++;
+        }
+        return i == a.length;
+    }
+
+    function signIn() {
+        let smthWrong = false;
+        if (document.querySelector('#si-btn').attributes.state.nodeValue != "") {
+            console.log('already loading');
+            return;
+        }
+        if (!validateString(document.querySelector('#username_si').value)) {
+            document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
+            document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
+            smthWrong = true;
+        } else {
+            document.querySelector('#username_si').attributes.state.nodeValue = '';
+        }
+        if (!validateString(document.querySelector('#password_si').value)) {
+            document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
+            document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
+            smthWrong = true;
+        } else {
+            document.querySelector('#password_si').attributes.state.nodeValue = '';
+        }
+        if (smthWrong) {
+            return;
+        }
+        else {
+            document.querySelector('#si-error').innerText = '';
+        }
+        document.querySelector('#si-btn').attributes.state.nodeValue = "disabled";
+        document.querySelector('#si-btn>svg').outerHTML = dom.loadingSVG;
+        document.querySelector('#si-btn>svg').style.animation = '1s loading infinite linear';
+        
+        fetch(`${domain.server}/account/signin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `username_si=${document.querySelector('#username_si').value}&password_si=${document.querySelector('#password_si').value}`
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (res) {
+            document.querySelector('#si-error').innerText = res.message;
+
+            document.querySelector('#si-btn').attributes.state.nodeValue = "";
+            document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
+            document.querySelector('#si-btn>svg').style.animation = '';
+
+            if (res.token) {
+                if (document.querySelector('#remember7_si').checked) {
+                    cookies.set('token', res.token, 7);
+                } else {
+                    cookies.set('token', res.token, "session");
+                }
+
+                changeView('sessions');
+
+                document.querySelector('#username_si').value = "";
+                document.querySelector('#password_si').value = "";
+            }
+        })
+    }
+
+    function signUp() {
+        let smthWrong = false;
+        if (document.querySelector('#su-btn').attributes.state.nodeValue != "") {
+            console.log('already loading');
+            return;
+        }
+        if (!validateString(document.querySelector('#username_su').value)) {
+            document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
+            document.querySelector('#su-error').style.fontSize = '10pt';
+            document.querySelector('#su-error').style.margin = '0px';
+            document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
+            if (document.querySelector('#username_su').value == "") {
+                document.querySelector('#su-error').style.fontSize = '12pt';
+                document.querySelector('#su-error').innerText = 'Empty field(s)!';
+            }
+            smthWrong = true;
+        } else {
+            document.querySelector('#username_su').attributes.state.nodeValue = '';
+        }
+        if (!validateString(document.querySelector('#password_su').value)) {
+            document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
+            document.querySelector('#su-error').style.fontSize = '10pt';
+            document.querySelector('#su-error').style.margin = '0px';
+            document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
+            if (document.querySelector('#password_su').value == "") {
+                document.querySelector('#su-error').style.fontSize = '12pt';
+                document.querySelector('#su-error').innerText = 'Empty field(s)!';
+            }
+            smthWrong = true;
+        } else {
+            document.querySelector('#password_su').attributes.state.nodeValue = '';
+        }
+        
+        if (smthWrong) {
+            return;
+        }
+        else {
+            document.querySelector('#su-error').innerText = '';
+            if (document.querySelector('#password_again_su').value != document.querySelector('#password_su').value) {
+                document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#password_again_su').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#su-error').style.fontSize = '12pt';
+                document.querySelector('#su-error').style.margin = 'unset';
+                document.querySelector('#su-error').innerText = 'The 2 given passwords are not the same!';
+                return;
+            }
+            else {
+                document.querySelector('#password_su').attributes.state.nodeValue = '';
+                document.querySelector('#password_again_su').attributes.state.nodeValue = '';
+            }
+        }
+        document.querySelector('#su-btn').attributes.state.nodeValue = "disabled";
+        document.querySelector('#su-btn>svg').outerHTML = dom.loadingSVG;
+        document.querySelector('#su-btn>svg').style.animation = '1s loading infinite linear';
+
+        fetch(`${domain.server}/account/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `username_su=${document.querySelector('#username_su').value}&password_su=${document.querySelector('#password_su').value}`
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (res) {
+            document.querySelector('#su-error').innerText = res.message;
+
+            document.querySelector('#su-btn').attributes.state.nodeValue = "";
+            document.querySelector('#su-btn>svg').outerHTML = dom.arrowSVG;
+            document.querySelector('#su-btn>svg').style.animation = '';
+
+            if (res.changeView) {
+                changeView(res.changeView);
+
+                document.querySelector('#username_su').value = "";
+                document.querySelector('#password_su').value = "";
+                document.querySelector('#password_again_su').value = "";
+            }
+        });
+    }
+
+
+</script>
+    
+<style>
+    main {
+        height: 100%;
+        width: 100%;
+    }
+    .title-grid {
+        display: none;
+        /* display: flex; */
+        overflow-x: auto;
+        height: 40px;
+    }
+    .title-grid button {
+        max-width: 200px;
+        min-width: 100px;
+        width: 100%;
+        border: unset;
+        background-color: unset;
+        border-radius: unset;
+        padding: 10px 0px 10px 0px;
+        text-align: left;
+        font-size: 12pt;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: 0.1s;
+        /* height: 40px; */
+    }
+    .title-grid button:hover {
+        background-color: rgba(0, 0, 0, 0.145);
+        cursor: pointer;
+    }
+    .title-grid button[state="active"] {
+        border-bottom: 5px #207a8b solid;
+        background-color: #20798b27;
+        padding: 7.5px 0px;
+    }
+    .content-box {
+        position: absolute;
+        height: calc(100% - 40px);
+        width: 100%;
+        top: 40px;
+        left: 0px;
+
+        display: none;
+    }
+
+    /*temp*/
+    #siu-title-grid {
+        display: flex;
+    }
+    /*temp*/
+    #sign-in-up {
+        height: 100%;
+        width: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    #siu-box {
+        width: 100%;
+        height: 100%;
+        max-width: 400px;
+        max-height: 400px;
+        background-color: white;
+        overflow-y: auto;
+    }
+    .siu-form {
+        height: 360px;/*sadly*/
+        /* height: calc(100% - 40px); */
+        padding: 10px;
+        box-sizing: border-box;
+        flex-direction: column;
+    }
+    .siu-form h2 {
+        margin: 0px 0px 15px 0px;
+    }
+    .siu-form input {
+        margin: 0px 0px 7.5px 0px;
+        font-size: 12pt;
+        padding: 3px 7px;
+        border: #207a8b 1px solid;
+        border-radius: 3px;
+    }
+    .siu-form label {
+        padding: 2px 0px; 
+    }
+    .siu-form button[selector="siu-btn"] {
+        border: unset;
+        border-radius: unset;
+        padding: 10px 10px 10px 15px;
+        box-sizing: border-box;
+        font-size: 12pt;
+        background-color: #207a8b;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: 0.1s;
+        max-width: 200px;
+        width: 100%;
+        align-self: flex-end;
+        margin-top: auto;
+    }
+    .siu-form button[selector="siu-btn"]:hover {
+        padding-right: 4px;
+        cursor: pointer;
+    }
+    .siu-form button[selector="siu-btn"] svg {
+        filter: invert();
+        height: 12pt;
+        width: 12pt;
+    }
+    .siu-form button[selector="siu-btn"][state="disabled"] {
+        background-color: #20798bb5;
+    }
+    .siu-form button[selector="siu-btn"][state="disabled"]:hover {
+        padding: 10px 10px 10px 15px;
+        cursor: default;
+    }
+    .siu-form input[state="wrong"] {
+        border: 1px red solid;
+    }
+    #su-pw-div {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+    #su-pw-div input {
+        margin: 0px 0px 3px 0px;
+    }
+    .error {
+        color: red;
+    }
+    #allowed-chars-p {
+        margin: 0px;
+        font-size: 10pt;
+    }
+    #rem7_si-label, #remember7_si:hover {
+        cursor: pointer;
+    }
+</style>

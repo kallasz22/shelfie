@@ -4,126 +4,488 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#207a8b" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+
     <title>SHELFIE - Book organizer.</title>
 
-    <link rel="stylesheet" href="/src/index.css">
-    <style>
-        @media screen and (max-width: 750px) {
-            h1{
-                font-size: 4em !important;
-            }
-            p{
-                font-size: 1.25em !important;
-            }
-        }
-        @media screen and (max-width: 675px) {
-            body{
-                background-image: none !important;
-            }
-        }
-        @media screen and (max-width: 450px) {
-            body{
-                background-image: url('/src/img/Bubble.svg') !important;
-                background-size: calc(100% - 100px), auto !important;
-                background-position: center calc(100vh - (100vh - 90%)) !important;
-            }
-            main{
-                justify-content: unset !important;
-                padding-top: 10% !important;
-            }
-        }
-        @media screen and (max-height: 660px) {
-            main{
-                padding-top: 10px !important;
-                justify-content: center !important;
-            }
-            body{
-                background-image: none !important;
-            }
-        }
-        @media screen and (max-height: 440px) {
-            body{
-                background-image: none !important;
-            }
-            h1{
-                font-size: 4em !important;
-            }
-            p{
-                font-size: 1.25em !important;
-            }
-        }
-        body{
-            height: 100vh;
-            background-image: url("/src/img/Bigger.svg");
-            background-repeat: no-repeat;
-            background-size: calc(100% - 5vw);
-            background-position: 2.5vw bottom;
-            /* box-sizing: border-box; */
-        }
-        h1{
-            font-size: 6em;
-            margin: 0px;
-        }
-        p{
-            font-size: 1.5em;
-        }
-        #very-big{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-        }
-        p{
-            text-align: center;
-        }
-        #headerh1{
-            font-size: 2em !important;
-        }
-
-        main{
-            height: calc(100% - calc(1em + 10px + 2px + 10px + 10px));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-    </style>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <!-- <link rel="preload" as="font" href="/Lexend-Regular.ttf"> -->
 </head>
 <body>
     <header>
-        <h1 id="headerh1"><a href="/" >SHELFIE</a></h1>
-        <img class="headerimg" src="/src/img/MenuClosed.svg" alt="" onclick="
-            if(this.src.endsWith('/src/img/MenuClosed.svg')){ 
-                this.src = '/src/img/MenuOpened.svg'; 
-                document.querySelector('#menu').style.animation = 'menuShow 0.5s normal forwards';
-                document.querySelector('.BG').style.animation = 'BGShow 0.5s normal forwards';
-            }
-            else{
-                this.src = '/src/img/MenuClosed.svg'; 
-                document.querySelector('#menu').style.animation = 'menuHide 0.5s normal forwards';
-                document.querySelector('.BG').style.animation = 'BGHide 0.5s normal forwards';
-        }">
-        
-        <div class="BG" onclick="document.querySelector('.headerimg').src = '/src/img/MenuClosed.svg'; document.querySelector('#menu').style.animation = 'menuHide 0.5s normal forwards'; document.querySelector('.BG').style.animation = 'BGHide 0.5s normal forwards';">
-            <div id="menu" onclick="event.cancelBubble=true">
-                <!-- <div class="header">MENU</div> -->
-                <div class="account"><a href="/account/" class="buttonlink">ACCOUNT</a></div>
-                <div class="notifications">NOTIFICATIONS COMING SOON</div>
-                <div class="portal"><a href="/portal/" class="buttonlink">PORTAL</a></div>
-                <div class="feedback"><a href="/feedback/" class="buttonlink">FEEDBACK</a></div>
-                <div class="github"><a href="https://github.com/kallasz22/shelfie" target="_blank" class="buttonlink">GITHUB</a></div>
+        <div id="header-title-grid">
+             <img src="/img/MenuClosed.svg" alt="" id="menu-img" onclick="menu()">
+            <h2>SHELFIE</h2>
+        </div>
+       
+        <div id="menu-bg" onclick="menu()">
+            <div id="menu" onclick="event.cancelBubble=true" state="closed">
+                <div id="upper-group">
+                    <div id="z-bg"></div>
+                    <button onclick="loadHTML('homepage'); menu()" state="" id="homepage-btn"><img src="/img/House.svg" alt="" class="menu-img">HOMEPAGE</button>
+                    <button onclick="loadHTML('account'); menu()" state="" id="account-btn"><img src="/img/Account.svg" alt="" class="menu-img">ACCOUNT</button>
+                    <button onclick="loadHTML('library'); menu()" state="" id="library-btn"><img src="/img/Library.svg" alt="" class="menu-img">LIBRARY</button>
+                </div>
+                <button onclick="showMore()" id="more" state="closed">MORE<img src="/img/ArrowRight.svg" alt="" class="menu-img" id="more-arrow">
+                </button>
+                <div id="downer-group">
+                    <button onclick="loadHTML('feedback'); menu()" state="" id="feedback-btn"><img src="/img/Feedback.svg" alt="" class="menu-img">FEEDBACK</button>
+                    <button onclick="loadHTML('features'); menu()" state="" id="features-btn"><img src="/img/Features.svg" alt="" class="menu-img">FEATURES</button>
+                    <!-- <button>PRIVACY POLICY</button> -->
+                    <!-- <button>TERMS OF SERVICE</button> -->
+                    <button onclick="window.open('https://github.com/kallasz22/shelfie')"><img src="/img/github.svg" alt="" class="menu-img"> GITHUB</button>
+                    <p id="tested-browsers" class="header-down-p">Tested browsers:<br> Mozilla Firefox, Vivaldi</p>
+                    <!-- <p id="made" class="header-down-p">Made with 💚 in Hungary.</p> -->
+                </div>
             </div>
         </div>
-    </header>
-    <main>
-        <h1>SHELFIE</h1>
-        <p>SHELFIE helps you organize your <em>books</em>. IT'S ALPHA!</p>
         
-        <a class="buttonlink" href="/features/">LEARN HOW</a>
-    </main>
+    </header>
+    
+    <div id="render"></div>
+    <script defer id="rScript"></script>
 </body>
+
+<script>
+    let domain = {};
+    fetch('/domain.json')
+    .then(function (res) {
+        return res.json();
+    })
+    .then(function (res) {
+        domain = res;
+    });
+
+    const url = {
+        changeUrl: function (toWhat) {
+            window.history.pushState({}, "", `${toWhat}`);
+            console.log('new history pushed');
+        },
+        replaceUrl: function (toWhat) {
+            window.history.replaceState({}, "", `${toWhat}`);
+            console.log('current history replaced');
+        },
+        url: window.location,
+        searchParams: function () {
+            return new URLSearchParams(window.location.search);
+        },
+        page: function () {
+            return window.location.search.split('&')[0].slice(1);
+        },
+        popstate: false,
+        latestPage: ""
+    };
+    url.latestPage = url.page();
+
+    const cookies = {
+        set: function (cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires="+d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        },
+        get: function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    }
+
+    const dom = {
+        render: document.querySelector('#render'),
+        menu: document.querySelector('#menu'),
+        menu_bg: document.querySelector('#menu-bg'),
+        menu_img: document.querySelector('#menu-img'),
+        downerGrp: document.querySelector('#downer-group'),
+        moreBtn: document.querySelector('#more'),
+        loadingSVG: '<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/></svg>',
+        arrowSVG: '<svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/><path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/></svg>',
+
+    }
+
+    function loadHTML(page) {
+        dom.render.innerHTML = '<main>Loading...</main>';
+        fetch(`/comp/${page}.html`)
+        .then(function (res) {
+            return res.text();
+        })
+        .then(function (text) {
+            dom.render.innerHTML = text;
+            switch (page) {
+                case 'account':
+                    document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
+                    initView();
+                    break;
+                default:
+                    break;
+            }
+        });
+        if (!url.popstate) {
+            if (url.searchParams().get('v') && page == url.page()) {
+                url.changeUrl(`/?${page}&v=${url.searchParams().get('v')}`);
+            } else if (url.page() == '') {
+                url.replaceUrl('?homepage');
+            } 
+            else {
+                url.changeUrl(`/?${page}`);
+            }
+        }
+        if (page == "homepage") {
+            document.title = 'SHELFIE - Book organizer.';
+        } else {
+            const title = page[0].toUpperCase() + page.slice(1);
+            document.title = `${title} - SHELFIE`;
+        }
+
+        const opt = ["homepage", "account", "library", "feedback", "features"];
+        for (let i = 0; i < opt.length; i++) {
+            if (opt[i] == page) {
+                document.querySelector(`#${opt[i]}-btn`).attributes.state.nodeValue = "active";
+            } else {
+                document.querySelector(`#${opt[i]}-btn`).attributes.state.nodeValue = "";
+            }
+        }
+    }
+
+    function menu() {
+        if (dom.menu.attributes.state.nodeValue == 'closed') {
+            dom.render.style.zIndex = "-1";
+            dom.menu.attributes.state.nodeValue = 'opened';
+            dom.menu_img.src = '/img/MenuOpened.svg';
+            dom.menu_bg.style.display = 'block';
+            dom.menu_bg.style.animation = 'menubgIN 0.25s forwards';
+            dom.menu.style.animation = 'menuIN 0.25s forwards';
+            dom.downerGrp.style.animation = 'moreINs 0.25s forwards';
+        } else {
+            dom.menu.attributes.state.nodeValue = 'closed';
+            dom.menu_img.src = '/img/MenuClosed.svg';
+            dom.menu_bg.style.animation = 'menubgOUT 0.25s forwards';
+            dom.menu.style.animation = 'menuOUT 0.25s forwards';
+            if (dom.moreBtn.attributes.state.nodeValue == 'opened') {
+                dom.moreBtn.attributes.state.nodeValue = 'closed';
+                dom.downerGrp.style.animation = 'moreOUTs 0.25s forwards';
+            }
+            else {
+                dom.downerGrp.style.animation = 'moreOUTs2 0.25s forwards';
+            }
+            setTimeout(function(){
+                dom.menu_bg.style.display = 'none';
+                dom.render.style.zIndex = "0";
+            }, 250);
+        }
+    }
+
+    function showMore() {
+        if (dom.moreBtn.attributes.state.nodeValue == 'closed') {
+            dom.moreBtn.attributes.state.nodeValue = 'opened';
+            dom.downerGrp.style.animation = 'moreIN 0.25s forwards';
+        } else {
+            dom.moreBtn.attributes.state.nodeValue = 'closed';
+            dom.downerGrp.style.animation = 'moreOUT 0.25s forwards';
+        }
+    }
+
+    if (window.location.search.split('&').length == 1) {
+        if (window.location.search.slice(1) == "") {
+            loadHTML('homepage');
+        } else {
+            loadHTML(window.location.search.slice(1));
+        }
+    } else {
+        if (window.location.search.split('&')[0].slice(1) == "") {
+            loadHTML('homepage');
+        } else {
+            loadHTML(window.location.search.split('&')[0].slice(1));
+        }
+    }
+
+    window.addEventListener('popstate', function () {
+        url.popstate = true;
+        console.log('popstate triggered');
+        if (url.latestPage != url.page()) {
+            loadHTML(`${url.page()}`);
+            url.latestPage = url.page();
+        } else {
+            switch (url.page()) {
+                case 'account':
+                    initView();
+                    break;
+                default:
+                    break;
+            }
+        }
+        url.popstate = false;
+        
+    });
+</script>
+
+<style>
+    @media (prefers-color-scheme: dark) {
+        /*nothing yet*/
+    }
+    :root {
+        --menu-width: 250px;
+    }
+    @font-face {
+        font-family: 'Lexend';
+        src: url('/Lexend-Regular.ttf');
+        font-display: swap;
+    }
+    html * {/*applying font to all html element*/
+        font-family: 'Lexend', sans-serif;
+    }
+    html * ::selection {
+        background-color: #207a8b;
+        color: white;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+        margin: 0px;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    #header-title-grid {
+        height: 3em;
+        background-color: #207a8b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0px 20px;
+        position: sticky;
+        top: 0px;
+        z-index: 0;
+    }
+    #header-title-grid h2 {
+        margin: 0px;
+        color: white;
+    }
+    #header-title-grid ::selection {
+        background-color: white;
+        color: #207a8b;
+    }
+    #header-title-grid>img {
+        height: 1.5em;
+        width: 1.5em;
+        filter: invert();
+    }
+    #header-title-grid>img:hover {
+        cursor: pointer;
+    }
+    #render {
+        height: calc(100% - 3em);
+        position: fixed;
+        top: 3em;
+        left: 0px;
+        width: 100%;
+        /* z-index: -1; */
+    }
+    #menu-bg {
+        background-color: transparent;
+        height: calc(100% - 3em);
+        width: 100%;
+        position: fixed;
+        top: 3em;
+        left: 0px;
+        display: none;
+        z-index: 0;
+    }
+    #menu {
+        height: 100%;
+        background-color: white;
+        position: absolute;
+        top: 0px;
+        max-width: var(--menu-width);
+        left: calc(var(--menu-width) * -1);
+        padding: 10px 0px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        width: 100%;
+        overflow-y: auto;
+    }
+    #menu button {
+        width: 100%;
+        border: unset;
+        background-color: unset;
+        border-radius: unset;
+        padding: 10px 0px 10px 20px;
+        text-align: left;
+        font-size: 12pt;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: 0.1s all;
+    }
+    #menu button[state="active"] {
+        border-left: #207a8b solid 5px;
+        padding-left: 15px;
+        background-color: #20798b27;
+    }
+    #menu button[state="active"]:hover {
+        background-color: #20798b27;
+    }
+    #menu button:hover {
+        background-color: rgba(0, 0, 0, 0.145);
+        cursor: pointer;
+    }
+    .menu-img {
+        height: 15pt;
+        width: 15pt;
+    }
+    #more {
+        display: none !important;
+    }
+    #z-bg {
+        display: none;
+    }
+    .header-down-p {
+        font-size: 10pt;
+        color: grey;
+        text-align: center;
+    }
+    @keyframes menuIN {
+        0% {
+            left: calc(var(--menu-width) * -1);
+        }
+        100% {
+            left: 0px;
+        }
+    }
+    @keyframes menuOUT {
+        0% {
+            left: 0px;
+        }
+        100% {
+            left: calc(var(--menu-width) * -1);
+        }
+    }
+    @keyframes menubgIN {
+        0% {
+            background-color: transparent;
+        }
+        100% {
+            background-color: rgba(0, 0, 0, 0.245);
+        }
+    }
+    @keyframes menubgOUT {
+        0% {
+            background-color: rgba(0, 0, 0, 0.245);
+        }
+        100% {
+            background-color: transparent;
+        }
+    }
+    @media screen and (height < calc(3em + 425px)) {
+        #more {
+            display: flex !important;
+            justify-content: space-between;
+            padding: 10px 20px 10px 20px !important;
+        }
+        #more[state="opened"] #more-arrow {
+            transform: rotate(180deg);
+        }
+        #downer-group {
+            position: fixed;
+            top: 3em;
+            left: 0px;
+            background-color: white;
+            max-width: var(--menu-width);
+            width: 100%;
+            padding: 10px 0px 10px 0px;
+            overflow-y: scroll;
+            /* display: none; */
+            height: calc(100% - 3em);
+            box-sizing: border-box;
+            z-index: -2;
+        }
+        #menu {
+            padding: 10px 0px 10px 0px;
+            /* z-index: 0; */
+        }
+        #z-bg {
+            height: 100%;
+            z-index: -1;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: var(--menu-width);
+            display: block;
+            background-color: white;
+        }
+        #menu-bg{
+            position: absolute;
+            /* z-index: -3; */
+            display: none;
+        }
+    }
+    @keyframes moreIN {
+        0% {
+            left: 0px;
+        }
+        100% {
+            left: var(--menu-width);
+        }
+    }
+    @keyframes moreINs {
+        0% {
+            left: calc(var(--menu-width) * -1);
+        }
+        100% {
+            left: 0px;
+        }
+    }
+    @keyframes moreOUT {
+        0% {
+            left: var(--menu-width);
+        }
+        100% {
+            left: 0px;
+        }
+    }
+    @keyframes moreOUTs {
+        0% {
+            left: var(--menu-width);
+        }
+        100% {
+            left: calc(var(--menu-width) * -1);
+        }
+    }
+    @keyframes moreOUTs2 {
+        0% {
+            left: 0px;
+        }
+        100% {
+            left: calc(var(--menu-width) * -1);
+        }
+    }
+    @media screen and (width < 500px) and (height < 475px){
+        #menu, #downer-group, #z-bg {
+            width: var(--menu-width);
+        }
+        :root {
+            --menu-width: 150px;
+        }
+    }
+    @keyframes loading {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 </html>
