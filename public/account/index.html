@@ -60,7 +60,7 @@
             animation: infinite loading 1.5s;
         }
 
-        form {
+        #signin, #signup {
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -506,23 +506,24 @@
 
     <main>
         <div id="forms">
-            <form action="signin" method="post" id="sign-in">
+            <div id="signin">
                 <h1>SIGN IN</h1>
-                <label for="uresname_si">Username: </label><input type="text" name="username_si" id="">
-                <label for="password_si">Password: </label><input type="password" name="password_si" id="">
+                <label for="uresname_si">Username: </label><input type="text" name="username_si" id="username_si">
+                <label for="password_si">Password: </label><input type="password" name="password_si" id="password_si">
                 <!-- <div></div>
                 <div></div> -->
-                <button onclick="this.classList = 'loading'">SIGN IN</button>
-            </form>
+                <button onclick="this.classList = 'loading'" id="signinbtn">SIGN IN</button>
+            </div>
+            
         
-            <form action="signup" method="post" id="sign-up">
+            <div id="signup">
                 <h1>SIGN UP</h1>
                 <label for="uresname_su">Username: </label><input type="text" name="username_su" id="">
                 <label for="password_su">Password: </label><input type="password" name="password_su" id="">
                 <!-- <div></div>
                 <div></div> -->
-                <button onclick="this.classList = 'loading'">SIGN UP</button>
-            </form>
+                <button onclick="this.classList = 'loading'" id="signupbtn">SIGN UP</button>
+            </div>
         </div>
     
         <div id="hidden">
@@ -626,116 +627,140 @@
         </div>
     
         <script>
-            fetch('load')
-            .then(function(response){
-                // console.log(response);
-                if (!response.redirected) {
-                    return response.json();
-                } else {
-                    document.querySelector('#forms').style.display = "grid";
-                    return {valid: false};
-                }
-            })
-            .then(function(response){
-                if (!response.valid) {//it wont happen :D
-                    document.querySelector('#forms').style.display = "grid";
-                    return;
-                }
-                // while (!loaded) {}//waiting room
-                document.querySelector('#sign-in').style.display = "none";
-                document.querySelector('#sign-up').style.display = "none";
-    
-                document.querySelector('#forms').style.padding = "0px";
-    
-                document.querySelector('#hidden').style.display = "grid";
-                document.querySelector('#user').innerText = response.user.username;
-
-                for (let i = 0; i < response.user.tokens.length; i++) {
-                    const token = response.user.tokens[i];
-
-                    let session = document.createElement('details');
-                    
-                    session.innerHTML = 
-                    `<div class="open">
-                    <p><strong>Date: </strong>${new Date(token.date.toString())}</p>
-                    <p><strong>User-Agent: </strong>${token.userAgent}</p>
-                    </div>
-                    `;
-                    let summary = document.createElement('summary');
-                    let sum_flex = document.createElement('span');
-                    sum_flex.innerText = token.userAgent;
-                    let button = document.createElement('button');
-                    button.classList = 'delete-session-button';
-                    button.id = token._id;
-                    button.innerText = 'DELETE SESSION';
-
-                    if (document.cookie.endsWith(token.token)) {
-                        summary.id = 'active-session';
-                    }
-
-                    sum_flex.append(button);
-                    summary.append(sum_flex);
-                    session.append(summary);
-
-                    document.querySelector('#active-sessions').append(session);
-
-                    
-                    button.addEventListener('click', function(){
-                        this.classList = 'loading';
-                        fetch('deletetoken', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: `objectID=${this.id}`
+            fetch('/domain.json')
+                .then(function (data) {
+                    return data.json();
+                })
+                .then(function (domain) {
+                    document.querySelector('#signinbtn').addEventListener('click', function () {
+                        fetch(`${domain.serverdomain}/account/signin`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `username_si=${document.querySelector('#username_si').value}&password_si=${document.querySelector('#password_si').value}`
                         })
-                        .then(function(mini_response){
-                            if (mini_response.redirected) {
-                                window.location.replace(mini_response.url);
-                            }
-                            else {
-                                document.querySelector('body').innerHTML = 'ERROR';
+                        .then(function (res) {
+                            console.log(res);
+                            if (res.redirected) {
+                                // window.location.replace(res.url);
+                            } else {
+                                
                             }
                         });
                     });
-                }
-            })
-            .then(function(){
-                document.querySelector('#loading').style.animation = 'loadingBGHide 1s forwards';
-                document.querySelector('#loading h1').style.animation = 'loadingH1Hide 1s forwards';
-                document.querySelector('#loading svg').style.animation = 'loadingSVGHide 1s forwards';
-                setTimeout(() => {
-                    document.querySelector('#loading').style.display = 'none';
-                }, 1000);
-            });
 
-            document.querySelector('#delete-account-button').addEventListener('click', function(){
+                    fetch(`${domain.serverdomain}/account/load`, {"credentials": "include"})
+                        .then(function (response) {
+                            if (!response.redirected) {
+                                return response.json();
+                            } else {
+                                document.querySelector('#forms').style.display = "grid";
+                                return { valid: false };
+                            }
+                        })
+                        .then(function (response) {
+                            if (!response.valid) {//it wont happen :D
+                                document.querySelector('#forms').style.display = "grid";
+                                return;
+                            }
+                            // while (!loaded) {}//waiting room
+                            document.querySelector('#sign-in').style.display = "none";
+                            document.querySelector('#sign-up').style.display = "none";
+
+                            document.querySelector('#forms').style.padding = "0px";
+
+                            document.querySelector('#hidden').style.display = "grid";
+                            document.querySelector('#user').innerText = response.user.username;
+
+                            for (let i = 0; i < response.user.tokens.length; i++) {
+                                const token = response.user.tokens[i];
+
+                                let session = document.createElement('details');
+
+                                session.innerHTML =
+                                    `<div class="open">
+                            <p><strong>Date: </strong>${new Date(token.date.toString())}</p>
+                            <p><strong>User-Agent: </strong>${token.userAgent}</p>
+                            </div>
+                            `;
+                                let summary = document.createElement('summary');
+                                let sum_flex = document.createElement('span');
+                                sum_flex.innerText = token.userAgent;
+                                let button = document.createElement('button');
+                                button.classList = 'delete-session-button';
+                                button.id = token._id;
+                                button.innerText = 'DELETE SESSION';
+
+                                if (document.cookie.endsWith(token.token)) {
+                                    summary.id = 'active-session';
+                                }
+
+                                sum_flex.append(button);
+                                summary.append(sum_flex);
+                                session.append(summary);
+
+                                document.querySelector('#active-sessions').append(session);
+
+
+                                button.addEventListener('click', function () {
+                                    this.classList = 'loading';
+                                    fetch('deletetoken', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: `objectID=${this.id}`
+                                    })
+                                        .then(function (mini_response) {
+                                            if (mini_response.redirected) {
+                                                window.location.replace(mini_response.url);
+                                            }
+                                            else {
+                                                document.querySelector('body').innerHTML = 'ERROR';
+                                            }
+                                        });
+                                });
+                            }
+                        })
+                        .then(function () {
+                            document.querySelector('#loading').style.animation = 'loadingBGHide 1s forwards';
+                            document.querySelector('#loading h1').style.animation = 'loadingH1Hide 1s forwards';
+                            document.querySelector('#loading svg').style.animation = 'loadingSVGHide 1s forwards';
+                            setTimeout(() => {
+                                document.querySelector('#loading').style.display = 'none';
+                            }, 1000);
+                        });
+                });
+
+
+            document.querySelector('#delete-account-button').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'flex';
                 document.querySelector('#delete-account-challenge').style.display = 'flex';
             });
-            document.querySelector('#change-password-button').addEventListener('click', function(){
+            document.querySelector('#change-password-button').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'flex';
                 document.querySelector('#change-password-challenge').style.display = 'flex';
             });
-            document.querySelector('#change-username-button').addEventListener('click', function(){
+            document.querySelector('#change-username-button').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'flex';
                 document.querySelector('#change-username-challenge').style.display = 'flex';
             });
 
-            document.querySelector('#da-cancel').addEventListener('click', function(){
+            document.querySelector('#da-cancel').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'none';
                 document.querySelector('#delete-account-challenge').style.display = 'none';
             });
-            document.querySelector('#cp_cancel').addEventListener('click', function(){
+            document.querySelector('#cp_cancel').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'none';
                 document.querySelector('#change-password-challenge').style.display = 'none';
             });
-            document.querySelector('#cu_cancel').addEventListener('click', function(){
+            document.querySelector('#cu_cancel').addEventListener('click', function () {
                 document.querySelector('#background').style.display = 'none';
                 document.querySelector('#change-username-challenge').style.display = 'none';
             });
 
-            document.querySelector('#sign-out-button').addEventListener('click', function(){
+            document.querySelector('#sign-out-button').addEventListener('click', function () {
                 this.classList = 'loading';
                 fetch('deletetoken', {
                     method: 'POST',
@@ -744,17 +769,15 @@
                     },
                     body: `objectID=${document.querySelector('#active-session button').id}`
                 })
-                .then(function(response){
-                    if (response.redirected) {
-                       window.location.replace(response.url);
-                    }
-                    else {
-                        document.querySelector('body').innerHTML = 'ERROR';
-                    }
-                });
+                    .then(function (response) {
+                        if (response.redirected) {
+                            window.location.replace(response.url);
+                        }
+                        else {
+                            document.querySelector('body').innerHTML = 'ERROR';
+                        }
+                    });
             });
-
-            
         </script>
     </main>
 

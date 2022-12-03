@@ -1,0 +1,5 @@
+van egy main html
+van headerje
+csak a bodyt változtatja a szerverrel való kommunikáció során
+
+html fájlok amiknek csak body vagy main tagje van teszemazt és abban van a kontent

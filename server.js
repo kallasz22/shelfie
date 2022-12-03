@@ -9,6 +9,7 @@ const app = express();
 const mongoose = require('mongoose');
 mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function () {
     app.listen(process.env.PORT);
+    console.log('Magic happens on port ' + process.env.PORT);
 });
 
 //bodyparser
@@ -24,9 +25,12 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const User = require('./models/user');
 
-app.use(express.static(__dirname + '/public'));
+//domain
+const domain = require('./public/domain.json');
 
-app.post('/account/signin', async function(req, res){
+// app.use(express.static(__dirname + '/public'));
+
+app.post('/account/signin', cors, async function(req, res){
     const user = await User.findOne({
         username: req.body.username_si
     });
@@ -34,55 +38,42 @@ app.post('/account/signin', async function(req, res){
     if (user) {
         const pwC = await bcrypt.compare(req.body.password_si, user.password);
         if (!pwC) {
-            res.status(404).send('WRONG PASSWORD');
+            res.status(405).type('application/json').send({message: 'Wrong password!'});
             return;
         }
 
-        const token = crypto.randomUUID();
-        // console.log(req.headers.cookie);
-        const tokenObj = {
-            date: Date(),
-            userAgent: req.headers['user-agent'],
-            token: token
-        }
-        user.tokens.push(tokenObj);
+        // await user.save();
 
-        await user.save();
-
-        res.cookie("session", token).redirect('/portal');
+        res.status(200).type('application/json').send({message: '', token: user.token});
     }
     else{
-        res.status(404).send('USER NOT FOUND');
+        res.status(404).type('application/json').send({message: 'User not found!'});
         return;
     }
 });
 
-app.post('/account/signup', async function(req, res){
-    if (!req.body.username_su.replace(/\s/g, '').length) {
-        res.send('INVALID USERNAME!');
-        return;
-    }
-    if (req.body.username_su && req.body.password_su) {
-        const user = new User();
-        const existAlready = await User.findOne({ username: req.body.username_su });
-        if (!existAlready) {
-            user.username = req.body.username_su;
+app.post('/account/signup', cors, async function(req, res){
+    const user = new User();
+    const existAlready = await User.findOne({ username: req.body.username_su });
+    if (!existAlready) {
+        user.username = req.body.username_su;
 
-            const hash = await bcrypt.hash(req.body.password_su, 10);
-            user.password = hash;
+        const hash = await bcrypt.hash(req.body.password_su, 10);
+        user.password = hash;
 
-            user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
-            await user.save();
-            res.redirect('/account');
-        } else {
-            res.status(404).send('USERNAME IS ALREADY USED');
-        }
+        const token = crypto.randomUUID();
+        user.token = token;
+
+        user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
+        await user.save();
+
+        res.status(200).type('application/json').send({message: '', changeView: 'sign-in'});
     } else {
-        res.status(404).send('USERNAME AND/OR PASSWORD IS EMPTY');
+        res.status(405).type('application/json').send({message: 'Username already used!'});
     }
 });
 
-app.get('/portal/load', accountOnly, async function(req, res){
+app.get('/portal/load', cors, accountOnly, async function(req, res){
     const user = await req.user;
     res.type('application/json').send(JSON.stringify(user));
 });
@@ -103,7 +94,7 @@ app.post('/portal/newhouse', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/portal/newroom', accountOnly, async function(req, res){
+app.post('/portal/newroom', cors, accountOnly, async function(req, res){
     if (!req.body.nr_name) {
         res.send('A NAME IS ESSENTIAL');
         return;
@@ -130,7 +121,7 @@ app.post('/portal/newroom', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/portal/newshelf', accountOnly, async function(req, res){
+app.post('/portal/newshelf', cors, accountOnly, async function(req, res){
     if (!req.body.ns_name) {
         res.send('A NAME IS ESSENTIAL');
         return;
@@ -165,7 +156,7 @@ app.post('/portal/newshelf', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/portal/newbook', accountOnly, async function(req, res){
+app.post('/portal/newbook', cors, accountOnly, async function(req, res){
     if (!req.body.nb_title) {
         res.send('A TITLE IS ESSENTIAL');
         return;
@@ -228,7 +219,7 @@ app.post('/portal/newbook', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.post('/portal/deletebook', accountOnly, async function(req, res){
+app.post('/portal/deletebook', cors, accountOnly, async function(req, res){
     // console.log(req.body.objectID);
     const user = req.user;
 
@@ -248,7 +239,7 @@ app.post('/portal/deletebook', accountOnly, async function(req, res){
     // res.redirect('/');
 });
 
-app.post('/portal/editbook', accountOnly, async function(req, res){
+app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     const user = req.user;
 
     // console.log('req.body.objectID: ', req.body.eb_objectID);
@@ -289,16 +280,16 @@ app.post('/portal/editbook', accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 
-app.get('/account/load', accountOnly, function(req, res){
+app.get('/account/load', cors, accountOnly, function(req, res){
     let user = req.user;
     let obj = {
-        valid: true,//im not sure its required
+        valid: true,//im not sure its neccessary
         user: user
     }
     res.type('application/json').send(JSON.stringify(obj));
 });
 
-app.post('/account/deleteaccount', accountOnly, async function(req, res){
+app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
     let user = req.user;
     if (user.username != req.body.da_username) {
         res.send('WRONG USERNAME');
@@ -314,7 +305,7 @@ app.post('/account/deleteaccount', accountOnly, async function(req, res){
     res.status(200).redirect('/');
 });
 
-app.post('/account/changepassword', accountOnly, async function(req, res){
+app.post('/account/changepassword', cors, accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cp_currentPassword, user.password);
 
@@ -334,7 +325,7 @@ app.post('/account/changepassword', accountOnly, async function(req, res){
     res.redirect('/account');
 });
 
-app.post('/account/changeusername', accountOnly, async function(req, res){
+app.post('/account/changeusername', cors, accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cu_password, user.password);
 
@@ -359,7 +350,7 @@ app.post('/account/changeusername', accountOnly, async function(req, res){
     res.redirect('/account');
 });
 
-app.post('/account/deletetoken', accountOnly, async function(req, res){
+app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
     let user = req.user;
 
     let i = 0;
@@ -378,41 +369,10 @@ app.post('/account/deletetoken', accountOnly, async function(req, res){
     res.status(200).redirect('/account');
 });
 
-// app.post('/clear-tokens', async function(req, res){
-//     if (process.env.tokenAuth) {
-//         if (process.env.tokenAuth == req.headers.tokenauth) {
-//             let collection = await User.find();
-//             // console.log(collection);
-//             for (let i = 0; i < collection.length; i++) {
-//                 let tokens = collection[i].tokens;
-//                 for (let j = 0; j < tokens.length; j++) {
-//                     const element = tokens[j];
-
-//                     let now = Date.now();
-//                     let then = element.date.getTime();
-
-//                     if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
-//                         await User.findByIdAndDelete(element._id);
-//                     }
-//                 }
-//             }
-//             res.status(200).send();
-//         }
-//         else {
-//             // console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
-//             console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
-//             res.status(500).send();
-//         }
-//     }
-//     else {
-//         res.send("HMMM");
-//     }
-// });
-
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {
-        res.status(403).redirect('/account');
+        res.status(403).redirect(`${domain.origindomain}/account`);
         return;
     }
 
@@ -440,10 +400,21 @@ async function accountOnly(req, res, next) {
         req.user = user;
         next();
     } else {
-        res.status(403).redirect('/account');
+        res.status(403).redirect(`${domain.origindomain}/account`);
+        return;
     }
 }
 
-app.get('*', function(req, res){
-    res.status(404).redirect('/404.html');
+async function cors(req, res, next) {
+    res.set(
+        {
+            'Access-Control-Allow-Origin': `${domain.origin}`,
+            'Access-Control-Allow-Credentials': true
+        }
+    );
+    next();
+}
+
+app.get('*', cors, function(req, res){
+    res.status(404).type('application/json').send({message: `Action ${req.url} not found.`});
 });

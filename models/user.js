@@ -9,23 +9,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tokens: {
-        // type: [String]
-        type: [
-            {
-                date: {
-                    type: Date,
-                    required: true
-                },
-                userAgent: {
-                    type: String
-                },
-                token: {
-                    type: String,
-                    required: true
-                }
-            }
-        ]
+    token: {
+        type: String,
+        required: true
     },
     books: {
         type: [
