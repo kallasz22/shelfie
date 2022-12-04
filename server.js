@@ -44,7 +44,7 @@ app.post('/account/signin', cors, async function(req, res){
 
         // await user.save();
 
-        res.status(200).type('application/json').send({message: '', token: user.token});
+        res.status(200).type('application/json').send({message: '', token: user.token, user: {username: user.username, sessions: user.sessions, sp: user.session_privacy}});
     }
     else{
         res.status(404).type('application/json').send({message: 'User not found!'});
@@ -60,8 +60,12 @@ app.post('/account/signup', cors, async function(req, res){
 
         const hash = await bcrypt.hash(req.body.password_su, 10);
         user.password = hash;
-
-        const token = crypto.randomUUID();
+        let token = '';
+        let tokenExist;
+        do {/*hopefully works*/
+            token = crypto.randomUUID();
+            tokenExist = await User.findOne({token: token});
+        } while (tokenExist);
         user.token = token;
 
         user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
@@ -72,12 +76,13 @@ app.post('/account/signup', cors, async function(req, res){
         res.status(405).type('application/json').send({message: 'Username already used!'});
     }
 });
-
+/*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
     const user = await req.user;
     res.type('application/json').send(JSON.stringify(user));
 });
-
+*/
+/*
 app.post('/portal/newhouse', accountOnly, async function(req, res){
     if (!req.body.nh_name) {
         res.send('A NAME IS ESSENTIAL');
@@ -93,7 +98,8 @@ app.post('/portal/newhouse', accountOnly, async function(req, res){
     await user.save();
     res.redirect('/portal');
 });
-
+*/
+/*
 app.post('/portal/newroom', cors, accountOnly, async function(req, res){
     if (!req.body.nr_name) {
         res.send('A NAME IS ESSENTIAL');
@@ -120,7 +126,8 @@ app.post('/portal/newroom', cors, accountOnly, async function(req, res){
     await user.save();
     res.redirect('/portal');
 });
-
+*/
+/*
 app.post('/portal/newshelf', cors, accountOnly, async function(req, res){
     if (!req.body.ns_name) {
         res.send('A NAME IS ESSENTIAL');
@@ -155,7 +162,8 @@ app.post('/portal/newshelf', cors, accountOnly, async function(req, res){
     await user.save();
     res.redirect('/portal');
 });
-
+*/
+/*
 app.post('/portal/newbook', cors, accountOnly, async function(req, res){
     if (!req.body.nb_title) {
         res.send('A TITLE IS ESSENTIAL');
@@ -218,7 +226,8 @@ app.post('/portal/newbook', cors, accountOnly, async function(req, res){
     await user.save();
     res.redirect('/portal');
 });
-
+*/
+/*
 app.post('/portal/deletebook', cors, accountOnly, async function(req, res){
     // console.log(req.body.objectID);
     const user = req.user;
@@ -238,7 +247,8 @@ app.post('/portal/deletebook', cors, accountOnly, async function(req, res){
     res.redirect('/portal');
     // res.redirect('/');
 });
-
+*/
+/*
 app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     const user = req.user;
 
@@ -279,7 +289,7 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
 
     res.redirect('/portal');
 });
-
+*/
 app.get('/account/load', cors, accountOnly, function(req, res){
     let user = req.user;
     let obj = {
@@ -288,7 +298,7 @@ app.get('/account/load', cors, accountOnly, function(req, res){
     }
     res.type('application/json').send(JSON.stringify(obj));
 });
-
+/*
 app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
     let user = req.user;
     if (user.username != req.body.da_username) {
@@ -304,7 +314,8 @@ app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
     await User.deleteOne({ username: user.username });
     res.status(200).redirect('/');
 });
-
+*/
+/*
 app.post('/account/changepassword', cors, accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cp_currentPassword, user.password);
@@ -324,7 +335,8 @@ app.post('/account/changepassword', cors, accountOnly, async function(req, res){
     await user.save();
     res.redirect('/account');
 });
-
+*/
+/*
 app.post('/account/changeusername', cors, accountOnly, async function(req, res){
     let user = req.user;
     const pwC = await bcrypt.compare(req.body.cu_password, user.password);
@@ -349,7 +361,8 @@ app.post('/account/changeusername', cors, accountOnly, async function(req, res){
     await user.save();
     res.redirect('/account');
 });
-
+*/
+/*
 app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
     let user = req.user;
 
@@ -368,7 +381,7 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 
     res.status(200).redirect('/account');
 });
-
+*/
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {

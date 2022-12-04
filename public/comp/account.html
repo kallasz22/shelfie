@@ -7,7 +7,34 @@
 
     <div id="sessions" class="content-box">sessions</div>
     <div id="profile" class="content-box">profile</div>
-    <div id="privacy" class="content-box">privacy</div>
+    <div id="privacy" class="content-box">
+        <h2>PRIVACY</h2>
+        <p>The recorded data about you can be managed through this page.</p>
+
+        <h3>SESSION PRIVACY</h3>
+        <p>When signing in, record:</p>
+        <div>
+            <input type="checkbox" name="ip_sp" id="ip_sp">
+            <label for="ip_sp">IP-address</label>
+        </div>
+        <div>
+            <input type="checkbox" name="uag_sp" id="uag_sp">
+            <label for="uag_sp">User-Agent (operating system, browser, etc.)</label>
+        </div>
+        <div>
+            <input type="checkbox" name="time_sp" id="time_sp">
+            <label for="time_sp">Time</label>
+        </div>
+
+        <h3>ACTION PRIVACY</h3>
+        <p>When doing the actions under, record the informations selected above:</p>
+        <div>
+            <!-- <input type="checkbox" name="changing_pw_ap" id="changing_pw_ap">
+            <label for="changing_pw_ap">Changing password</label> -->
+            No options yet! Nothing will be recorded.
+        </div>
+
+    </div>
 
     <div id="sign-in-up">
         <div id="siu-box">
@@ -361,6 +388,13 @@
         left: 0px;
 
         display: none;
+        flex-direction: column;
+        overflow-y: auto;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .content-box h2, h3, p {
+        margin: 5px 0px;
     }
 
     /*temp*/
@@ -457,4 +491,5 @@
     #rem7_si-label, #remember7_si:hover {
         cursor: pointer;
     }
+
 </style>

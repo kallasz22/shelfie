@@ -13,12 +13,30 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sessions: {
+        type: [
+            {
+                IP: {
+                    type: String
+                },
+                UAG: {
+                    type: String
+                },
+                time: {
+                    type: Date
+                },
+                UUID: {
+                    type: String,
+                    required: true
+                }
+            }
+        ]
+    },
     books: {
         type: [
             {
                 writer: {
                     type: String,
-                    // required: true
                 },
                 title: {
                     type: String,
@@ -26,23 +44,18 @@ const userSchema = new mongoose.Schema({
                 },
                 description: {
                     type: String,
-                    // required: true
                 },
                 type: {
                     type: String,
-                    // required: true
                 },
                 publisher: {
                     type: String,
-                    // required: true
                 },
                 yearOfPublication: {
                     type: Number,
-                    // required: true
                 },
                 notes: {
                     type: String,
-                    // required: true
                 },
                 house: {
                     type: String,
@@ -106,19 +119,19 @@ const userSchema = new mongoose.Schema({
             }
         ]
     },
-    settings: {
-        type: [
-            {
-                key: {
-                    type: String,
-                    required: true
-                },
-                value: {
-                    type: String,
-                    required: true
-                }
-            }
-        ]
+    session_privacy: {
+        IP: {
+            type: Boolean,
+            required: true
+        },
+        UAG: {
+            type: Boolean,
+            required: true
+        },
+        time: {
+            type: Boolean,
+            required: true
+        }
     }
 });
 
