@@ -1,4 +1,4 @@
 {
-    "server":"http://192.168.0.16:5000",
-    "origin":"http://192.168.0.16:3000"
+    "server":"https://backend.shelfie.tk",
+    "origin":"https://shelfie.tk"
 }
