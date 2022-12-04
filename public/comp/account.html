@@ -1,12 +1,12 @@
 <main>
     <div id="title-grid" class="title-grid">
-        <button onclick="changeView('sessions')" id="sessions-btn" state="">SESSIONS</button>
         <button onclick="changeView('profile')" id="profile-btn" state="">PROFILE</button>
+        <button onclick="changeView('sessions')" id="sessions-btn" state="">SESSIONS</button>
         <button onclick="changeView('privacy')" id="privacy-btn" state="">PRIVACY</button>
     </div>
 
-    <div id="sessions" class="content-box">sessions</div>
     <div id="profile" class="content-box">profile</div>
+    <div id="sessions" class="content-box">sessions</div>
     <div id="privacy" class="content-box">
         <h2>PRIVACY</h2>
         <p>The recorded data about you can be managed through this page.</p>
@@ -139,7 +139,7 @@
             if (searchParams.has('v') && searchParams.get('v') != 'sign-up' && searchParams.get('v') != 'sign-in') {
                 changeView(searchParams.get('v'), true);
             } else {
-                changeView('sessions');
+                changeView('profile');
             }
         } else {
             if (searchParams.has('v') && searchParams.get('v') == 'sign-up') {
@@ -235,7 +235,7 @@
                     cookies.set('token', res.token, "session");
                 }
 
-                changeView('sessions');
+                changeView('profile');
 
                 document.querySelector('#username_si').value = "";
                 document.querySelector('#password_si').value = "";

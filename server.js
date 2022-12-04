@@ -23,6 +23,7 @@ app.use(cookieParser());
 //auth
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const cryptoJS = require('crypto-js');
 const User = require('./models/user');
 
 //domain
@@ -44,7 +45,7 @@ app.post('/account/signin', cors, async function(req, res){
 
         // await user.save();
 
-        res.status(200).type('application/json').send({message: '', token: user.token, user: {username: user.username, sessions: user.sessions, sp: user.session_privacy}});
+        res.status(200).type('application/json').send({message: '', token: cryptoJS.AES.decrypt(user.token, req.body.password_si).toString(cryptoJS.enc.Utf8), user: {username: user.username, sessions: user.sessions, sp: user.session_privacy, ip: req.ip}});
     }
     else{
         res.status(404).type('application/json').send({message: 'User not found!'});
@@ -66,7 +67,9 @@ app.post('/account/signup', cors, async function(req, res){
             token = crypto.randomUUID();
             tokenExist = await User.findOne({token: token});
         } while (tokenExist);
-        user.token = token;
+        user.token = cryptoJS.AES.encrypt(token, req.body.password_su).toString();
+
+        user.session_privacy = {IP: false, UAG: true, time: true};
 
         user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
         await user.save();
