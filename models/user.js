@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    token: {
+    pkiy: { /*encrypted with password of course*/
         type: String,
         required: true
     },

@@ -50,7 +50,7 @@
                 <input type="password" name="password_si" id="password_si" state="">
                 <div id="rem7">
                     <input type="checkbox" name="remember7_si" id="remember7_si">
-                    <label for="remember7_si" id="rem7_si-label">REMEMBER ME FOR 7 DAYS</label>
+                    <label for="remember7_si" id="rem7_si-label">REMEMBER ME</label>
                 </div>
                 <p id="si-error" class="error"></p>
                 <button type="button" selector="siu-btn" onclick="signIn()" id="si-btn" state="">
@@ -135,12 +135,39 @@
 
     function initView() {
         let searchParams = new URLSearchParams(window.location.search);
-        if (cookies.get('token') != "") {
+        if (localStorage.getItem('jwt')) {
             if (searchParams.has('v') && searchParams.get('v') != 'sign-up' && searchParams.get('v') != 'sign-in') {
                 changeView(searchParams.get('v'), true);
             } else {
                 changeView('profile');
             }
+            fetch(`${domain.server}/account/load`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                },
+                // mode: "no-cors"
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                if (res.redirected) {
+                    let page = url.page();
+                    url.changeUrl(res.redirected);
+                    if (page == url.page()) {
+                        changeView(url.searchParams().get('v'));
+                    } else {
+                        loadHTML(url.page());
+                    }
+                }
+                if (res.user) {
+                    document.querySelector('#ip_sp').checked = res.user.session_privacy.IP;
+                    document.querySelector('#uag_sp').checked = res.user.session_privacy.UAG;
+                    document.querySelector('#time_sp').checked = res.user.session_privacy.time;
+                }
+            });
         } else {
             if (searchParams.has('v') && searchParams.get('v') == 'sign-up') {
                 changeView(searchParams.get('v'), true);
@@ -228,18 +255,24 @@
             document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
             document.querySelector('#si-btn>svg').style.animation = '';
 
-            if (res.token) {
-                if (document.querySelector('#remember7_si').checked) {
-                    cookies.set('token', res.token, 7);
-                } else {
-                    cookies.set('token', res.token, "session");
-                }
+            if (res.jwt) {
+                // if (document.querySelector('#remember7_si').checked) {
+                //     cookies.set('token', res.token, 7);
+                // } else {
+                //     cookies.set('token', res.token, "session");
+                // }
+
+                localStorage.setItem('jwt', res.jwt);
 
                 changeView('profile');
 
                 document.querySelector('#username_si').value = "";
                 document.querySelector('#password_si').value = "";
             }
+
+            document.querySelector('#ip_sp').checked = res.user.session_privacy.IP;
+            document.querySelector('#uag_sp').checked = res.user.session_privacy.UAG;
+            document.querySelector('#time_sp').checked = res.user.session_privacy.time;
         })
         .catch(function () {
             document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';

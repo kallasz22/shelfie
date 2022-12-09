@@ -56,6 +56,20 @@
         domain = res;
     });
 
+    let pIP = {
+        get: async function () {
+            let a = '';
+            await fetch('https://jsonip.com', { mode: 'cors' })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                a = res.ip;
+            });
+            return a;
+        }
+    }
+
     const url = {
         changeUrl: function (toWhat) {
             window.history.pushState({}, "", `${toWhat}`);

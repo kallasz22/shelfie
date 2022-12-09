@@ -24,14 +24,17 @@ app.use(cookieParser());
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const cryptoJS = require('crypto-js');
+const jwt = require('jsonwebtoken');
 const User = require('./models/user');
 
 //domain
 const domain = require('./public/domain.json');
 
-// app.use(express.static(__dirname + '/public'));
+app.use(express.json());
+app.use(cors);
 
-app.post('/account/signin', cors, async function(req, res){
+
+app.post('/account/signin', async function(req, res){
     const user = await User.findOne({
         username: req.body.username_si
     });
@@ -45,7 +48,20 @@ app.post('/account/signin', cors, async function(req, res){
 
         // await user.save();
 
-        res.status(200).type('application/json').send({message: '', token: cryptoJS.AES.decrypt(user.token, req.body.password_si).toString(cryptoJS.enc.Utf8), user: {username: user.username, sessions: user.sessions, sp: user.session_privacy, ip: req.ip}});
+        let userObj = {
+            username: user.username,
+            pkiy: cryptoJS.AES.decrypt(user.pkiy, req.body.password_si).toString(cryptoJS.enc.Utf8)
+        }
+
+        const accessToken = jwt.sign(userObj, process.env.jwt_normal_key);
+
+        userObj = {
+            username: user.username,
+            session_privacy: user.session_privacy,
+            sessions: user.sessions
+        }
+
+        res.status(200).type('application/json').send({message: '', jwt: accessToken, changeView: 'profile', user: userObj});
     }
     else{
         res.status(404).type('application/json').send({message: 'User not found!'});
@@ -53,7 +69,7 @@ app.post('/account/signin', cors, async function(req, res){
     }
 });
 
-app.post('/account/signup', cors, async function(req, res){
+app.post('/account/signup', async function(req, res){
     const user = new User();
     const existAlready = await User.findOne({ username: req.body.username_su });
     if (!existAlready) {
@@ -61,13 +77,8 @@ app.post('/account/signup', cors, async function(req, res){
 
         const hash = await bcrypt.hash(req.body.password_su, 10);
         user.password = hash;
-        let token = '';
-        let tokenExist;
-        do {/*hopefully works*/
-            token = crypto.randomUUID();
-            tokenExist = await User.findOne({token: token});
-        } while (tokenExist);
-        user.token = cryptoJS.AES.encrypt(token, req.body.password_su).toString();
+        pkiy = crypto.randomBytes(64).toString('hex');
+        user.pkiy = cryptoJS.AES.encrypt(pkiy, req.body.password_su).toString();
 
         user.session_privacy = {IP: false, UAG: true, time: true};
 
@@ -293,13 +304,14 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 */
-app.get('/account/load', cors, accountOnly, function(req, res){
-    let user = req.user;
-    let obj = {
-        valid: true,//im not sure its neccessary
-        user: user
+app.get('/account/load', accountOnly, async function(req, res){
+    const user = await User.findOne({username: req.user.username});
+
+    let uObj = {
+        username: user.username,
+        session_privacy: user.session_privacy
     }
-    res.type('application/json').send(JSON.stringify(obj));
+    res.status(200).type('application/json').send({user: uObj});
 });
 /*
 app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
@@ -386,46 +398,35 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 });
 */
 async function accountOnly(req, res, next) {
-    const token = req.cookies.session;
-    if (!token) {
-        res.status(403).redirect(`${domain.origindomain}/account`);
+    let accessToken = req.headers['authorization'];
+    if (!accessToken) {
+        res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
+        return;
+    }
+    accessToken = req.headers['authorization'].split(' ')[1];
+    if (!accessToken) {
+        res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
         return;
     }
 
-    let collection = await User.find();
-
-    let i = 0;
-    let noToken = true;
-    while (i < collection.length && noToken) {
-        let tokens = collection[i].tokens;
-        let j = 0;
-        while (j < tokens.length && tokens[j].token != token) {
-            j++;
+    jwt.verify(accessToken, process.env.jwt_normal_key, function (error, data) {
+        if (error) {
+            res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
+            return;
         }
-        if (j <tokens.length) {
-            noToken = false;
-        }
-        else {
-            i++;
-        }
-    }
-
-    const user = collection[i];
-
-    if (user) {
-        req.user = user;
+        req.user = data;
         next();
-    } else {
-        res.status(403).redirect(`${domain.origindomain}/account`);
-        return;
-    }
+    });
 }
 
 async function cors(req, res, next) {
     res.set(
         {
+            // 'Access-Control-Allow-Origin': `*`,
             'Access-Control-Allow-Origin': `${domain.origin}`,
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': '*',
+            'Allow': 'GET, POST'
         }
     );
     next();
