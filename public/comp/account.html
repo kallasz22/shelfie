@@ -275,10 +275,13 @@
             document.querySelector('#time_sp').checked = res.user.session_privacy.time;
         })
         .catch(function () {
-            document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
-            document.querySelector('#si-btn').attributes.state.nodeValue = "";
-            document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
-            document.querySelector('#si-btn>svg').style.animation = '';
+            if (document.querySelector('#si-error').innerText == '') {
+                document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
+                document.querySelector('#si-btn').attributes.state.nodeValue = "";
+                document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
+                document.querySelector('#si-btn>svg').style.animation = '';
+            }
+            
         });
     }
 
@@ -366,10 +369,12 @@
             }
         })
         .catch(function () {
-            document.querySelector('#su-error').innerText = 'There was an error, while trying to sign up. Please try again later and/or report the bug!';
-            document.querySelector('#su-btn').attributes.state.nodeValue = "";
-            document.querySelector('#su-btn>svg').outerHTML = dom.arrowSVG;
-            document.querySelector('#su-btn>svg').style.animation = '';
+            if (document.querySelector('#su-error').innerText == '') {
+                document.querySelector('#su-error').innerText = 'There was an error, while trying to sign up. Please try again later and/or report the bug!';
+                document.querySelector('#su-btn').attributes.state.nodeValue = "";
+                document.querySelector('#su-btn>svg').outerHTML = dom.arrowSVG;
+                document.querySelector('#su-btn>svg').style.animation = '';
+            }
         });
     }
 
@@ -429,12 +434,9 @@
     .content-box h2, .content-box h3, .content-box p {
         margin: 5px 0px;
     }
-
-    /*temp*/
     #siu-title-grid {
         display: flex;
     }
-    /*temp*/
     #sign-in-up {
         height: 100%;
         width: 100%;

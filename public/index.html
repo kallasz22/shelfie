@@ -14,23 +14,30 @@
 <body>
     <header>
         <div id="header-title-grid">
-            <img src="/img/MenuClosed.svg" alt="" id="menu-img" onclick="menu()">
+            <!-- <img src="/img/MenuClosed.svg" alt="" id="menu-img" onclick="menu.action()"> -->
+            <div id="menu-img" onclick="menu.action()">
+                <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="5" height="1" rx="0.5" fill="black"/>
+                    <rect y="4" width="5" height="1" rx="0.5" fill="black"/>
+                    <rect y="2" width="5" height="1" rx="0.5" fill="black"/>
+                </svg>  
+            </div>
             <h2>SHELFIE</h2>
         </div>
        
-        <div id="menu-bg" onclick="menu()">
+        <div id="menu-bg" onclick="menu.action()">
             <div id="menu" onclick="event.cancelBubble=true" state="closed">
                 <div id="upper-group">
                     <div id="z-bg"></div>
-                    <button onclick="loadHTML('homepage'); menu()" state="" id="homepage-btn"><img src="/img/House.svg" alt="" class="menu-img">HOMEPAGE</button>
-                    <button onclick="loadHTML('account'); menu()" state="" id="account-btn"><img src="/img/Account.svg" alt="" class="menu-img">ACCOUNT</button>
-                    <button onclick="loadHTML('library'); menu()" state="" id="library-btn"><img src="/img/Library.svg" alt="" class="menu-img">LIBRARY</button>
+                    <button onclick="loadHTML('homepage'); menu.action()" state="" id="homepage-btn"><img src="/img/House.svg" alt="" class="menu-img">HOMEPAGE</button>
+                    <button onclick="loadHTML('account'); menu.action()" state="" id="account-btn"><img src="/img/Account.svg" alt="" class="menu-img">ACCOUNT</button>
+                    <button onclick="loadHTML('library'); menu.action()" state="" id="library-btn"><img src="/img/Library.svg" alt="" class="menu-img">LIBRARY</button>
                 </div>
                 <button onclick="showMore()" id="more" state="closed">MORE<img src="/img/ArrowRight.svg" alt="" class="menu-img" id="more-arrow">
                 </button>
                 <div id="downer-group">
-                    <button onclick="loadHTML('feedback'); menu()" state="" id="feedback-btn"><img src="/img/Feedback.svg" alt="" class="menu-img">FEEDBACK</button>
-                    <button onclick="loadHTML('features'); menu()" state="" id="features-btn"><img src="/img/Features.svg" alt="" class="menu-img">FEATURES</button>
+                    <button onclick="loadHTML('feedback'); menu.action()" state="" id="feedback-btn"><img src="/img/Feedback.svg" alt="" class="menu-img">FEEDBACK</button>
+                    <button onclick="loadHTML('features'); menu.action()" state="" id="features-btn"><img src="/img/Features.svg" alt="" class="menu-img">FEATURES</button>
                     <!-- <button>PRIVACY POLICY</button> -->
                     <!-- <button>TERMS OF SERVICE</button> -->
                     <button onclick="window.open('https://github.com/kallasz22/shelfie')"><img src="/img/github.svg" alt="" class="menu-img"> GITHUB</button>
@@ -47,6 +54,49 @@
 </body>
 
 <script>
+    const menu = {
+        close: function () {
+            dom.menu.attributes.state.nodeValue = 'closed';
+            dom.menu_img.innerHTML = menu.svg.closed;
+            dom.menu_bg.style.animation = 'menubgOUT 0.25s forwards';
+            dom.menu.style.animation = 'menuOUT 0.25s forwards';
+            if (dom.moreBtn.attributes.state.nodeValue == 'opened') {
+                dom.moreBtn.attributes.state.nodeValue = 'closed';
+                dom.downerGrp.style.animation = 'moreOUTs 0.25s forwards';
+            }
+            else {
+                dom.downerGrp.style.animation = 'moreOUTs2 0.25s forwards';
+            }
+            setTimeout(function(){
+                dom.menu_bg.style.display = 'none';
+                dom.render.style.zIndex = "0";
+            }, 250);
+        },
+        open: function () {
+            dom.render.style.zIndex = "-1";
+            dom.menu.attributes.state.nodeValue = 'opened';
+            dom.menu_img.innerHTML = menu.svg.opened;
+            dom.menu_bg.style.display = 'block';
+            dom.menu_bg.style.animation = 'menubgIN 0.25s forwards';
+            dom.menu.style.animation = 'menuIN 0.25s forwards';
+            dom.downerGrp.style.animation = 'moreINs 0.25s forwards';
+        },
+        state: function () {
+            return dom.menu.attributes.state.nodeValue;
+        },
+        action: function () {
+            if (menu.state() == 'closed') {
+                menu.open();
+            } else {
+                menu.close();
+            }
+        },
+        svg: {
+            closed: `<svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="5" height="1" rx="0.5" fill="black"/><rect y="4" width="5" height="1" rx="0.5" fill="black"/><rect y="2" width="5" height="1" rx="0.5" fill="black"/></svg>`,
+            opened: `<svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg"><rect y="4.24261" width="6" height="1" rx="0.5" transform="rotate(-45 0 4.24261)" fill="black"/><rect x="0.707092" width="6" height="1" rx="0.5" transform="rotate(45 0.707092 0)" fill="black"/></svg>`
+        }
+    };
+
     let domain = {};
     fetch('/domain.json')
     .then(function (res) {
@@ -55,20 +105,6 @@
     .then(function (res) {
         domain = res;
     });
-
-    let pIP = {
-        get: async function () {
-            let a = '';
-            await fetch('https://jsonip.com', { mode: 'cors' })
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (res) {
-                a = res.ip;
-            });
-            return a;
-        }
-    }
 
     const url = {
         changeUrl: function (toWhat) {
@@ -91,6 +127,7 @@
     };
     url.latestPage = url.page();
 
+    /*
     const cookies = {
         set: function (cname, cvalue, exdays) {
             const d = new Date();
@@ -113,6 +150,7 @@
             return "";
         }
     }
+    */
 
     const dom = {
         render: document.querySelector('#render'),
@@ -170,33 +208,6 @@
         }
     }
 
-    function menu() {
-        if (dom.menu.attributes.state.nodeValue == 'closed') {
-            dom.render.style.zIndex = "-1";
-            dom.menu.attributes.state.nodeValue = 'opened';
-            dom.menu_img.src = '/img/MenuOpened.svg';
-            dom.menu_bg.style.display = 'block';
-            dom.menu_bg.style.animation = 'menubgIN 0.25s forwards';
-            dom.menu.style.animation = 'menuIN 0.25s forwards';
-            dom.downerGrp.style.animation = 'moreINs 0.25s forwards';
-        } else {
-            dom.menu.attributes.state.nodeValue = 'closed';
-            dom.menu_img.src = '/img/MenuClosed.svg';
-            dom.menu_bg.style.animation = 'menubgOUT 0.25s forwards';
-            dom.menu.style.animation = 'menuOUT 0.25s forwards';
-            if (dom.moreBtn.attributes.state.nodeValue == 'opened') {
-                dom.moreBtn.attributes.state.nodeValue = 'closed';
-                dom.downerGrp.style.animation = 'moreOUTs 0.25s forwards';
-            }
-            else {
-                dom.downerGrp.style.animation = 'moreOUTs2 0.25s forwards';
-            }
-            setTimeout(function(){
-                dom.menu_bg.style.display = 'none';
-                dom.render.style.zIndex = "0";
-            }, 250);
-        }
-    }
 
     function showMore() {
         if (dom.moreBtn.attributes.state.nodeValue == 'closed') {
@@ -288,14 +299,6 @@
         background-color: white;
         color: #207a8b;
     }
-    #header-title-grid>img {
-        height: 1.5em;
-        width: 1.5em;
-        filter: invert();
-    }
-    #header-title-grid>img:hover {
-        cursor: pointer;
-    }
     #render {
         height: calc(100% - 3em);
         position: fixed;
@@ -328,6 +331,18 @@
         box-sizing: border-box;
         width: 100%;
         overflow-y: auto;
+    }
+    #menu-img {
+        display: flex;
+        align-items: center;
+        filter: invert();
+    }
+    #menu-img:hover {
+        cursor: pointer;
+    }
+    #menu-img svg {
+        width: 1.5em;
+        height: 1.5em;
     }
     #menu button {
         width: 100%;
