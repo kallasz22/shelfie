@@ -29,6 +29,16 @@
             <div id="menu" onclick="event.cancelBubble=true" state="closed">
                 <div id="upper-group">
                     <div id="z-bg"></div>
+                    <div id="small-account">
+                        <p>Loading...</p>
+                        <button id="sign-out" onclick="account.signOut()">
+                            SIGN OUT
+                            <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                                <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                            </svg>
+                        </button>
+                    </div>
                     <button onclick="loadHTML('homepage'); menu.action()" state="" id="homepage-btn"><img src="/img/House.svg" alt="" class="menu-img">HOMEPAGE</button>
                     <button onclick="loadHTML('account'); menu.action()" state="" id="account-btn"><img src="/img/Account.svg" alt="" class="menu-img">ACCOUNT</button>
                     <button onclick="loadHTML('library'); menu.action()" state="" id="library-btn"><img src="/img/Library.svg" alt="" class="menu-img">LIBRARY</button>
@@ -167,6 +177,9 @@
         menu_img: document.querySelector('#menu-img'),
         downerGrp: document.querySelector('#downer-group'),
         moreBtn: document.querySelector('#more'),
+        signOutBtn: document.querySelector('#sign-out'),
+        smallAccount: document.querySelector('#small-account'),
+        smallAccountP: document.querySelector('#small-account p'),
         loadingSVG: '<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/></svg>',
         arrowSVG: '<svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/><path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/></svg>',
 
@@ -243,6 +256,23 @@
         }
     }
 
+    const account = {
+        action: function () {
+            if (localStorage.getItem('jwt')) {
+                dom.smallAccountP.innerText = 'You are signed in!';
+                dom.signOutBtn.style.display = 'flex';
+            } else {
+                dom.smallAccountP.innerText = 'You are not signed in!';
+                dom.signOutBtn.style.display = 'none';
+            }
+        },
+        signOut: function () {
+            localStorage.removeItem('jwt');
+            account.action();
+        }
+    }
+    account.action();
+
     window.addEventListener('popstate', function () {
         url.popstate = true;
         console.log('popstate triggered');
@@ -259,7 +289,6 @@
             }
         }
         url.popstate = false;
-        
     });
 </script>
 
@@ -405,12 +434,47 @@
         background-color: rgba(0, 0, 0, 0.145);
         cursor: pointer;
     }
+    #small-account {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding-bottom: 10px;
+        border-bottom: #20798b27 2px solid;
+        margin-bottom: 5px;
+    }
+    #small-account p {
+        margin: 2px;
+    }
+    #small-account #sign-out {
+        width: 100%;
+        max-width: 175px;
+        padding: 10px 10px 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        background-color: #207a8b;
+        margin-top: 5px;
+    }
+    #small-account #sign-out svg {
+        height: 12pt;
+        width: 12pt;
+        filter: invert();
+    }
+    #small-account #sign-out:hover {
+        padding-right: 4px;
+    }
     .menu-img {
         height: 15pt;
         width: 15pt;
     }
     #more {
         display: none !important;
+    }
+    #more-arrow {
+        transition: 0.25s;
     }
     #z-bg {
         display: none;
@@ -470,7 +534,6 @@
             width: 100%;
             padding: 10px 0px 10px 0px;
             overflow-y: scroll;
-            /* display: none; */
             height: calc(100% - 3em);
             box-sizing: border-box;
             z-index: -2;
@@ -491,7 +554,6 @@
         }
         #menu-bg{
             position: absolute;
-            /* z-index: -3; */
             display: none;
         }
     }
