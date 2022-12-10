@@ -122,10 +122,10 @@
         }
         if (!url.popstate) {
             if (replace) {
-                url.replaceUrl(`/?${url.page()}&v=${view}`);
+                url.replace(`/?${url.page()}&v=${view}`);
             }
             else if (view != url.searchParams().get('v')){
-                url.changeUrl(`/?${url.page()}&v=${view}`);
+                url.change(`/?${url.page()}&v=${view}`);
             }
         }
         
@@ -157,11 +157,11 @@
             .then(function (res) {
                 if (res.redirected) {
                     let page = url.page();
-                    url.changeUrl(res.redirected);
+                    url.change(res.redirected);
                     if (page == url.page()) {
                         changeView(url.searchParams().get('v'));
                     } else {
-                        loadHTML(url.page());
+                        loadHTML(url.page());//old, problematic
                     }
                 }
                 if (res.user) {
@@ -178,6 +178,7 @@
             }
         }
     }
+    initView();
 
     function validateString(text) {
         const allowedChars = {
@@ -226,7 +227,7 @@
             document.querySelector('#si-error').innerText = '';
         }
         document.querySelector('#si-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#si-btn>svg').outerHTML = dom.loadingSVG;
+        document.querySelector('#si-btn>svg').outerHTML = dom.svg.loading;
         document.querySelector('#si-btn>svg').style.animation = '1s loading infinite linear';
         
         fetch(`${domain.server}/account/signin`, {
@@ -254,22 +255,18 @@
             document.querySelector('#si-error').innerText = res.message;
 
             document.querySelector('#si-btn').attributes.state.nodeValue = "";
-            document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
+            document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
             document.querySelector('#si-btn>svg').style.animation = '';
 
             if (res.jwt) {
-                // if (document.querySelector('#remember7_si').checked) {
-                //     cookies.set('token', res.token, 7);
-                // } else {
-                //     cookies.set('token', res.token, "session");
-                // }
-
                 localStorage.setItem('jwt', res.jwt);
 
                 changeView('profile');
 
                 document.querySelector('#username_si').value = "";
                 document.querySelector('#password_si').value = "";
+
+                account.action();
             }
 
             document.querySelector('#ip_sp').checked = res.user.session_privacy.IP;
@@ -280,10 +277,9 @@
             if (document.querySelector('#si-error').innerText == '') {
                 document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
                 document.querySelector('#si-btn').attributes.state.nodeValue = "";
-                document.querySelector('#si-btn>svg').outerHTML = dom.arrowSVG;
+                document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#si-btn>svg').style.animation = '';
             }
-            
         });
     }
 
@@ -339,7 +335,7 @@
             }
         }
         document.querySelector('#su-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#su-btn>svg').outerHTML = dom.loadingSVG;
+        document.querySelector('#su-btn>svg').outerHTML = dom.svg.loading;
         document.querySelector('#su-btn>svg').style.animation = '1s loading infinite linear';
 
         fetch(`${domain.server}/account/signup`, {
@@ -359,7 +355,7 @@
             document.querySelector('#su-error').innerText = res.message;
 
             document.querySelector('#su-btn').attributes.state.nodeValue = "";
-            document.querySelector('#su-btn>svg').outerHTML = dom.arrowSVG;
+            document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
             document.querySelector('#su-btn>svg').style.animation = '';
 
             if (res.changeView) {
@@ -374,7 +370,7 @@
             if (document.querySelector('#su-error').innerText == '') {
                 document.querySelector('#su-error').innerText = 'There was an error, while trying to sign up. Please try again later and/or report the bug!';
                 document.querySelector('#su-btn').attributes.state.nodeValue = "";
-                document.querySelector('#su-btn>svg').outerHTML = dom.arrowSVG;
+                document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#su-btn>svg').style.animation = '';
             }
         });
