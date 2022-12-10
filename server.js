@@ -7,6 +7,7 @@ const app = express();
 
 //database
 const mongoose = require('mongoose');
+mongoose.set('strictQuery', true);
 mongoose.connect(`mongodb+srv://${process.env.dbUsername}:${process.env.dbPassword}@shelfiecluster.cow3v5m.mongodb.net/?retryWrites=true&w=majority`).then(function () {
     app.listen(process.env.PORT);
     console.log('Magic happens on port ' + process.env.PORT);
@@ -89,6 +90,15 @@ app.post('/account/signup', async function(req, res){
     } else {
         res.status(405).type('application/json').send({message: 'Username already used!'});
     }
+});
+app.get('/account/load', accountOnly, async function(req, res){
+    const user = await User.findOne({username: req.user.username});
+
+    let uObj = {
+        username: user.username,
+        session_privacy: user.session_privacy
+    }
+    res.status(200).type('application/json').send({user: uObj});
 });
 /*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
@@ -304,15 +314,6 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 */
-app.get('/account/load', accountOnly, async function(req, res){
-    const user = await User.findOne({username: req.user.username});
-
-    let uObj = {
-        username: user.username,
-        session_privacy: user.session_privacy
-    }
-    res.status(200).type('application/json').send({user: uObj});
-});
 /*
 app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
     let user = req.user;
@@ -409,11 +410,19 @@ async function accountOnly(req, res, next) {
         return;
     }
 
-    jwt.verify(accessToken, process.env.jwt_normal_key, function (error, data) {
+    jwt.verify(accessToken, process.env.jwt_normal_key, async function (error, data) {
         if (error) {
             res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
             return;
         }
+
+        const userExist = await User.findOne({username: data.username});
+
+        if (!userExist) {
+            res.status(404).type('application/json').send({redirected: '?account&v=sign-in'});
+            return;
+        }
+
         req.user = data;
         next();
     });

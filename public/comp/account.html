@@ -146,10 +146,12 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-                },
-                // mode: "no-cors"
+                }
             })
             .then(function (res) {
+                if (res.status == 404) {
+                    localStorage.removeItem('jwt');
+                }
                 return res.json();
             })
             .then(function (res) {
