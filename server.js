@@ -104,7 +104,7 @@ app.get('/account/load', accountOnly, async function(req, res){
 
     let uObj = {
         username: user.username,
-        session_privacy: user.session_privacy
+        session_privacy: JSON.parse(CIMP.dec(user.session_privacy, req.user.pkiy))
     }
     res.status(200).type('application/json').send({user: uObj});
 });
