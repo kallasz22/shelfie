@@ -192,6 +192,7 @@
                 .then(function (html) {
                     dom.loading.style.display = 'none';
                     dom.render.innerHTML = html;
+                    console.log(document.querySelector('#script'));
                     if (document.querySelector('#script')) {
                         dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
                     } else {
