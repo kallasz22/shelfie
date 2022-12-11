@@ -118,9 +118,15 @@
             dom.downerGrp.style.animation = 'moreINs 0.25s forwards';
         },
         state: function () {
+            if (window.innerHeight >= 474 && window.innerWidth >= 750) {
+                return 'constant';
+            }
             return dom.menu.attributes.state.nodeValue;
         },
         action: function () {
+            if (menu.state() == 'constant') {
+                return;
+            }
             if (menu.state() == 'closed') {
                 menu.open();
             } else {
@@ -188,11 +194,13 @@
                     dom.render.innerHTML = html;
                     if (document.querySelector('#script')) {
                         dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
-                        if (url.page() == 'account') {
-                            initView();
-                        }
                     } else {
                         dom.rScript.innerHTML = '';
+                    }
+                })
+                .then(function () {
+                    if (url.page() == 'account') {
+                        initView();
                     }
                 });
             }
@@ -424,7 +432,7 @@
         margin: 2px;
     }
     #small-account #sign-out {
-        width: 100%;
+        width: calc(100% - 20px);
         max-width: 175px;
         padding: 10px 10px 10px 15px;
         display: flex;
@@ -587,6 +595,35 @@
         }
         100% {
             transform: rotate(360deg);
+        }
+    }
+    @media screen and (width > 750px) and (height >= calc(3em + 425px)) {
+        #menu {
+            position: fixed;
+            top: 3em;
+            left: 0px;
+            animation: none !important;
+            height: calc(100% - 3em);
+        }
+        #downer-group {
+            animation: none !important;
+        }
+        #menu-bg {
+            display: block !important;
+            animation: none !important;
+            background-color: transparent !important;
+        }
+        #render {
+            position: fixed;
+            top: 3em;
+            left: 250px;
+            width: calc(100% - 250px);
+        }
+        #loading {
+            position: fixed;
+            top: 3em;
+            left: 250px;
+            width: calc(100% - 250px);
         }
     }
 </style>

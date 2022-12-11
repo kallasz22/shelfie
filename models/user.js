@@ -120,18 +120,7 @@ const userSchema = new mongoose.Schema({
         ]
     },
     session_privacy: {
-        IP: {
-            type: Boolean,
-            required: true
-        },
-        UAG: {
-            type: Boolean,
-            required: true
-        },
-        time: {
-            type: Boolean,
-            required: true
-        }
+        type: String
     }
 });
 

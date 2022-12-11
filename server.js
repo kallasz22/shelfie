@@ -34,6 +34,14 @@ const domain = require('./public/domain.json');
 app.use(express.json());
 app.use(cors);
 
+const CIMP = {
+    enc: function (value, key) {
+        return cryptoJS.AES.encrypt(value, key).toString();
+    },
+    dec: function (value, key) {
+        return cryptoJS.AES.decrypt(value, key).toString(cryptoJS.enc.Utf8);
+    }
+}
 
 app.post('/account/signin', async function(req, res){
     const user = await User.findOne({
@@ -51,14 +59,14 @@ app.post('/account/signin', async function(req, res){
 
         let userObj = {
             username: user.username,
-            pkiy: cryptoJS.AES.decrypt(user.pkiy, req.body.password_si).toString(cryptoJS.enc.Utf8)
+            pkiy: CIMP.dec(user.pkiy, req.body.password_si)
         }
 
         const accessToken = jwt.sign(userObj, process.env.jwt_normal_key);
 
         userObj = {
             username: user.username,
-            session_privacy: user.session_privacy,
+            session_privacy: JSON.parse(CIMP.dec(user.session_privacy, userObj.pkiy)),
             sessions: user.sessions
         }
 
@@ -79,9 +87,9 @@ app.post('/account/signup', async function(req, res){
         const hash = await bcrypt.hash(req.body.password_su, 10);
         user.password = hash;
         pkiy = crypto.randomBytes(64).toString('hex');
-        user.pkiy = cryptoJS.AES.encrypt(pkiy, req.body.password_su).toString();
+        user.pkiy = CIMP.enc(pkiy, req.body.password_su);
 
-        user.session_privacy = {IP: false, UAG: true, time: true};
+        user.session_privacy = CIMP.enc(JSON.stringify({IP: false, UAG: true, time: true}), pkiy);
 
         user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
         await user.save();

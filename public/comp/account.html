@@ -26,13 +26,11 @@
             <label for="time_sp">Time</label>
         </div>
 
-        <h3>ACTION PRIVACY</h3>
+        <!-- <h3>ACTION PRIVACY</h3>
         <p>When doing the actions under, record the informations selected above:</p>
         <div>
-            <!-- <input type="checkbox" name="changing_pw_ap" id="changing_pw_ap">
-            <label for="changing_pw_ap">Changing password</label> -->
             No options yet! Nothing will be recorded.
-        </div>
+        </div> -->
 
     </div>
 
@@ -85,6 +83,10 @@
 </main>
 
 <script id="script">
+    const view = {
+
+    }
+
     function changeView(view, replace) {
         if (view == "sign-in" || view == "sign-up") {
             document.querySelector('#sign-in-up').style.display = 'flex';
