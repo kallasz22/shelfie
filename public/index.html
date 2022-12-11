@@ -192,16 +192,19 @@
                 .then(function (html) {
                     dom.loading.style.display = 'none';
                     dom.render.innerHTML = html;
-                    if (document.querySelector('#script') != null) {
-                        dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
-                    } else {
-                        dom.rScript.innerHTML = '';
-                        console.log('there isn"t anything to see')
-                    }
-                    // dom.rScript = document.querySelector('#script');
-                    if (url.page() == 'account') {
-                        initView();
-                    }
+                    setTimeout(() => {
+                        if (document.querySelector('#script') != null) {
+                            dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
+                        } else {
+                            dom.rScript.innerHTML = '';
+                            console.log('there isn"t anything to see')
+                        }
+                        if (url.page() == 'account') {
+                            initView();
+                        }
+                        console.log('interval');
+                    }, 100);
+                    
                 });
             }
             if (url.page() == "homepage") {
