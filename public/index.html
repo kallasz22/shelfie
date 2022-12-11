@@ -192,16 +192,14 @@
                 .then(function (html) {
                     dom.loading.style.display = 'none';
                     dom.render.innerHTML = html;
-                    console.log(document.querySelector('#script'));
-                    if (document.querySelector('#script')) {
+                    if (document.querySelector('#script') != null) {
                         dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
                     } else {
                         dom.rScript.innerHTML = '';
                     }
-                })
-                .then(function () {
+                    // dom.rScript = document.querySelector('#script');
                     if (url.page() == 'account') {
-                        // initView();
+                        initView();
                     }
                 });
             }
@@ -253,6 +251,7 @@
                 dom.smallAccountP.innerText = 'You are not signed in!';
                 dom.signOutBtn.style.display = 'none';
             }
+            dom.smallAccount.style.display = 'flex';
         },
         signOut: function () {
             localStorage.removeItem('jwt');
@@ -420,7 +419,7 @@
         cursor: pointer;
     }
     #small-account {
-        display: flex;
+        display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
