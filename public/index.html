@@ -14,7 +14,6 @@
 <body>
     <header>
         <div id="header-title-grid">
-            <!-- <img src="/img/MenuClosed.svg" alt="" id="menu-img" onclick="menu.action()"> -->
             <div id="menu-img" onclick="menu.action()">
                 <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="5" height="1" rx="0.5" fill="black"/>
@@ -192,27 +191,11 @@
                 .then(function (html) {
                     dom.loading.style.display = 'none';
                     dom.render.innerHTML = html;
-                    // setTimeout(() => {
-                    //     if (document.querySelector('#script') != null) {
-                    //         document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
-                    //         // dom.rScript.innerHTML = document.querySelector('#script').innerHTML;
-                    //         console.log('im doin it');
-                    //     } else {
-                    //         dom.rScript.innerHTML = '';
-                    //         console.log('there isn"t anything to see');
-                    //     }
-                    //     if (url.page() == 'account') {
-                    //         initView();
-                    //     }
-                    //     console.log('interval');
-                    // }, 1000);
-                    
+
                     if (document.querySelector('#script') != null) {
                         document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
-                        console.log('im doin it');
                     } else {
                         dom.rScript.innerHTML = '';
-                        console.log('there isn"t anything to see');
                     }
                     if (url.page() == 'account') {
                         initView();
@@ -271,7 +254,7 @@
         },
         signOut: function () {
             localStorage.removeItem('jwt');
-            url.change('?account');
+            url.change('?homepage');
             account.action();
         }
     }
@@ -294,7 +277,30 @@
 
 <style>
     @media (prefers-color-scheme: dark) {
-        /*nothing yet*/
+        :root {
+            --color: white;
+            --bg-color: black;
+            --render-bg-color: rgba(255, 255, 255, 0.05);
+            --accent-color: #207a8b;
+            --accent-bg-color: #20798b27;
+            --button-hover-color: rgba(255, 255, 255, 0.145);
+            --menu-bg-color: rgba(255, 255, 255, 0.245);
+        }
+        svg, img {
+            filter: invert() !important;
+        }
+    }
+    @media (prefers-color-scheme: light) {
+        :root {
+            --color: black;
+            --bg-color: white;
+            --render-bg-color: rgba(0, 0, 0, 0.05);
+            --accent-color: #207a8b;
+            --accent-bg-color: #20798b27;
+            --button-hover-color: rgba(0, 0, 0, 0.145);
+            --menu-bg-color: rgba(0, 0, 0, 0.245);
+
+        }
     }
     :root {
         --menu-width: 250px;
@@ -306,6 +312,7 @@
     }
     html * {/*applying font to all html element*/
         font-family: 'Lexend', sans-serif;
+        color: var(--color);
     }
     html * ::selection {
         background-color: #207a8b;
@@ -317,11 +324,11 @@
     body {
         margin: 0px;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: var(--bg-color);
     }
     #header-title-grid {
         height: 3em;
-        background-color: #207a8b;
+        background-color: var(--accent-color);
         display: flex;
         align-items: center;
         gap: 10px;
@@ -371,6 +378,7 @@
         top: 3em;
         left: 0px;
         width: 100%;
+        background-color: var(--render-bg-color);
     }
     #menu-bg {
         background-color: transparent;
@@ -384,7 +392,7 @@
     }
     #menu {
         height: 100%;
-        background-color: white;
+        background-color: var(--bg-color);
         position: absolute;
         top: 0px;
         max-width: var(--menu-width);
@@ -411,7 +419,7 @@
     }
     #menu button {
         width: 100%;
-        border: unset;
+        border: 0px solid transparent;
         background-color: unset;
         border-radius: unset;
         padding: 10px 0px 10px 20px;
@@ -425,13 +433,13 @@
     #menu button[state="active"] {
         border-left: #207a8b solid 5px;
         padding-left: 15px;
-        background-color: #20798b27;
+        background-color: var(--accent-bg-color);
     }
     #menu button[state="active"]:hover {
-        background-color: #20798b27;
+        background-color: var(--accent-bg-color);
     }
     #menu button:hover {
-        background-color: rgba(0, 0, 0, 0.145);
+        background-color: var(--button-hover-color);
         cursor: pointer;
     }
     #small-account {
@@ -505,12 +513,12 @@
             background-color: transparent;
         }
         100% {
-            background-color: rgba(0, 0, 0, 0.245);
+            background-color: var(--menu-bg-color);
         }
     }
     @keyframes menubgOUT {
         0% {
-            background-color: rgba(0, 0, 0, 0.245);
+            background-color: var(--menu-bg-color);
         }
         100% {
             background-color: transparent;
@@ -529,7 +537,7 @@
             position: fixed;
             top: 3em;
             left: 0px;
-            background-color: white;
+            background-color: var(--menu-bg-color);
             max-width: var(--menu-width);
             width: 100%;
             padding: 10px 0px 10px 0px;
@@ -550,7 +558,7 @@
             left: 0px;
             width: var(--menu-width);
             display: block;
-            background-color: white;
+            background-color: var(--menu-bg-color);
         }
         #menu-bg{
             position: absolute;
@@ -640,6 +648,12 @@
             top: 3em;
             left: 250px;
             width: calc(100% - 250px);
+        }
+        #menu-img {
+            display: none;
+        }
+        #header-title-grid {
+            padding-left: calc(20px + 10px + 1.5em);/*normal padding + gap + svg width*/
         }
     }
 </style>
