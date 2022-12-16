@@ -410,12 +410,12 @@
         /* height: 40px; */
     }
     .title-grid button:hover {
-        background-color: rgba(0, 0, 0, 0.145);
+        background-color: var(--button-hover-color);
         cursor: pointer;
     }
     .title-grid button[state="active"] {
-        border-bottom: 5px #207a8b solid;
-        background-color: #20798b27;
+        border-bottom: 5px var(--accent-color) solid;
+        background-color: var(--accent-bg-color);
         padding: 7.5px 0px;
     }
     .content-box {
@@ -449,7 +449,7 @@
         height: 100%;
         max-width: 400px;
         max-height: 400px;
-        background-color: white;
+        background-color: var(--bg-color);
         overflow-y: auto;
     }
     .siu-form {
@@ -468,6 +468,7 @@
         padding: 3px 7px;
         border: #207a8b 1px solid;
         border-radius: 3px;
+        background-color: var(--render-bg-color);
     }
     .siu-form label {
         padding: 2px 0px; 
