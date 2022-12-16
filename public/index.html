@@ -287,7 +287,10 @@
             --menu-bg-color: rgba(255, 255, 255, 0.245);
         }
         svg, img {
-            filter: invert() !important;
+            filter: invert(80%);
+        }
+        #menu-img svg {
+            filter: invert(0%);
         }
     }
     @media (prefers-color-scheme: light) {
@@ -408,6 +411,7 @@
     #menu-img {
         display: flex;
         align-items: center;
+        filter: invert(100%);
     }
     #menu-img:hover {
         cursor: pointer;
