@@ -58,11 +58,14 @@
     </header>
     
     <div id="loading">
-        <svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/>
-            <!-- <path d="M63 31.5C63 26.305 61.7152 21.1907 59.2599 16.6125C56.8047 12.0344 53.2553 8.13451 48.9278 5.26031C44.6004 2.38612 39.6292 0.626821 34.4572 0.139118C29.2852 -0.348585 24.0728 0.450449 19.2844 2.46505L21.9349 8.76491C25.6843 7.18743 29.7657 6.56176 33.8156 6.94365C37.8654 7.32553 41.7579 8.7031 45.1464 10.9537C48.5349 13.2042 51.3142 16.2579 53.2367 19.8427C55.1592 23.4276 56.1653 27.4322 56.1653 31.5H63Z" fill="#808080"/> -->
-        </svg>
+        <div id="loading-img">
+            <svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/>
+            </svg>
+        </div>
+        
         <p>LOADING</p>
+        <p id="loading-error"></p>
     </div>
 
     <div id="render"></div>
@@ -73,6 +76,8 @@
     const dom = {
         render: document.querySelector('#render'),
         loading: document.querySelector('#loading'),
+        loading_img: document.querySelector('#loading-img'),
+        loadingEP: document.querySelector('#loading-error'),
         menu: document.querySelector('#menu'),
         menu_bg: document.querySelector('#menu-bg'),
         menu_img: document.querySelector('#menu-img'),
@@ -83,7 +88,7 @@
         smallAccountP: document.querySelector('#small-account p'),
         rScript: document.querySelector('#rScript'),
         svg: {
-            loading: '<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/></svg>',
+            // loading: '<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/></svg>',
             arrow: '<svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/><path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/></svg>',
         }
     }
@@ -179,13 +184,27 @@
     window.onresize = menu.updateIcon;
 
     let domain = {};
-    fetch('/domain.json')
-    .then(function (res) {
-        return res.json();
-    })
-    .then(function (res) {
-        domain = res;
-    });
+    
+    const loading = {
+        start: function () {
+            dom.loading.style.display = 'flex';
+        },
+        stop: function () {
+            dom.loading.style.display = 'none';
+        },
+        error: function () {
+            dom.loading_img.innerHTML = loading.svg.error;
+            dom.loading_img.children[0].style.animation = 'none';
+        },
+        loading: function () {
+            dom.loading_img.innerHTML = loading.svg.loading;
+            dom.loading_img.children[0].style.animation = 'loadingRotate 0.5s infinite linear';
+        },
+        svg: {
+            loading: '<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63 31.5C63 37.197 61.455 42.7873 58.5295 47.6757C55.604 52.5642 51.4076 56.5678 46.387 59.2602C41.3664 61.9526 35.7096 63.233 30.019 62.9652C24.3283 62.6973 18.8168 60.8912 14.0713 57.7391C9.3258 54.587 5.52396 50.207 3.07059 45.0653C0.617213 39.9237 -0.395848 34.213 0.139268 28.5412C0.674384 22.8694 2.73764 17.4489 6.10936 12.8569C9.48108 8.26484 14.035 4.67314 19.2863 2.46423L21.9368 8.76516C17.825 10.4947 14.2593 13.307 11.6193 16.9026C8.97925 20.4981 7.36372 24.7423 6.94473 29.1833C6.52574 33.6242 7.31896 38.0957 9.23994 42.1216C11.1609 46.1474 14.1377 49.577 17.8534 52.0451C21.5691 54.5131 25.8846 55.9273 30.3404 56.137C34.7961 56.3468 39.2253 55.3442 43.1564 53.236C47.0875 51.1279 50.3733 47.9931 52.664 44.1655C54.9546 40.3379 56.1643 35.9607 56.1643 31.5L63 31.5Z" fill="black"/></svg>',
+            error: '<svg width="91" height="91" viewBox="0 0 91 91" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M47.7961 5.28064L72.3158 15.437C73.786 16.046 74.954 17.214 75.563 18.6842L85.7194 43.2039C86.3283 44.6741 86.3283 46.3259 85.7194 47.7961L75.563 72.3158C74.954 73.786 73.786 74.954 72.3158 75.563L47.7961 85.7194C46.3259 86.3283 44.6741 86.3283 43.2039 85.7194L18.6842 75.563C17.214 74.954 16.046 73.786 15.437 72.3158L5.28064 47.7961C4.67168 46.3259 4.67168 44.6741 5.28064 43.2039L15.437 18.6842C16.046 17.214 17.214 16.046 18.6842 15.437L43.2039 5.28064C44.6741 4.67168 46.3259 4.67168 47.7961 5.28064Z" stroke="black" stroke-width="8"/><rect x="41" y="19" width="9" height="36" rx="4.5" fill="black"/><rect x="41" y="62" width="9" height="9" rx="4.5" fill="black"/></svg>'
+        }
+    }
 
     const url = {
         action: function () {
@@ -197,24 +216,67 @@
         },
         load: function () {
             if (url.lastPage != url.page()) {
-                dom.loading.style.display = 'flex';
+                loading.start();
                 dom.render.innerHTML = '';
                 fetch(`/comp/${url.page()}.html`)
                 .then(function (res) {
                     return res.text();
                 })
                 .then(function (html) {
-                    dom.loading.style.display = 'none';
-                    dom.render.innerHTML = html;
+                    if (!domain.origin) {
+                        fetchDomainJSON();
+                        function fetchDomainJSON() {
+                            loading.loading();
+                            loading.start();
+                            dom.loadingEP.innerHTML = "";
+                            fetch('/domain.json')
+                            .then(function (res) {
+                                return res.json();
+                            })
+                            .then(function (res) {
+                                domain = res;
 
-                    if (document.querySelector('#script') != null) {
-                        document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
-                    } else {
-                        dom.rScript.innerHTML = '';
+                                loading.stop();
+                                dom.render.innerHTML = html;
+
+                                if (document.querySelector('#script') != null) {
+                                    document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
+                                } else {
+                                    dom.rScript.innerHTML = '';
+                                }
+                                if (url.page() == 'account') {
+                                    initView();
+                                }
+                            })
+                            .catch(function () {
+                                loading.error();
+                                dom.loadingEP.innerHTML = 'Error while trying to load domain.json.<br>Retry in: <span id="cd">60</span>';
+                                
+                                const cd = setInterval(function () {
+                                    document.querySelector('#cd').innerHTML--;
+                                    if (document.querySelector('#cd').innerHTML == 0) {
+                                        clearInterval(cd);
+                                        fetchDomainJSON();
+                                    }
+                                }, 1000);
+                            });
+                        }
                     }
-                    if (url.page() == 'account') {
-                        initView();
+                    else {
+                        loading.stop();
+                        dom.render.innerHTML = html;
+                        
+                        if (document.querySelector('#script') != null) {
+                            document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
+                        } else {
+                            dom.rScript.innerHTML = '';
+                        }
+                        if (url.page() == 'account') {
+                            initView();
+                        }
                     }
+
+                    
                 });
             }
             if (url.page() == "homepage") {
@@ -274,6 +336,8 @@
         }
     }
     account.action();
+
+    
 
     window.addEventListener('popstate', function () {
         url.popstate = true;
@@ -376,11 +440,16 @@
     #loading p {
         font-size: 16pt;
         margin: 8px;
+        text-align: center;
     }
     #loading svg {
         height: 25pt;
         width: 25pt;
         animation: loadingRotate 0.5s infinite linear;
+    }
+    #loading #loading-error, #loading span {
+        font-size: 12pt;
+        color: red;
     }
     @keyframes loadingRotate {
         0% {

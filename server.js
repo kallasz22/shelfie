@@ -443,6 +443,7 @@ async function cors(req, res, next) {
             'Access-Control-Allow-Origin': `${domain.origin}`,
             'Access-Control-Allow-Credentials': true,
             'Access-Control-Allow-Headers': '*',
+            'Access-Control-Expose-Headers': '*, Authorization',
             'Allow': 'GET, POST'
         }
     );

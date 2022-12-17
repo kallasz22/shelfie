@@ -229,7 +229,7 @@
             document.querySelector('#si-error').innerText = '';
         }
         document.querySelector('#si-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#si-btn>svg').outerHTML = dom.svg.loading;
+        document.querySelector('#si-btn>svg').outerHTML = loading.svg.loading;
         document.querySelector('#si-btn>svg').style.animation = '1s loading infinite linear';
         
         fetch(`${domain.server}/account/signin`, {
@@ -337,7 +337,7 @@
             }
         }
         document.querySelector('#su-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#su-btn>svg').outerHTML = dom.svg.loading;
+        document.querySelector('#su-btn>svg').outerHTML = loading.svg.loading;
         document.querySelector('#su-btn>svg').style.animation = '1s loading infinite linear';
 
         fetch(`${domain.server}/account/signup`, {
