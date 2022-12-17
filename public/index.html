@@ -206,6 +206,8 @@
         }
     }
 
+    let cdrunning = false;
+
     const url = {
         action: function () {
             if (url.page() == "") {
@@ -251,11 +253,15 @@
                             .catch(function () {
                                 loading.error();
                                 dom.loadingEP.innerHTML = 'Error while trying to load domain.json.<br>Retry in: <span id="cd">60</span>';
-                                
+                                if (cdrunning) {
+                                    return;
+                                }
+                                cdrunning = true;
                                 const cd = setInterval(function () {
                                     document.querySelector('#cd').innerHTML--;
                                     if (document.querySelector('#cd').innerHTML == 0) {
                                         clearInterval(cd);
+                                        cdrunning = false;
                                         fetchDomainJSON();
                                     }
                                 }, 1000);
@@ -337,7 +343,6 @@
     }
     account.action();
 
-    
 
     window.addEventListener('popstate', function () {
         url.popstate = true;
