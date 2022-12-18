@@ -5,7 +5,55 @@
         <button onclick="changeView('statistics')" id="statistics-btn" state="">STATISTICS</button>
     </div>
 
-    <div id="profile" class="content-box">profile</div>
+    <div id="profile" class="content-box">
+        <h2>PROFILE</h2>
+        <div id="profile-box" class="box">Username: <span id="pv_username"></span></div>
+        <h3>CHANGE USERNAME</h3>
+        <p>With changing your username, the system will delete all your sessions.</p>
+        <div class="box" id="cu">
+            <label for="cu_password">PASSWORD</label>
+            <input type="password" class="input" id="cu_password">
+            <label for="cu_username">NEW USERNAME</label>
+            <input type="text" class="input" id="cu_username">
+            <button class="button ticked-button">
+                SAVE
+                <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
+                    <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
+                </svg>
+            </button>
+        </div>
+        <h3>CHANGE PASSWORD</h3>
+        <p>With changing your password, the system will delete all your sessions.</p>
+        <div class="box" id="cp">
+            <label for="cpc_password">CURRENT PASSWORD</label>
+            <input type="password" class="input" id="cpc_password">
+            <label for="cpn_password">NEW PASSWORD</label>
+            <input type="password" class="input" id="cpn_password">
+            <button class="button ticked-button">
+                SAVE
+                <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
+                    <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
+                </svg>
+            </button>
+        </div>
+        <h3>DELETE ACCOUNT</h3>
+        <p>With deleting your account, you delete all your data stored in the system. After that, it can't be recovered.</p>
+        <div class="box" id="da">
+            <label for="da_username">USERNAME</label>
+            <input type="text" class="input" id="da_username">
+            <label for="da_password">PASSWORD</label>
+            <input type="password" class="input" id="da_password">
+            <button class="button arrowed-button">
+                DELETE
+                <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                    <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                </svg>
+            </button>
+        </div>
+    </div>
     <div id="sessions" class="content-box">sessions</div>
     <div id="statistics" class="content-box">
         statistics
@@ -20,15 +68,15 @@
             <form id="sign-in" class="siu-form">
                 <h2>SIGN IN</h2>
                 <label for="username_si">USERNAME</label>
-                <input type="text" name="username_si" id="username_si" state="">
+                <input type="text" name="username_si" id="username_si" state="" class="input">
                 <label for="password_si">PASSWORD</label>
-                <input type="password" name="password_si" id="password_si" state="">
+                <input type="password" name="password_si" id="password_si" state="" class="input">
                 <div id="rem7">
                     <input type="checkbox" name="remember7_si" id="remember7_si">
                     <label for="remember7_si" id="rem7_si-label">REMEMBER ME</label>
                 </div>
                 <p id="si-error" class="error"></p>
-                <button type="button" selector="siu-btn" onclick="signIn()" id="si-btn" state="">
+                <button type="button" selector="siu-btn" onclick="signIn()" id="si-btn" state="" class="button arrowed-button">
                     SIGN IN 
                     <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
@@ -39,15 +87,15 @@
             <form id="sign-up" class="siu-form">
                 <h2>SIGN UP</h2>
                 <label for="username_su">USERNAME</label>
-                <input type="text" name="username_su" id="username_su" state="">
+                <input type="text" name="username_su" id="username_su" state="" class="input">
                 <div id="su-pw-div">
                     <label for="password_su">PASSWORD</label>
-                    <input type="password" name="password_su" id="password_su" state="">
+                    <input type="password" name="password_su" id="password_su" state="" class="input">
                     <label for="password_again_su">PASSWORD AGAIN</label>
-                    <input type="password" name="password_again_su" id="password_again_su" state="">
+                    <input type="password" name="password_again_su" id="password_again_su" state="" class="input">
                 </div>
                 <p class="error" id="su-error"></p>
-                <button type="button" selector="siu-btn" onclick="signUp()" id="su-btn" state="">
+                <button type="button" selector="siu-btn" onclick="signUp()" id="su-btn" state="" class="button arrowed-button">
                     SIGN UP
                     <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
@@ -424,8 +472,7 @@
         overflow-y: auto;
     }
     .siu-form {
-        height: 360px;/*sadly*/
-        /* height: calc(100% - 40px); */
+        height: 360px;
         padding: 10px;
         box-sizing: border-box;
         flex-direction: column;
@@ -435,41 +482,22 @@
     }
     .siu-form input {
         margin: 0px 0px 7.5px 0px;
-        font-size: 12pt;
-        padding: 3px 7px;
-        border: #207a8b 1px solid;
-        border-radius: 3px;
-        background-color: var(--render-bg-color);
     }
     .siu-form label {
-        padding: 2px 0px; 
+        padding: 2px 0px;
     }
     .siu-form button[selector="siu-btn"] {
-        border: unset;
-        border-radius: unset;
-        padding: 10px 10px 10px 15px;
-        box-sizing: border-box;
-        font-size: 12pt;
-        background-color: #207a8b;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: 0.1s;
-        max-width: 200px;
-        width: 100%;
         align-self: flex-end;
         margin-top: auto;
     }
-    .siu-form button[selector="siu-btn"]:hover {
+    /* .siu-form button[selector="siu-btn"]:hover {
         padding-right: 4px;
-        cursor: pointer;
     }
     .siu-form button[selector="siu-btn"] svg {
         filter: invert();
         height: 12pt;
         width: 12pt;
-    }
+    } */
     .siu-form button[selector="siu-btn"][state="disabled"] {
         background-color: #20798bb5;
     }
@@ -499,6 +527,38 @@
         cursor: pointer;
     }
     input[type="checkbox"] {
-        accent-color: #207a8b;
+        accent-color: var(--accent-color);
+    }
+    .box {
+        border-left: var(--accent-color) 5px solid;
+        padding: 10px;
+        box-sizing: border-box;
+        background-color: var(--accent-bg-color);
+        display: flex;
+        flex-direction: column;
+    }
+    /* #cu {
+        display: flex;
+        flex-direction: column;
+    } */
+    /* #cu button {
+        align-self: flex-end;
+        margin-top: 10px;
+    } */
+    .box button {
+        align-self: flex-end;
+        margin-top: 10px;
+    }
+    #cu label {
+        padding: 2px 0px;
+    }
+    #profile h3 {
+        margin-top: 15px;
+    }
+    #da {
+        border-left: 5px red solid;
+    }
+    #da button {
+        background-color: red;
     }
 </style>

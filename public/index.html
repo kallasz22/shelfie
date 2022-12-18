@@ -411,7 +411,6 @@
             --accent-bg-color: #20798b27;
             --button-hover-color: rgba(0, 0, 0, 0.145);
             --menu-bg-color: rgba(0, 0, 0, 0.245);
-
         }
     }
     :root {
@@ -437,6 +436,50 @@
         margin: 0px;
         height: 100%;
         background-color: var(--bg-color);
+    }
+    .input {
+        margin: 0px 0px 7.5px 0px;
+        font-size: 12pt;
+        padding: 3px 7px;
+        border: #207a8b 1px solid;
+        border-radius: 3px;
+        background-color: var(--render-bg-color);
+    }
+    .button {
+        border: unset;
+        border-radius: unset;
+        padding: 10px 10px 10px 15px;
+        box-sizing: border-box;
+        font-size: 12pt;
+        background-color: #207a8b;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: 0.1s;
+        max-width: 200px;
+        width: 100%;
+    }
+    .button:hover {
+        cursor: pointer;
+    }
+    .button svg {
+        height: 12pt;
+        width: 12pt;
+        filter: invert(100%);
+    }
+    .ticked-button svg {
+        transition: 0.1s all;
+    }
+    .ticked-button:hover svg {
+        height: 15pt;
+        width: 15pt;
+    }
+    .arrowed-button {
+        transition: 0.1s all;
+    }
+    .arrowed-button:hover {
+        padding-right: 4px;
     }
     #header-title-grid {
         height: 3em;
