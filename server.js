@@ -30,6 +30,7 @@ const User = require('./models/user');
 
 //domain
 const domain = require('./public/domain.json');
+const { json } = require('express');
 
 app.use(express.json());
 app.use(cors);
@@ -66,7 +67,6 @@ app.post('/account/signin', async function(req, res){
 
         userObj = {
             username: user.username,
-            session_privacy: JSON.parse(CIMP.dec(user.session_privacy, userObj.pkiy)),
             sessions: user.sessions
         }
 
@@ -89,9 +89,19 @@ app.post('/account/signup', async function(req, res){
         pkiy = crypto.randomBytes(64).toString('hex');
         user.pkiy = CIMP.enc(pkiy, req.body.password_su);
 
-        user.session_privacy = CIMP.enc(JSON.stringify({IP: false, UAG: true, time: true}), pkiy);
-
-        user.houses.push({ name: 'Default house', description: 'The default house. Automatically created.', rooms: { name: 'Default room', description: 'The default room. Automatically created.', shelfs: { name: 'Default shelf', description: 'The default shelf. Automatically created.' } } });
+        let houseObj = {
+            name: 'Default house',
+            description: 'The default house. Automatically created.',
+            rooms: {
+                name: 'Default room',
+                description: 'The default room. Automatically created.',
+                shelfs: {
+                    name: 'Default shelf',
+                    description: 'The default shelf. Automatically created.'
+                }
+            }
+        }
+        user.houses.push(CIMP.enc(JSON.stringify(houseObj), pkiy));
         await user.save();
 
         res.status(200).type('application/json').send({message: '', changeView: 'sign-in'});
@@ -104,7 +114,6 @@ app.get('/account/load', accountOnly, async function(req, res){
 
     let uObj = {
         username: user.username,
-        session_privacy: JSON.parse(CIMP.dec(user.session_privacy, req.user.pkiy))
     }
     res.status(200).type('application/json').send({user: uObj});
 });

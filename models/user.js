@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    pkiy: { /*encrypted with password of course*/
+    pkiy: {
         type: String,
         required: true
     },
     sessions: {
-        type: [
+        /*type: [
             {
                 IP: {
                     type: String
@@ -30,10 +30,11 @@ const userSchema = new mongoose.Schema({
                     required: true
                 }
             }
-        ]
+        ]*/
+        type: [String]
     },
     books: {
-        type: [
+        /*type: [
             {
                 writer: {
                     type: String,
@@ -74,10 +75,11 @@ const userSchema = new mongoose.Schema({
                     required: true
                 }
             }
-        ]
+        ]*/
+        type: [String]
     },
     houses: {
-        type: [
+        /*type: [
             {
                 rooms: {
                     type: [
@@ -91,11 +93,9 @@ const userSchema = new mongoose.Schema({
                                         },
                                         description: {
                                             type: String,
-                                            // required: true
                                         }
                                     }
                                 ],
-                                // required: true
                             },
                             name: {
                                 type: String,
@@ -103,7 +103,6 @@ const userSchema = new mongoose.Schema({
                             },
                             description: {
                                 type: String,
-                                // required: true
                             }
                         }
                     ]
@@ -114,13 +113,10 @@ const userSchema = new mongoose.Schema({
                 },
                 description: {
                     type: String,
-                    // required: true
                 }
             }
-        ]
-    },
-    session_privacy: {
-        type: String
+        ]*/
+        type: [String]
     }
 });
 
