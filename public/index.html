@@ -424,6 +424,16 @@
     html * {/*applying font to all html element*/
         font-family: 'Lexend', sans-serif;
         color: var(--color);
+        scrollbar-color: var(--accent-color) var(--render-bg-color);
+        scrollbar-width: thin;
+        
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+        background-color: var(--render-bg-color);
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--accent-color);
     }
     html * ::selection {
         background-color: #207a8b;
@@ -462,6 +472,9 @@
     }
     .button:hover {
         cursor: pointer;
+    }
+    .button[state="disabled"] {
+        background-color: #20798bb5;
     }
     .button svg {
         height: 12pt;
