@@ -216,6 +216,7 @@
 
     let cdrunning = false;
 
+
     const url = {
         action: function () {
             if (url.page() == "") {
@@ -252,6 +253,7 @@
 
                                     loading.stop();
                                     dom.render.innerHTML = html;
+                                    dom.render.style.display = 'block';
 
                                     if (document.querySelector('#script') != null) {
                                         document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
@@ -261,7 +263,6 @@
                                     runPagerScripts();
                                 })
                                 .catch(function (e) {
-                                    // console.log('catched error', e);
                                     loading.error();
                                     dom.loadingEP.innerHTML = 'Error while trying to load domain.json.<br>Retry in: <span id="cd">60</span>';
                                     if (cdrunning) {
@@ -269,6 +270,10 @@
                                     }
                                     cdrunning = true;
                                     const cd = setInterval(function () {
+                                        if (!document.querySelector('#cd')) {
+                                            clearInterval(cd);
+                                            return;
+                                        }
                                         document.querySelector('#cd').innerHTML--;
                                         if (document.querySelector('#cd').innerHTML == 0) {
                                             clearInterval(cd);
@@ -282,6 +287,8 @@
                         else {
                             loading.stop();
                             dom.render.innerHTML = html;
+                            dom.render.style.display = 'block';
+
 
                             if (document.querySelector('#script') != null) {
                                 document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
@@ -299,6 +306,10 @@
                         }
                         cdrunning = true;
                         const cd = setInterval(function () {
+                            if (!document.querySelector('#cd')) {
+                                clearInterval(cd);
+                                return;
+                            }
                             document.querySelector('#cd').innerHTML--;
                             if (document.querySelector('#cd').innerHTML == 0) {
                                 clearInterval(cd);

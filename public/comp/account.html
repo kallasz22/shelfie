@@ -189,6 +189,10 @@
             }
             cdrunning = true;
             const cd = setInterval(function () {
+                if (!document.querySelector('#cd')) {
+                    clearInterval(cd);
+                    return;
+                }
                 document.querySelector('#cd').innerHTML--;
                 if (document.querySelector('#cd').innerHTML == 0) {
                     clearInterval(cd);
@@ -201,7 +205,6 @@
 
     const view = {
         change: function (v) {
-            console.log('v');
             if (v == "sign-in" || v == "sign-up") {
                 document.querySelector('#sign-in-up').style.display = 'flex';
                 document.querySelector('#title-grid').style.display = 'none';
@@ -234,11 +237,6 @@
                     document.querySelector(`#${view.views[i]}-btn`).attributes.state.nodeValue = "";
                 }
             }
-
-            // let temp = v[0].toUpperCase() + v.slice(1);
-            // document.title = `${temp}:Account - SHELFIE`;
-            // console.log('set title: ', document.title)
-
             if (!url.popstate) {
                 url.change(`?account&v=${v}`);
             }
