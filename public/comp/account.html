@@ -201,6 +201,7 @@
 
     const view = {
         change: function (v) {
+            console.log('v');
             if (v == "sign-in" || v == "sign-up") {
                 document.querySelector('#sign-in-up').style.display = 'flex';
                 document.querySelector('#title-grid').style.display = 'none';
@@ -256,9 +257,14 @@
                 account.load();
             }
             else {
-                view.change('sign-in');
+                if (url.searchParams().get('v') && (url.searchParams().get('v') == 'sign-up' || url.searchParams().get('v') == 'sign-in')) {
+                    view.change(url.searchParams().get('v'));
+                }
+                else {
+                    view.change('sign-in');
+                }
                 loading.stop();
-                dom.render.style.display = 'flex';
+                dom.render.style.display = 'block';
             }
         },
         views: ["sessions", "profile", "statistics", "sign-in", "sign-up"]

@@ -477,7 +477,11 @@
         cursor: pointer;
     }
     .button[state="disabled"] {
-        background-color: #20798bb5;
+        background-color: #20798bb5 !important;
+    }
+    .button[state="disabled"]:hover {
+        cursor: default !important;
+        padding: 10px 10px 10px 15px !important;
     }
     .button svg {
         height: 12pt;
