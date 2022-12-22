@@ -163,6 +163,7 @@
     }
 
     account.load = function () {
+        dom.loadingEP.innerHTML = "";
         loading.loading();
         fetch(`${domain.server}/account/load`, {
             method: 'POST',
