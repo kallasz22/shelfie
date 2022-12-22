@@ -109,7 +109,7 @@ app.post('/account/signup', async function(req, res){
         res.status(405).type('application/json').send({message: 'Username already used!'});
     }
 });
-app.get('/account/load', accountOnly, async function(req, res){
+app.post('/account/load', accountOnly, async function(req, res) {
     const user = await User.findOne({username: req.user.username});
 
     let uObj = {
@@ -416,16 +416,16 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 });
 */
 async function accountOnly(req, res, next) {
-    let accessToken = req.headers['authorization'];
+    let accessToken = req.body.auth;
     if (!accessToken) {
         res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
         return;
     }
-    accessToken = req.headers['authorization'].split(' ')[1];
-    if (!accessToken) {
-        res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
-        return;
-    }
+    // accessToken = req.body.auth.split(' ')[1];
+    // if (!accessToken) {
+    //     res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
+    //     return;
+    // }
 
     jwt.verify(accessToken, process.env.jwt_normal_key, async function (error, data) {
         if (error) {

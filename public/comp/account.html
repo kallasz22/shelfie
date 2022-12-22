@@ -1,57 +1,77 @@
 <main>
     <div id="title-grid" class="title-grid">
-        <button onclick="changeView('profile')" id="profile-btn" state="">PROFILE</button>
-        <button onclick="changeView('sessions')" id="sessions-btn" state="">SESSIONS</button>
-        <button onclick="changeView('statistics')" id="statistics-btn" state="">STATISTICS</button>
+        <button onclick="view.change('profile')" id="profile-btn" state="">PROFILE</button>
+        <button onclick="view.change('sessions')" id="sessions-btn" state="">SESSIONS</button>
+        <button onclick="view.change('statistics')" id="statistics-btn" state="">STATISTICS</button>
     </div>
 
     <div id="profile" class="content-box">
         <h2>PROFILE</h2>
-        <div id="profile-box" class="box">Username: <span id="pv_username"></span></div>
+        <div id="profile-box" class="box">Username: <span id="pb_username"></span></div>
+
         <h3>CHANGE USERNAME</h3>
         <p>With changing your username, the system will delete all your sessions.</p>
-        <div class="box" id="cu">
-            <label for="cu_password">PASSWORD</label>
-            <input type="password" class="input" id="cu_password">
-            <label for="cu_username">NEW USERNAME</label>
-            <input type="text" class="input" id="cu_username">
-            <button class="button ticked-button">
-                SAVE
-                <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
-                    <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
-                </svg>
-            </button>
-        </div>
+
         <h3>CHANGE PASSWORD</h3>
         <p>With changing your password, the system will delete all your sessions.</p>
-        <div class="box" id="cp">
-            <label for="cpc_password">CURRENT PASSWORD</label>
-            <input type="password" class="input" id="cpc_password">
-            <label for="cpn_password">NEW PASSWORD</label>
-            <input type="password" class="input" id="cpn_password">
-            <button class="button ticked-button">
-                SAVE
-                <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
-                    <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
-                </svg>
-            </button>
-        </div>
+
         <h3>DELETE ACCOUNT</h3>
         <p>With deleting your account, you delete all your data stored in the system. After that, it can't be recovered.</p>
-        <div class="box" id="da">
-            <label for="da_username">USERNAME</label>
-            <input type="text" class="input" id="da_username">
-            <label for="da_password">PASSWORD</label>
-            <input type="password" class="input" id="da_password">
-            <button class="button arrowed-button">
-                DELETE
-                <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
-                    <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
-                </svg>
-            </button>
+        
+        <div id="outer-box-bg">
+            <div id="outer-box">
+                <div id="outer-box-title">
+                    <h3 id="ob-title">TITLE-TITLE-H3</h3>
+                    <button class="button x-button" onclick="popup.close()">
+                        <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect y="4.24261" width="6" height="1" rx="0.5" transform="rotate(-45 0 4.24261)" fill="black"/>
+                            <rect x="0.707092" width="6" height="1" rx="0.5" transform="rotate(45 0.707092 0)" fill="black"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="ob-content">
+                    <div class="box" id="da">
+                        <label for="da_username">USERNAME</label>
+                        <input type="text" class="input" id="da_username">
+                        <label for="da_password">PASSWORD</label>
+                        <input type="password" class="input" id="da_password">
+                        <button class="button arrowed-button">
+                            DELETE
+                            <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                                <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="box" id="cp">
+                        <label for="cpc_password">CURRENT PASSWORD</label>
+                        <input type="password" class="input" id="cpc_password">
+                        <label for="cpn_password">NEW PASSWORD</label>
+                        <input type="password" class="input" id="cpn_password">
+                        <button class="button ticked-button">
+                            SAVE
+                            <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
+                                <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="box" id="cu">
+                        <label for="cu_password">PASSWORD</label>
+                        <input type="password" class="input" id="cu_password">
+                        <label for="cu_username">NEW USERNAME</label>
+                        <input type="text" class="input" id="cu_username">
+                        <button class="button ticked-button">
+                            SAVE
+                            <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
+                                <path d="M30.8009 50.0381C32.4578 51.6949 32.4578 54.3812 30.8009 56.0381V56.0381C29.144 57.6949 26.4578 57.6949 24.8009 56.0381L3 34.2372C1.34315 32.5803 1.34315 29.894 3 28.2372V28.2372C4.65685 26.5803 7.34315 26.5803 9 28.2372L30.8009 50.0381Z" fill="black"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
     <div id="sessions" class="content-box">sessions</div>
@@ -62,8 +82,8 @@
     <div id="sign-in-up">
         <div id="siu-box">
             <div id="siu-title-grid" class="title-grid">
-                <button id="sign-in-btn" state="" onclick="changeView('sign-in')">SIGN IN</button>
-                <button id="sign-up-btn" state="" onclick="changeView('sign-up')">SIGN UP</button>
+                <button id="sign-in-btn" state="" onclick="view.change('sign-in')">SIGN IN</button>
+                <button id="sign-up-btn" state="" onclick="view.change('sign-up')">SIGN UP</button>
             </div>
             <form id="sign-in" class="siu-form">
                 <h2>SIGN IN</h2>
@@ -108,102 +128,140 @@
 </main>
 
 <script id="script">
+    const popup = {
+        selfBg: document.querySelector('#outer-box-bg'),
+        self: document.querySelector('#outer-box'),
+        title: document.querySelector('#ob-title'),
+        open: function (v) {
+            popup.selfBg.style.display = 'flex';
+            popup.self.style.display = 'block';
+            for (let i = 0; i < popup.views.length; i++) {
+                if (popup.views[i] == v) {
+                    document.querySelector(`#${popup.views[i]}`).style.display = 'flex';
+                    popup.title.innerText = popup.vNames[i];
+                } else {
+                    document.querySelector(`#${popup.views[i]}`).style.display = 'none';
+                }
+            }
+        },
+        close: function () {
+            popup.selfBg.style.display = 'none';
+            popup.self.style.display = 'none';
+
+
+            document.querySelector('#da_username').value = '';
+            document.querySelector('#da_password').value = '';
+
+            document.querySelector('#cpc_password').value = '';
+            document.querySelector('#cpn_password').value = '';
+
+            document.querySelector('#cu_password').value = '';
+            document.querySelector('#cu_username').value = '';
+        },
+        views: ['da', 'cp', 'cu'],
+        vNames: ['DELETE ACCOUNT', 'CHANGE PASSWORD', 'CHANGE USERNAME']
+    }
+
+    account.load = function () {
+        loading.loading();
+        fetch(`${domain.server}/account/load`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `auth=${localStorage.getItem('jwt')}`
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (res) {
+            document.querySelector('#pb_username').innerText = res.user.username;
+
+            loading.stop();
+            dom.render.style.display = 'block';
+        })
+        .catch(function () {
+            loading.error();
+            dom.loadingEP.innerHTML = 'Error while trying to load /account/load.<br>Retry in: <span id="cd">60</span>';
+            if (cdrunning) {
+                return;
+            }
+            cdrunning = true;
+            const cd = setInterval(function () {
+                document.querySelector('#cd').innerHTML--;
+                if (document.querySelector('#cd').innerHTML == 0) {
+                    clearInterval(cd);
+                    cdrunning = false;
+                    account.load();
+                }
+            }, 1000);
+        });
+    }
+
     const view = {
+        change: function (v) {
+            if (v == "sign-in" || v == "sign-up") {
+                document.querySelector('#sign-in-up').style.display = 'flex';
+                document.querySelector('#title-grid').style.display = 'none';
 
+                document.querySelector('#si-error').innerText = '';
+                document.querySelector('#username_si').attributes.state.nodeValue = '';
+                document.querySelector('#username_si').value = '';
+                document.querySelector('#password_si').attributes.state.nodeValue = '';
+                document.querySelector('#password_si').value = '';
+                document.querySelector('#remember7_si').checked = false;
+
+                document.querySelector('#su-error').innerText = '';
+                document.querySelector('#username_su').attributes.state.nodeValue = '';
+                document.querySelector('#username_su').value = '';
+                document.querySelector('#password_su').attributes.state.nodeValue = '';
+                document.querySelector('#password_su').value = '';
+                document.querySelector('#password_again_su').attributes.state.nodeValue = '';
+                document.querySelector('#password_again_su').value = '';
+            }
+            else {
+                document.querySelector('#sign-in-up').style.display = 'none';
+                document.querySelector('#title-grid').style.display = 'flex';
+            }
+            for (let i = 0; i < view.views.length; i++) {
+                if (view.views[i] == v) {
+                    document.querySelector(`#${view.views[i]}`).style.display = 'flex';
+                    document.querySelector(`#${view.views[i]}-btn`).attributes.state.nodeValue = "active";
+                } else {
+                    document.querySelector(`#${view.views[i]}`).style.display = 'none';
+                    document.querySelector(`#${view.views[i]}-btn`).attributes.state.nodeValue = "";
+                }
+            }
+
+            // let temp = v[0].toUpperCase() + v.slice(1);
+            // document.title = `${temp}:Account - SHELFIE`;
+            // console.log('set title: ', document.title)
+
+            if (!url.popstate) {
+                url.change(`?account&v=${v}`);
+            }
+        },
+        init: function () {
+            dom.render.style.display = 'none';
+            loading.loading();
+            loading.start();
+            if (localStorage.getItem('jwt')) {
+                if (url.searchParams().get('v') && url.searchParams().get('v') != 'sign-up' && url.searchParams().get('v') != 'sign-in') {
+                    view.change(url.searchParams().get('v'));
+                }
+                else {
+                    view.change('profile');
+                }
+                account.load();
+            }
+            else {
+                view.change('sign-in');
+                loading.stop();
+                dom.render.style.display = 'flex';
+            }
+        },
+        views: ["sessions", "profile", "statistics", "sign-in", "sign-up"]
     }
-
-    function changeView(view, replace) {
-        if (view == "sign-in" || view == "sign-up") {
-            document.querySelector('#sign-in-up').style.display = 'flex';
-            document.querySelector('#title-grid').style.display = 'none';
-
-            document.querySelector('#si-error').innerText = '';
-            document.querySelector('#username_si').attributes.state.nodeValue = '';
-            document.querySelector('#username_si').value = '';
-            document.querySelector('#password_si').attributes.state.nodeValue = '';
-            document.querySelector('#password_si').value = '';
-            document.querySelector('#remember7_si').checked = false;
-
-            document.querySelector('#su-error').innerText = '';
-            document.querySelector('#username_su').attributes.state.nodeValue = '';
-            document.querySelector('#username_su').value = '';
-            document.querySelector('#password_su').attributes.state.nodeValue = '';
-            document.querySelector('#password_su').value = '';
-            document.querySelector('#password_again_su').attributes.state.nodeValue = '';
-            document.querySelector('#password_again_su').value = '';
-        }
-        else {
-            document.querySelector('#sign-in-up').style.display = 'none';
-            document.querySelector('#title-grid').style.display = 'flex';
-        }
-        
-        const views = ["sessions", "profile", "statistics", "sign-in", "sign-up"];
-        for (let i = 0; i < views.length; i++) {
-            if (views[i] == view) {
-                document.querySelector(`#${views[i]}`).style.display = 'flex';
-                document.querySelector(`#${views[i]}-btn`).attributes.state.nodeValue = "active";
-            } else {
-                document.querySelector(`#${views[i]}`).style.display = 'none';
-                document.querySelector(`#${views[i]}-btn`).attributes.state.nodeValue = "";
-            }
-        }
-        if (!url.popstate) {
-            if (replace) {
-                url.replace(`/?${url.page()}&v=${view}`);
-            }
-            else if (view != url.searchParams().get('v')){
-                url.change(`/?${url.page()}&v=${view}`);
-            }
-        }
-        
-        let temp = view[0].toUpperCase() + view.slice(1);
-        document.title = `${temp}:Account - SHELFIE`;
-    }
-
-    function initView() {
-        let searchParams = new URLSearchParams(window.location.search);
-        if (localStorage.getItem('jwt')) {
-            if (searchParams.has('v') && searchParams.get('v') != 'sign-up' && searchParams.get('v') != 'sign-in') {
-                changeView(searchParams.get('v'), true);
-            } else {
-                changeView('profile');
-            }
-            fetch(`${domain.server}/account/load`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-                }
-            })
-            .then(function (res) {
-                if (res.status == 404) {
-                    localStorage.removeItem('jwt');
-                }
-                return res.json();
-            })
-            .then(function (res) {
-                if (res.redirected) {
-                    let page = url.page();
-                    url.change(res.redirected);
-                    if (page == url.page()) {
-                        changeView(url.searchParams().get('v'));
-                    } else {
-                        loadHTML(url.page());//old, problematic
-                    }
-                }
-                if (res.user) {
-
-                }
-            });
-        } else {
-            if (searchParams.has('v') && searchParams.get('v') == 'sign-up') {
-                changeView(searchParams.get('v'), true);
-            } else {
-                changeView('sign-in');
-            }
-        }
-    }
-    initView();
 
     function validateString(text) {
         const allowedChars = {
@@ -526,21 +584,70 @@
         background-color: var(--accent-bg-color);
         display: flex;
         flex-direction: column;
+        max-width: 400px;
+        width: 100%;
     }
     .box button {
         align-self: flex-end;
         margin-top: 10px;
     }
-    #cu label {
-        padding: 2px 0px;
-    }
     #profile h3 {
         margin-top: 15px;
+    }
+    #profile-box {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
     }
     #da {
         border-left: 5px red solid;
     }
     #da button {
         background-color: red;
+    }
+    #outer-box-bg {
+        height: calc(100% - 3em);
+        width: 100%;
+        position: fixed;
+        top: 3em;
+        left: 0;
+        background-color: var(--menu-bg-color);
+        justify-content: center;
+        align-items: center;
+        display: none;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    #outer-box-title {
+        display: flex;
+        /* max-width: 400px;
+        width: 100%; */
+        padding-left: 10px;
+        justify-content: space-between;
+        align-items: center;
+
+        background-color: var(--bg-color);
+    }
+    #outer-box-title h3 {
+        margin: 0px;
+    }
+    #ob-content {
+        background-color: var(--bg-color);
+    }
+    #outer-box {
+        width: 100%;
+        max-width: 400px;
+        display: none;
+    }
+    @media screen and (width > 750px) and (height > calc(3em + 425px)) {
+        #outer-box-bg {
+            left: 250px;
+            width: calc(100% - 250px);
+        }
+    }
+    @media screen and (width < calc(250px + 400px + 200px))  {
+        .box {
+            max-width: 550px;
+        }
     }
 </style>

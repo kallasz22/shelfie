@@ -68,7 +68,7 @@
         <p id="loading-error"></p>
     </div>
 
-    <div id="render"></div>
+    <div id="render" state=""></div>
     <script defer id="rScript"></script>
 </body>
 
@@ -187,10 +187,12 @@
     
     const loading = {
         start: function () {
+            dom.render.attributes.state.nodeValue = '';
             dom.loading.style.display = 'flex';
         },
         stop: function () {
             dom.loading.style.display = 'none';
+            dom.render.attributes.state.nodeValue = 'active';
         },
         error: function () {
             if (dom.loading_img.attributes.state.nodeValue != 'error') {
@@ -256,11 +258,10 @@
                                     } else {
                                         dom.rScript.innerHTML = '';
                                     }
-                                    if (url.page() == 'account') {
-                                        initView();
-                                    }
+                                    runPagerScripts();
                                 })
-                                .catch(function () {
+                                .catch(function (e) {
+                                    // console.log('catched error', e);
                                     loading.error();
                                     dom.loadingEP.innerHTML = 'Error while trying to load domain.json.<br>Retry in: <span id="cd">60</span>';
                                     if (cdrunning) {
@@ -287,9 +288,7 @@
                             } else {
                                 dom.rScript.innerHTML = '';
                             }
-                            if (url.page() == 'account') {
-                                initView();
-                            }
+                            runPagerScripts();
                         }
                     })
                     .catch(function () {
@@ -376,12 +375,16 @@
             url.action();
             url.lastPage = url.page();
         } else {
-            if (url.page() == 'account') {
-                initView();
-            }
+            runPagerScripts();
         }
         url.popstate = false;
     });
+
+    function runPagerScripts() {
+        if (url.page() == 'account') {
+            view.init();
+        }
+    }
 </script>
 
 <style>
@@ -494,6 +497,22 @@
     .arrowed-button:hover {
         padding-right: 4px;
     }
+    .x-button {
+        width: calc(15pt + 20px);
+        height: calc(15pt + 20px);
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .x-button svg {
+        height: 10pt;
+        width: 10pt;
+        transition: 0.1s all;
+    }
+    .x-button:hover svg {
+        height: 13pt;
+        width: 13pt;
+    }
     #header-title-grid {
         height: 3em;
         background-color: var(--accent-color);
@@ -522,6 +541,7 @@
         flex-direction: column;
         position: absolute;
         z-index: -1;
+        background-color: var(--render-bg-color);
     }
     #loading p {
         font-size: 16pt;
@@ -551,6 +571,9 @@
         top: 3em;
         left: 0px;
         width: 100%;
+        background-color: transparent;
+    }
+    #render[state="active"] {
         background-color: var(--render-bg-color);
     }
     #menu-bg {
