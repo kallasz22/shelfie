@@ -162,45 +162,53 @@
         vNames: ['DELETE ACCOUNT', 'CHANGE PASSWORD', 'CHANGE USERNAME']
     }
 
-    account.load = function () {
-        dom.loadingEP.innerHTML = "";
-        loading.loading();
-        fetch(`${domain.server}/account/load`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `auth=${localStorage.getItem('jwt')}`
-        })
-        .then(function (res) {
-            return res.json();
-        })
-        .then(function (res) {
-            document.querySelector('#pb_username').innerText = res.user.username;
+    const localAccount = {
+        load: function () {
+            dom.loadingEP.innerHTML = "";
+            loading.loading();
+            fetch(`${domain.server}/account/load`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `auth=${localStorage.getItem('jwt')}`
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                document.querySelector('#pb_username').innerText = res.user.username;
 
-            loading.stop();
-            dom.render.style.display = 'block';
-        })
-        .catch(function () {
-            loading.error();
-            dom.loadingEP.innerHTML = 'Error while trying to load /account/load.<br>Retry in: <span id="cd">60</span>';
-            if (cdrunning) {
-                return;
-            }
-            cdrunning = true;
-            const cd = setInterval(function () {
-                if (!document.querySelector('#cd')) {
-                    clearInterval(cd);
+                loading.stop();
+                dom.render.style.display = 'block';
+            })
+            .catch(function () {
+                loading.error();
+                dom.loadingEP.innerHTML = 'Error while trying to load /account/load.<br>Retry in: <span id="cd">60</span>';
+                if (cdrunning) {
                     return;
                 }
-                document.querySelector('#cd').innerHTML--;
-                if (document.querySelector('#cd').innerHTML == 0) {
-                    clearInterval(cd);
-                    cdrunning = false;
-                    account.load();
-                }
-            }, 1000);
-        });
+                cdrunning = true;
+                const cd = setInterval(function () {
+                    if (!document.querySelector('#cd')) {
+                        clearInterval(cd);
+                        return;
+                    }
+                    document.querySelector('#cd').innerHTML--;
+                    if (document.querySelector('#cd').innerHTML == 0) {
+                        clearInterval(cd);
+                        cdrunning = false;
+                        localAccount.load();
+                    }
+                }, 1000);
+            });
+        },
+        signIn: function () {
+            
+        },
+        signUp: function () {
+            
+        }
     }
 
     const view = {
@@ -252,7 +260,7 @@
                 else {
                     view.change('profile');
                 }
-                account.load();
+                localAccount.load();
             }
             else {
                 if (url.searchParams().get('v') && (url.searchParams().get('v') == 'sign-up' || url.searchParams().get('v') == 'sign-in')) {
@@ -349,7 +357,7 @@
             if (res.jwt) {
                 localStorage.setItem('jwt', res.jwt);
 
-                changeView('profile');
+                view.change('profile');
 
                 document.querySelector('#username_si').value = "";
                 document.querySelector('#password_si').value = "";
@@ -443,7 +451,7 @@
             document.querySelector('#su-btn>svg').style.animation = '';
 
             if (res.changeView) {
-                changeView(res.changeView);
+                view.change(res.changeView);
 
                 document.querySelector('#username_su').value = "";
                 document.querySelector('#password_su').value = "";
