@@ -93,10 +93,11 @@
                     </div>
                     <div class="box" id="cu">
                         <label for="cu_password">PASSWORD</label>
-                        <input type="password" class="input" id="cu_password">
+                        <input type="password" class="input" id="cu_password" state="">
                         <label for="cu_username">NEW USERNAME</label>
-                        <input type="text" class="input" id="cu_username">
-                        <button class="button ticked-button">
+                        <input type="text" class="input" id="cu_username" state="">
+                        <p class="error" id="cu-error"></p>
+                        <button class="button ticked-button" onclick="localAccount.changeUsername()" id="cu-btn" state="">
                             SAVE
                             <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
@@ -422,11 +423,83 @@
             }
         },
         changeUsername: function () {
-            
+            let smthWrong = false;
+            if (document.querySelector('#cu-btn').attributes.state.nodeValue != "") {
+                return;
+            }
+            if (!validateString(document.querySelector('#cu_password').value)) {
+                document.querySelector('#cu_password').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#cu-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#cu_password').attributes.state.nodeValue = '';
+            }
+            if (!validateString(document.querySelector('#cu_username').value)) {
+                document.querySelector('#cu_username').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#cu-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#cu_username').attributes.state.nodeValue = '';
+            }
+            if (smthWrong) {
+                return;
+            }
+            else {
+                document.querySelector('#cu-error').innerText = '';
+            }
+            document.querySelector('#close-popup').style.display = 'none';
+            document.querySelector('#cu-btn').attributes.state.nodeValue = "disabled";
+            document.querySelector('#cu-btn>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#cu-btn>svg').style.animation = '1s loading infinite linear';
+
+
+            fetch(`${domain.server}/account/changeusername`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `cu_password=${document.querySelector('#cu_password').value}&cu_username=${document.querySelector('#cu_username').value}&auth=${localStorage.getItem('jwt')}`
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                switch (res.eCode) {
+                    case '405xWP':
+                        document.querySelector('#cu_password').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case '405xUAU': 
+                        document.querySelector('#cu_username').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case '200xSUC':
+                        url.change('?homepage');
+                        account.signOut();
+                        return;
+                        break; /*:?:*/
+                    default:
+                        break;
+                }
+                document.querySelector('#cu-error').innerText = ecodes.lookup(res.eCode);
+
+                document.querySelector('#cu-btn').attributes.state.nodeValue = "";
+                document.querySelector('#cu-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#cu-btn>svg').style.animation = '';
+                document.querySelector('#close-popup').style.display = 'flex';
+
+            })
+            .catch(function () {
+                if (document.querySelector('#cu-error').innerText == '') {
+                    document.querySelector('#cu-error').innerText = 'There was an error, while trying to change password. Please try again later and/or report the bug!';
+                    document.querySelector('#cu-btn').attributes.state.nodeValue = "";
+                    document.querySelector('#cu-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#cu-btn>svg').style.animation = '';
+                    document.querySelector('#close-popup').style.display = 'flex';
+                }
+            });
         },
         changePassword: function () {
             let smthWrong = false;
-            if (document.querySelector('#da-btn').attributes.state.nodeValue != "") {
+            if (document.querySelector('#cp-btn').attributes.state.nodeValue != "") {
                 return;
             }
             if (!validateString(document.querySelector('#cpc_password').value)) {

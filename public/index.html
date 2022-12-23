@@ -83,7 +83,8 @@
         '200xSSU': '!SUCCESSFUL_SIGN_UP',
         '200xSAD': '!SUCCESSFUL_ACCOUNT_DELETION',
         '405xWU': 'Wrong username!',
-        '200xSPC':'!SUCCESSFUL_PASSWORD_CHANGE',
+        '200xSPC': '!SUCCESSFUL_PASSWORD_CHANGE',
+        '200xSUC': '!SUCCESSFUL_USERNAME_CHANGE',
         lookup: function (code) {
             if (ecodes[code] && ecodes[code][0] != '!') {
                 return ecodes[code];

@@ -153,24 +153,20 @@ app.post('/account/changeusername', accountOnly, async function(req, res){
     const pwC = await bcrypt.compare(req.body.cu_password, user.password);
 
     if(!pwC){
-        res.send('WRONG PASSWORD');
+        res.status(405).type('application/json').send({eCode: '405xWP'});
         return;
     }
 
     const existAlready = await User.findOne({ username: req.body.cu_username });
     if (existAlready) {
-        res.send('USERNAME IS ALREADY USED');
+        res.status(405).type('application/json').send({eCode: '405xUAU'});
         return;
     }
-    if (!req.body.cu_username) {
-        res.send("USERNAME CAN'T BE EMPTY");
-        return;
-    }
+
     user.username = req.body.cu_username;
-    user.tokens.splice(0, user.tokens.length);
 
     await user.save();
-    res.redirect('/account');
+    res.status(200).type('application/json').send({eCode: '200xSUC'});
 });
 /*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
