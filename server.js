@@ -110,12 +110,28 @@ app.post('/account/signup', async function(req, res){
     }
 });
 app.post('/account/load', accountOnly, async function(req, res) {
-    const user = await User.findOne({username: req.user.username});
+    const user = req.user;
 
     let uObj = {
         username: user.username,
     }
     res.status(200).type('application/json').send({user: uObj});
+});
+app.post('/account/delete', accountOnly, async function(req, res){
+    let user = req.user;
+    if (user.username != req.body.da_username) {
+        res.status(405).type('application/json').send({eCode: '405xWU'});
+        return;
+    }
+    // console.log('user', user);
+    const pwC = await bcrypt.compare(req.body.da_password, user.password);
+
+    if(!pwC){
+        res.status(405).type('application/json').send({eCode: '405xWP'});
+        return;
+    }
+    await User.deleteOne({ username: user.username });
+    res.status(200).type('application/json').send({eCode: '200xSAD'});
 });
 /*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
@@ -331,23 +347,7 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 */
-/*
-app.post('/account/deleteaccount', cors, accountOnly, async function(req, res){
-    let user = req.user;
-    if (user.username != req.body.da_username) {
-        res.send('WRONG USERNAME');
-        return;
-    }
-    const pwC = await bcrypt.compare(req.body.da_password, user.password);
 
-    if(!pwC){
-        res.send('WRONG PASSWORD');
-        return;
-    }
-    await User.deleteOne({ username: user.username });
-    res.status(200).redirect('/');
-});
-*/
 /*
 app.post('/account/changepassword', cors, accountOnly, async function(req, res){
     let user = req.user;
@@ -435,7 +435,9 @@ async function accountOnly(req, res, next) {
             return;
         }
 
-        req.user = data;
+        req.user = userExist;
+        req.jwt = data;
+        
         next();
     });
 }

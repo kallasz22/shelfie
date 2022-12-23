@@ -81,6 +81,8 @@
         '405xUAU': 'Username already used!',
         '200xSSI': '!SUCCESSFUL_SIGN_IN',
         '200xSSU': '!SUCCESSFUL_SIGN_UP',
+        '200xSAD': '!SUCCESSFUL_ACCOUNT_DELETION',
+        '405xWU': 'Wrong username!',
         lookup: function (code) {
             if (ecodes[code] && ecodes[code][0] != '!') {
                 return ecodes[code];
@@ -486,6 +488,9 @@
         border: #207a8b 1px solid;
         border-radius: 3px;
         background-color: var(--render-bg-color);
+    }
+    .input[state="wrong"] {
+        border: 1px solid red;
     }
     .button {
         border: unset;

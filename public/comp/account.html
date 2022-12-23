@@ -51,11 +51,11 @@
         
 
         
-        <div id="outer-box-bg">
-            <div id="outer-box">
+        <div id="outer-box-bg" onclick="popup.close()">
+            <div id="outer-box" onclick="event.cancelBubble=true">
                 <div id="outer-box-title">
                     <h3 id="ob-title">TITLE-TITLE-H3</h3>
-                    <button class="button x-button" onclick="popup.close()">
+                    <button class="button x-button" onclick="popup.close()" id="close-popup">
                         <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect y="4.24261" width="6" height="1" rx="0.5" transform="rotate(-45 0 4.24261)" fill="black"/>
                             <rect x="0.707092" width="6" height="1" rx="0.5" transform="rotate(45 0.707092 0)" fill="black"/>
@@ -65,10 +65,11 @@
                 <div id="ob-content">
                     <div class="box" id="da">
                         <label for="da_username">USERNAME</label>
-                        <input type="text" class="input" id="da_username">
+                        <input type="text" class="input" id="da_username" state="">
                         <label for="da_password">PASSWORD</label>
-                        <input type="password" class="input" id="da_password">
-                        <button class="button arrowed-button">
+                        <input type="password" class="input" id="da_password" state="">
+                        <p class="error" id="da-error"></p>
+                        <button class="button arrowed-button" onclick="localAccount.deleteAccount()" id="da-btn" state="">
                             DELETE
                             <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
@@ -179,8 +180,6 @@
                     document.querySelector(`#${popup.views[i]}`).style.display = 'none';
                 }
             }
-
-
         },
         close: function () {
             popup.selfBg.style.opacity = '0';
@@ -294,7 +293,7 @@
                         break;
                     case '405xWP':
                         document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
-                        break
+                        break;
                     default:
                         break;
                 }
@@ -424,6 +423,87 @@
             if (data.user.username) {
                 document.querySelector('#pb_username').innerText = data.user.username;
             }
+        },
+        changeUsername: function () {
+            
+        },
+        changePassword: function () {
+            
+        },
+        deleteAccount: function () {
+            let smthWrong = false;
+            if (document.querySelector('#da-btn').attributes.state.nodeValue != "") {
+                return;
+            }
+            if (!validateString(document.querySelector('#da_username').value)) {
+                document.querySelector('#da_username').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#da-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#da_username').attributes.state.nodeValue = '';
+            }
+            if (!validateString(document.querySelector('#da_password').value)) {
+                document.querySelector('#da_password').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#da-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#da_password').attributes.state.nodeValue = '';
+            }
+            if (smthWrong) {
+                return;
+            }
+            else {
+                document.querySelector('#da-error').innerText = '';
+            }
+            document.querySelector('#close-popup').style.display = 'none';
+            document.querySelector('#da-btn').attributes.state.nodeValue = "disabled";
+            document.querySelector('#da-btn>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#da-btn>svg').style.animation = '1s loading infinite linear';
+
+
+            fetch(`${domain.server}/account/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `da_username=${document.querySelector('#da_username').value}&da_password=${document.querySelector('#da_password').value}&auth=${localStorage.getItem('jwt')}`
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                switch (res.eCode) {
+                    case '405xWU':
+                        document.querySelector('#da_username').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case '405xWP':
+                        document.querySelector('#da_password').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case '200xSAD':
+                        url.change('?homepage');
+                        account.signOut();
+                        return;
+                        break; /*:?:*/
+                    default:
+                        break;
+                }
+                document.querySelector('#da-error').innerText = ecodes.lookup(res.eCode);
+
+                document.querySelector('#da-btn').attributes.state.nodeValue = "";
+                document.querySelector('#da-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#da-btn>svg').style.animation = '';
+                document.querySelector('#close-popup').style.display = 'flex';
+
+            })
+            .catch(function () {
+                if (document.querySelector('#da-error').innerText == '') {
+                    document.querySelector('#da-error').innerText = 'There was an error, while trying to delete account. Please try again later and/or report the bug!';
+                    document.querySelector('#da-btn').attributes.state.nodeValue = "";
+                    document.querySelector('#da-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#da-btn>svg').style.animation = '';
+                    document.querySelector('#close-popup').style.display = 'flex';
+                }
+            });
         }
     }
 
@@ -614,9 +694,9 @@
         padding: 10px 10px 10px 15px;
         cursor: default;
     }
-    .siu-form input[state="wrong"] {
+    /* .siu-form input[state="wrong"] {
         border: 1px red solid;
-    }
+    } */
     #su-pw-div {
         display: flex;
         flex-direction: column;
@@ -666,6 +746,9 @@
     #da button {
         background-color: red;
     }
+    #da button[state="disabled"] {
+        background-color: red !important;
+    }
     #da-card {
         border-top: 0px red solid;
     }
@@ -700,6 +783,7 @@
         align-items: center;
 
         background-color: var(--bg-color);
+        height: 40px;
     }
     #outer-box-title h3 {
         margin: 0px;
