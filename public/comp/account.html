@@ -214,7 +214,7 @@
                 return res.json();
             })
             .then(function (res) {
-                if (res.eCode) {
+                if (res.eCode == '404xUNF') {
                     localStorage.removeItem('jwt');
                     view.change('sign-in');
                     document.querySelector('#si-error').innerText = ecodes.lookup(res.eCode);
@@ -489,7 +489,7 @@
             })
             .catch(function () {
                 if (document.querySelector('#cu-error').innerText == '') {
-                    document.querySelector('#cu-error').innerText = 'There was an error, while trying to change password. Please try again later and/or report the bug!';
+                    document.querySelector('#cu-error').innerText = 'There was an error, while trying to change username. Please try again later and/or report the bug!';
                     document.querySelector('#cu-btn').attributes.state.nodeValue = "";
                     document.querySelector('#cu-btn>svg').outerHTML = dom.svg.arrow;
                     document.querySelector('#cu-btn>svg').style.animation = '';
@@ -977,21 +977,4 @@
         margin-top: auto;
         align-self: flex-end;
     }
-
-    /* @keyframes popupIN {
-        0% {
-            
-        }
-        100% {
-            
-        }
-    }
-    @keyframes popupOUT {
-        0% {
-
-        }
-        100% {
-
-        }
-    } */
 </style>

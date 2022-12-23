@@ -114,7 +114,7 @@ app.post('/account/load', accountOnly, async function(req, res) {
     let uObj = {
         username: user.username,
     }
-    res.status(200).type('application/json').send({user: uObj});
+    res.status(200).type('application/json').send({eCode: '200xSAL', user: uObj});
 });
 app.post('/account/delete', accountOnly, async function(req, res){
     let user = req.user;
