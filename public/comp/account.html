@@ -79,10 +79,11 @@
                     </div>
                     <div class="box" id="cp">
                         <label for="cpc_password">CURRENT PASSWORD</label>
-                        <input type="password" class="input" id="cpc_password">
+                        <input type="password" class="input" id="cpc_password" state="">
                         <label for="cpn_password">NEW PASSWORD</label>
-                        <input type="password" class="input" id="cpn_password">
-                        <button class="button ticked-button">
+                        <input type="password" class="input" id="cpn_password" state="">
+                        <p class="error" id="cp-error"></p>
+                        <button class="button ticked-button" onclick="localAccount.changePassword()" id="cp-btn" state="">
                             SAVE
                             <svg width="81" height="60" viewBox="0 0 81 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M71.8432 3C73.5001 1.34315 76.1863 1.34315 77.8432 3V3C79.5001 4.65685 79.5001 7.34315 77.8432 9L31.3015 55.5417C29.6446 57.1986 26.9583 57.1986 25.3015 55.5418V55.5418C23.6446 53.8849 23.6446 51.1986 25.3015 49.5417L71.8432 3Z" fill="black"/>
@@ -424,7 +425,76 @@
             
         },
         changePassword: function () {
-            
+            let smthWrong = false;
+            if (document.querySelector('#da-btn').attributes.state.nodeValue != "") {
+                return;
+            }
+            if (!validateString(document.querySelector('#cpc_password').value)) {
+                document.querySelector('#cpc_password').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#cp-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#cpc_password').attributes.state.nodeValue = '';
+            }
+            if (!validateString(document.querySelector('#cpn_password').value)) {
+                document.querySelector('#cpn_password').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#cp-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#cpn_password').attributes.state.nodeValue = '';
+            }
+            if (smthWrong) {
+                return;
+            }
+            else {
+                document.querySelector('#cp-error').innerText = '';
+            }
+            document.querySelector('#close-popup').style.display = 'none';
+            document.querySelector('#cp-btn').attributes.state.nodeValue = "disabled";
+            document.querySelector('#cp-btn>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#cp-btn>svg').style.animation = '1s loading infinite linear';
+
+
+            fetch(`${domain.server}/account/changepassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `cpc_password=${document.querySelector('#cpc_password').value}&cpn_password=${document.querySelector('#cpn_password').value}&auth=${localStorage.getItem('jwt')}`
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                switch (res.eCode) {
+                    case '405xWP':
+                        document.querySelector('#cpc_password').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case '200xSPC':
+                        url.change('?homepage');
+                        account.signOut();
+                        return;
+                        break; /*:?:*/
+                    default:
+                        break;
+                }
+                document.querySelector('#cp-error').innerText = ecodes.lookup(res.eCode);
+
+                document.querySelector('#cp-btn').attributes.state.nodeValue = "";
+                document.querySelector('#cp-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#cp-btn>svg').style.animation = '';
+                document.querySelector('#close-popup').style.display = 'flex';
+
+            })
+            .catch(function () {
+                if (document.querySelector('#cp-error').innerText == '') {
+                    document.querySelector('#cp-error').innerText = 'There was an error, while trying to change password. Please try again later and/or report the bug!';
+                    document.querySelector('#cp-btn').attributes.state.nodeValue = "";
+                    document.querySelector('#cp-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#cp-btn>svg').style.animation = '';
+                    document.querySelector('#close-popup').style.display = 'flex';
+                }
+            });
         },
         deleteAccount: function () {
             let smthWrong = false;

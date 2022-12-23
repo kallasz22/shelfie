@@ -77,7 +77,6 @@ app.post('/account/signin', async function(req, res){
         return;
     }
 });
-
 app.post('/account/signup', async function(req, res){
     const user = new User();
     const existAlready = await User.findOne({ username: req.body.username_su });
@@ -123,7 +122,6 @@ app.post('/account/delete', accountOnly, async function(req, res){
         res.status(405).type('application/json').send({eCode: '405xWU'});
         return;
     }
-    // console.log('user', user);
     const pwC = await bcrypt.compare(req.body.da_password, user.password);
 
     if(!pwC){
@@ -132,6 +130,47 @@ app.post('/account/delete', accountOnly, async function(req, res){
     }
     await User.deleteOne({ username: user.username });
     res.status(200).type('application/json').send({eCode: '200xSAD'});
+});
+app.post('/account/changepassword', accountOnly, async function(req, res){
+    let user = req.user;
+    const pwC = await bcrypt.compare(req.body.cpc_password, user.password);
+
+    if(!pwC){
+        res.status(405).type('application/json').send({eCode: '405xWP'});
+        return;
+    }
+
+    user.pkiy = CIMP.enc(CIMP.dec(user.pkiy, req.body.cpc_password), req.body.cpn_password);
+
+    const hash = await bcrypt.hash(req.body.cpn_password, 10);
+    user.password = hash;
+
+    await user.save();
+    res.status(405).type('application/json').send({eCode: '200xSPC'});
+});
+app.post('/account/changeusername', accountOnly, async function(req, res){
+    let user = req.user;
+    const pwC = await bcrypt.compare(req.body.cu_password, user.password);
+
+    if(!pwC){
+        res.send('WRONG PASSWORD');
+        return;
+    }
+
+    const existAlready = await User.findOne({ username: req.body.cu_username });
+    if (existAlready) {
+        res.send('USERNAME IS ALREADY USED');
+        return;
+    }
+    if (!req.body.cu_username) {
+        res.send("USERNAME CAN'T BE EMPTY");
+        return;
+    }
+    user.username = req.body.cu_username;
+    user.tokens.splice(0, user.tokens.length);
+
+    await user.save();
+    res.redirect('/account');
 });
 /*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
@@ -345,54 +384,6 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     await user.save();
 
     res.redirect('/portal');
-});
-*/
-
-/*
-app.post('/account/changepassword', cors, accountOnly, async function(req, res){
-    let user = req.user;
-    const pwC = await bcrypt.compare(req.body.cp_currentPassword, user.password);
-
-    if(!pwC){
-        res.send('WRONG PASSWORD');
-        return;
-    }
-    if (!req.body.cp_newPassword) {
-        res.send('WRONG NEW PASSWORD');
-        return;
-    }
-    const hash = await bcrypt.hash(req.body.cp_newPassword, 10);
-    user.password = hash;
-    user.tokens.splice(0, user.tokens.length);
-
-    await user.save();
-    res.redirect('/account');
-});
-*/
-/*
-app.post('/account/changeusername', cors, accountOnly, async function(req, res){
-    let user = req.user;
-    const pwC = await bcrypt.compare(req.body.cu_password, user.password);
-
-    if(!pwC){
-        res.send('WRONG PASSWORD');
-        return;
-    }
-
-    const existAlready = await User.findOne({ username: req.body.cu_username });
-    if (existAlready) {
-        res.send('USERNAME IS ALREADY USED');
-        return;
-    }
-    if (!req.body.cu_username) {
-        res.send("USERNAME CAN'T BE EMPTY");
-        return;
-    }
-    user.username = req.body.cu_username;
-    user.tokens.splice(0, user.tokens.length);
-
-    await user.save();
-    res.redirect('/account');
 });
 */
 /*
