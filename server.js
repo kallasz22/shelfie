@@ -52,7 +52,7 @@ app.post('/account/signin', async function(req, res){
     if (user) {
         const pwC = await bcrypt.compare(req.body.password_si, user.password);
         if (!pwC) {
-            res.status(405).type('application/json').send({message: 'Wrong password!'});
+            res.status(405).type('application/json').send({eCode: '405xWP'});
             return;
         }
 
@@ -73,7 +73,7 @@ app.post('/account/signin', async function(req, res){
         res.status(200).type('application/json').send({message: '', jwt: accessToken, changeView: 'profile', user: userObj});
     }
     else{
-        res.status(404).type('application/json').send({message: 'User not found!'});
+        res.status(404).type('application/json').send({eCode: '404xUNF'});
         return;
     }
 });
@@ -106,7 +106,7 @@ app.post('/account/signup', async function(req, res){
 
         res.status(200).type('application/json').send({message: '', changeView: 'sign-in'});
     } else {
-        res.status(405).type('application/json').send({message: 'Username already used!'});
+        res.status(405).type('application/json').send({eCode: '405xUAU'});
     }
 });
 app.post('/account/load', accountOnly, async function(req, res) {
@@ -418,20 +418,20 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 async function accountOnly(req, res, next) {
     let accessToken = req.body.auth;
     if (!accessToken) {
-        res.status(403).type('application/json').send({redirected: '?account&v=sign-in', eCode: '403xATNF'});
+        res.status(403).type('application/json').send({eCode: '403xATNF'});
         return;
     }
 
     jwt.verify(accessToken, process.env.jwt_normal_key, async function (error, data) {
         if (error) {
-            res.status(403).type('application/json').send({redirected: '?account&v=sign-in', eCode: '403xIAT'});
+            res.status(403).type('application/json').send({eCode: '403xIAT'});
             return;
         }
 
         const userExist = await User.findOne({username: data.username});
 
         if (!userExist) {
-            res.status(404).type('application/json').send({redirected: '?account&v=sign-in', eCode: '404xUNF'});
+            res.status(404).type('application/json').send({eCode: '404xUNF'});
             return;
         }
 

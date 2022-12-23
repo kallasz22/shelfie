@@ -177,8 +177,10 @@
                 return res.json();
             })
             .then(function (res) {
-                if (res.eCode == '404xUNF' || res.eCode == '403xIAT' || res.eCode == '403xATNF') {
+                if (res.eCode) {
+                    localStorage.removeItem('jwt');
                     view.change('sign-in');
+                    document.querySelector('#si-error').innerText = ecodes.lookup(res.eCode);
                 }
                 localAccount.applyData(res);
 
@@ -209,7 +211,6 @@
         signIn: function () {
             let smthWrong = false;
             if (document.querySelector('#si-btn').attributes.state.nodeValue != "") {
-                console.log('already loading');
                 return;
             }
             if (!validateString(document.querySelector('#username_si').value)) {
@@ -244,21 +245,20 @@
                 body: `username_si=${document.querySelector('#username_si').value}&password_si=${document.querySelector('#password_si').value}`
             })
             .then(function (res) {
-                switch (res.status) {
-                    case 404:
+                return res.json();
+            })
+            .then(function (res) {
+                switch (res.eCode) {
+                    case '404xUNF':
                         document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
                         break;
-                    case 405:
+                    case '405xWP':
                         document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
                         break
                     default:
                         break;
                 }
-
-                return res.json();
-            })
-            .then(function (res) {
-                document.querySelector('#si-error').innerText = res.message;
+                document.querySelector('#si-error').innerText = ecodes.lookup(res.eCode);
 
                 document.querySelector('#si-btn').attributes.state.nodeValue = "";
                 document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
@@ -288,7 +288,6 @@
         signUp: function () {
             let smthWrong = false;
             if (document.querySelector('#su-btn').attributes.state.nodeValue != "") {
-                console.log('already loading');
                 return;
             }
             if (!validateString(document.querySelector('#username_su').value)) {
@@ -348,13 +347,14 @@
                 body: `username_su=${document.querySelector('#username_su').value}&password_su=${document.querySelector('#password_su').value}`
             })
             .then(function (res) {
-                if (res.status == 405) {
-                    document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
-                }
                 return res.json();
             })
             .then(function (res) {
-                document.querySelector('#su-error').innerText = res.message;
+                if (res.eCode == '405xUAU') {
+                    document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
+                }
+
+                document.querySelector('#su-error').innerText = ecodes.lookup(res.eCode);
 
                 document.querySelector('#su-btn').attributes.state.nodeValue = "";
                 document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;

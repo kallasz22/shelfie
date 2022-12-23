@@ -73,6 +73,22 @@
 </body>
 
 <script>
+    const ecodes = {
+        '403xATNF': '!ACCESS_TOKEN_NOT_FOUND',
+        '403xIAT': '!INVALID_ACCESS_TOKEN',
+        '404xUNF': 'User not found!',
+        '405xWP': 'Wrong password!',
+        '405xUAU': 'Username already used!',
+        lookup: function (code) {
+            if (ecodes[code] && ecodes[code][0] != '!') {
+                return ecodes[code];
+            }
+            else {
+                return '';
+            }
+        }
+    }
+
     const dom = {
         render: document.querySelector('#render'),
         loading: document.querySelector('#loading'),
