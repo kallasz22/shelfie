@@ -418,25 +418,20 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 async function accountOnly(req, res, next) {
     let accessToken = req.body.auth;
     if (!accessToken) {
-        res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
+        res.status(403).type('application/json').send({redirected: '?account&v=sign-in', eCode: '403xATNF'});
         return;
     }
-    // accessToken = req.body.auth.split(' ')[1];
-    // if (!accessToken) {
-    //     res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
-    //     return;
-    // }
 
     jwt.verify(accessToken, process.env.jwt_normal_key, async function (error, data) {
         if (error) {
-            res.status(403).type('application/json').send({redirected: '?account&v=sign-in'});
+            res.status(403).type('application/json').send({redirected: '?account&v=sign-in', eCode: '403xIAT'});
             return;
         }
 
         const userExist = await User.findOne({username: data.username});
 
         if (!userExist) {
-            res.status(404).type('application/json').send({redirected: '?account&v=sign-in'});
+            res.status(404).type('application/json').send({redirected: '?account&v=sign-in', eCode: '404xUNF'});
             return;
         }
 
@@ -452,7 +447,6 @@ async function cors(req, res, next) {
             'Access-Control-Allow-Origin': `${domain.origin}`,
             'Access-Control-Allow-Credentials': true,
             'Access-Control-Allow-Headers': '*',
-            'Access-Control-Expose-Headers': '*, Authorization',
             'Allow': 'GET, POST'
         }
     );

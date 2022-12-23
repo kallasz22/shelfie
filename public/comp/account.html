@@ -96,7 +96,7 @@
                     <label for="remember7_si" id="rem7_si-label">REMEMBER ME</label>
                 </div>
                 <p id="si-error" class="error"></p>
-                <button type="button" selector="siu-btn" onclick="signIn()" id="si-btn" state="" class="button arrowed-button">
+                <button type="button" selector="siu-btn" onclick="localAccount.signIn()" id="si-btn" state="" class="button arrowed-button">
                     SIGN IN 
                     <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
@@ -115,7 +115,7 @@
                     <input type="password" name="password_again_su" id="password_again_su" state="" class="input">
                 </div>
                 <p class="error" id="su-error"></p>
-                <button type="button" selector="siu-btn" onclick="signUp()" id="su-btn" state="" class="button arrowed-button">
+                <button type="button" selector="siu-btn" onclick="localAccount.signUp()" id="su-btn" state="" class="button arrowed-button">
                     SIGN UP
                     <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
@@ -177,7 +177,10 @@
                 return res.json();
             })
             .then(function (res) {
-                document.querySelector('#pb_username').innerText = res.user.username;
+                if (res.eCode == '404xUNF' || res.eCode == '403xIAT' || res.eCode == '403xATNF') {
+                    view.change('sign-in');
+                }
+                localAccount.applyData(res);
 
                 loading.stop();
                 dom.render.style.display = 'block';
@@ -204,10 +207,183 @@
             });
         },
         signIn: function () {
-            
+            let smthWrong = false;
+            if (document.querySelector('#si-btn').attributes.state.nodeValue != "") {
+                console.log('already loading');
+                return;
+            }
+            if (!validateString(document.querySelector('#username_si').value)) {
+                document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#username_si').attributes.state.nodeValue = '';
+            }
+            if (!validateString(document.querySelector('#password_si').value)) {
+                document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
+                smthWrong = true;
+            } else {
+                document.querySelector('#password_si').attributes.state.nodeValue = '';
+            }
+            if (smthWrong) {
+                return;
+            }
+            else {
+                document.querySelector('#si-error').innerText = '';
+            }
+            document.querySelector('#si-btn').attributes.state.nodeValue = "disabled";
+            document.querySelector('#si-btn>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#si-btn>svg').style.animation = '1s loading infinite linear';
+
+            fetch(`${domain.server}/account/signin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `username_si=${document.querySelector('#username_si').value}&password_si=${document.querySelector('#password_si').value}`
+            })
+            .then(function (res) {
+                switch (res.status) {
+                    case 404:
+                        document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
+                        break;
+                    case 405:
+                        document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
+                        break
+                    default:
+                        break;
+                }
+
+                return res.json();
+            })
+            .then(function (res) {
+                document.querySelector('#si-error').innerText = res.message;
+
+                document.querySelector('#si-btn').attributes.state.nodeValue = "";
+                document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#si-btn>svg').style.animation = '';
+
+                if (res.jwt) {
+                    localStorage.setItem('jwt', res.jwt);
+                    
+                    localAccount.applyData(res);
+                    view.change('profile');
+
+                    document.querySelector('#username_si').value = "";
+                    document.querySelector('#password_si').value = "";
+
+                    account.action();
+                }
+            })
+            .catch(function () {
+                if (document.querySelector('#si-error').innerText == '') {
+                    document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
+                    document.querySelector('#si-btn').attributes.state.nodeValue = "";
+                    document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#si-btn>svg').style.animation = '';
+                }
+            });
         },
         signUp: function () {
-            
+            let smthWrong = false;
+            if (document.querySelector('#su-btn').attributes.state.nodeValue != "") {
+                console.log('already loading');
+                return;
+            }
+            if (!validateString(document.querySelector('#username_su').value)) {
+                document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#su-error').style.fontSize = '10pt';
+                document.querySelector('#su-error').style.margin = '0px';
+                document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
+                if (document.querySelector('#username_su').value == "") {
+                    document.querySelector('#su-error').style.fontSize = '12pt';
+                    document.querySelector('#su-error').innerText = 'Empty field(s)!';
+                }
+                smthWrong = true;
+            } else {
+                document.querySelector('#username_su').attributes.state.nodeValue = '';
+            }
+            if (!validateString(document.querySelector('#password_su').value)) {
+                document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
+                document.querySelector('#su-error').style.fontSize = '10pt';
+                document.querySelector('#su-error').style.margin = '0px';
+                document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
+                if (document.querySelector('#password_su').value == "") {
+                    document.querySelector('#su-error').style.fontSize = '12pt';
+                    document.querySelector('#su-error').innerText = 'Empty field(s)!';
+                }
+                smthWrong = true;
+            } else {
+                document.querySelector('#password_su').attributes.state.nodeValue = '';
+            }
+
+            if (smthWrong) {
+                return;
+            }
+            else {
+                document.querySelector('#su-error').innerText = '';
+                if (document.querySelector('#password_again_su').value != document.querySelector('#password_su').value) {
+                    document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
+                    document.querySelector('#password_again_su').attributes.state.nodeValue = 'wrong';
+                    document.querySelector('#su-error').style.fontSize = '12pt';
+                    document.querySelector('#su-error').style.margin = 'unset';
+                    document.querySelector('#su-error').innerText = 'The 2 given passwords are not the same!';
+                    return;
+                }
+                else {
+                    document.querySelector('#password_su').attributes.state.nodeValue = '';
+                    document.querySelector('#password_again_su').attributes.state.nodeValue = '';
+                }
+            }
+            document.querySelector('#su-btn').attributes.state.nodeValue = "disabled";
+            document.querySelector('#su-btn>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#su-btn>svg').style.animation = '1s loading infinite linear';
+
+            fetch(`${domain.server}/account/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `username_su=${document.querySelector('#username_su').value}&password_su=${document.querySelector('#password_su').value}`
+            })
+            .then(function (res) {
+                if (res.status == 405) {
+                    document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
+                }
+                return res.json();
+            })
+            .then(function (res) {
+                document.querySelector('#su-error').innerText = res.message;
+
+                document.querySelector('#su-btn').attributes.state.nodeValue = "";
+                document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#su-btn>svg').style.animation = '';
+
+                if (res.changeView) {
+                    view.change(res.changeView);
+
+                    document.querySelector('#username_su').value = "";
+                    document.querySelector('#password_su').value = "";
+                    document.querySelector('#password_again_su').value = "";
+                }
+            })
+            .catch(function () {
+                if (document.querySelector('#su-error').innerText == '') {
+                    document.querySelector('#su-error').innerText = 'There was an error, while trying to sign up. Please try again later and/or report the bug!';
+                    document.querySelector('#su-btn').attributes.state.nodeValue = "";
+                    document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#su-btn>svg').style.animation = '';
+                }
+            });
+        },
+        applyData: function (data) {
+            if (!data.user) {
+                return;
+            }
+            if (data.user.username) {
+                document.querySelector('#pb_username').innerText = data.user.username;
+            }
         }
     }
 
@@ -296,176 +472,8 @@
         return i == a.length;
     }
 
-    function signIn() {
-        let smthWrong = false;
-        if (document.querySelector('#si-btn').attributes.state.nodeValue != "") {
-            console.log('already loading');
-            return;
-        }
-        if (!validateString(document.querySelector('#username_si').value)) {
-            document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
-            document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
-            smthWrong = true;
-        } else {
-            document.querySelector('#username_si').attributes.state.nodeValue = '';
-        }
-        if (!validateString(document.querySelector('#password_si').value)) {
-            document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
-            document.querySelector('#si-error').innerText = 'Invalid character(s) or empty field(s)!';
-            smthWrong = true;
-        } else {
-            document.querySelector('#password_si').attributes.state.nodeValue = '';
-        }
-        if (smthWrong) {
-            return;
-        }
-        else {
-            document.querySelector('#si-error').innerText = '';
-        }
-        document.querySelector('#si-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#si-btn>svg').outerHTML = loading.svg.loading;
-        document.querySelector('#si-btn>svg').style.animation = '1s loading infinite linear';
-        
-        fetch(`${domain.server}/account/signin`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `username_si=${document.querySelector('#username_si').value}&password_si=${document.querySelector('#password_si').value}`
-        })
-        .then(function (res) {
-            switch (res.status) {
-                case 404:
-                    document.querySelector('#username_si').attributes.state.nodeValue = 'wrong';
-                    break;
-                case 405:
-                    document.querySelector('#password_si').attributes.state.nodeValue = 'wrong';
-                    break
-                default:
-                    break;
-            }
-
-            return res.json();
-        })
-        .then(function (res) {
-            document.querySelector('#si-error').innerText = res.message;
-
-            document.querySelector('#si-btn').attributes.state.nodeValue = "";
-            document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
-            document.querySelector('#si-btn>svg').style.animation = '';
-
-            if (res.jwt) {
-                localStorage.setItem('jwt', res.jwt);
-
-                view.change('profile');
-
-                document.querySelector('#username_si').value = "";
-                document.querySelector('#password_si').value = "";
-
-                account.action();
-            }
-        })
-        .catch(function () {
-            if (document.querySelector('#si-error').innerText == '') {
-                document.querySelector('#si-error').innerText = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
-                document.querySelector('#si-btn').attributes.state.nodeValue = "";
-                document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
-                document.querySelector('#si-btn>svg').style.animation = '';
-            }
-        });
-    }
-
     function signUp() {
-        let smthWrong = false;
-        if (document.querySelector('#su-btn').attributes.state.nodeValue != "") {
-            console.log('already loading');
-            return;
-        }
-        if (!validateString(document.querySelector('#username_su').value)) {
-            document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
-            document.querySelector('#su-error').style.fontSize = '10pt';
-            document.querySelector('#su-error').style.margin = '0px';
-            document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
-            if (document.querySelector('#username_su').value == "") {
-                document.querySelector('#su-error').style.fontSize = '12pt';
-                document.querySelector('#su-error').innerText = 'Empty field(s)!';
-            }
-            smthWrong = true;
-        } else {
-            document.querySelector('#username_su').attributes.state.nodeValue = '';
-        }
-        if (!validateString(document.querySelector('#password_su').value)) {
-            document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
-            document.querySelector('#su-error').style.fontSize = '10pt';
-            document.querySelector('#su-error').style.margin = '0px';
-            document.querySelector('#su-error').innerText = 'Usernames and passwords can only contain the letters of the English alphabets, numbers, and the common special characters (+, -, /, *, %, =, (, ), [, ], <, >, #, &, @, {, }, !, ?, ., :, ;, _, ,)!';
-            if (document.querySelector('#password_su').value == "") {
-                document.querySelector('#su-error').style.fontSize = '12pt';
-                document.querySelector('#su-error').innerText = 'Empty field(s)!';
-            }
-            smthWrong = true;
-        } else {
-            document.querySelector('#password_su').attributes.state.nodeValue = '';
-        }
         
-        if (smthWrong) {
-            return;
-        }
-        else {
-            document.querySelector('#su-error').innerText = '';
-            if (document.querySelector('#password_again_su').value != document.querySelector('#password_su').value) {
-                document.querySelector('#password_su').attributes.state.nodeValue = 'wrong';
-                document.querySelector('#password_again_su').attributes.state.nodeValue = 'wrong';
-                document.querySelector('#su-error').style.fontSize = '12pt';
-                document.querySelector('#su-error').style.margin = 'unset';
-                document.querySelector('#su-error').innerText = 'The 2 given passwords are not the same!';
-                return;
-            }
-            else {
-                document.querySelector('#password_su').attributes.state.nodeValue = '';
-                document.querySelector('#password_again_su').attributes.state.nodeValue = '';
-            }
-        }
-        document.querySelector('#su-btn').attributes.state.nodeValue = "disabled";
-        document.querySelector('#su-btn>svg').outerHTML = loading.svg.loading;
-        document.querySelector('#su-btn>svg').style.animation = '1s loading infinite linear';
-
-        fetch(`${domain.server}/account/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `username_su=${document.querySelector('#username_su').value}&password_su=${document.querySelector('#password_su').value}`
-        })
-        .then(function (res) {
-            if (res.status == 405) {
-                document.querySelector('#username_su').attributes.state.nodeValue = 'wrong';
-            }
-            return res.json();
-        })
-        .then(function (res) {
-            document.querySelector('#su-error').innerText = res.message;
-
-            document.querySelector('#su-btn').attributes.state.nodeValue = "";
-            document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
-            document.querySelector('#su-btn>svg').style.animation = '';
-
-            if (res.changeView) {
-                view.change(res.changeView);
-
-                document.querySelector('#username_su').value = "";
-                document.querySelector('#password_su').value = "";
-                document.querySelector('#password_again_su').value = "";
-            }
-        })
-        .catch(function () {
-            if (document.querySelector('#su-error').innerText == '') {
-                document.querySelector('#su-error').innerText = 'There was an error, while trying to sign up. Please try again later and/or report the bug!';
-                document.querySelector('#su-btn').attributes.state.nodeValue = "";
-                document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
-                document.querySelector('#su-btn>svg').style.animation = '';
-            }
-        });
     }
 
 
