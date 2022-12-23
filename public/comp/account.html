@@ -163,29 +163,25 @@
 
 <script id="script">
     const popup = {
-        selfBg: document.querySelector('#outer-box-bg'),
-        self: document.querySelector('#outer-box'),
-        title: document.querySelector('#ob-title'),
         open: function (v) {
-            popup.selfBg.style.display = 'flex';
+            document.querySelector('#outer-box-bg').style.display = 'flex';
             setTimeout(function () {
-                popup.selfBg.style.opacity = '1';
+                document.querySelector('#outer-box-bg').style.opacity = '1';
             }, 001)
 
             for (let i = 0; i < popup.views.length; i++) {
                 if (popup.views[i] == v) {
                     document.querySelector(`#${popup.views[i]}`).style.display = 'flex';
-                    popup.title.innerText = popup.vNames[i];
+                    document.querySelector('#ob-title').innerText = popup.vNames[i];
                 } else {
                     document.querySelector(`#${popup.views[i]}`).style.display = 'none';
                 }
             }
         },
         close: function () {
-            popup.selfBg.style.opacity = '0';
+            document.querySelector('#outer-box-bg').style.opacity = '0';
             setTimeout(function () {
-                popup.selfBg.style.display = 'none';
-                
+                document.querySelector('#outer-box-bg').style.display = 'none';
             }, 150)
 
             document.querySelector('#da_username').value = '';
