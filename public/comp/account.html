@@ -689,6 +689,7 @@
         box-sizing: border-box;
         opacity: 0;
         transition: 0.1s all;
+        overflow-y: scroll;
     }
     #outer-box-title {
         display: flex;
@@ -709,7 +710,12 @@
     #outer-box {
         width: 100%;
         max-width: 400px;
-        /* display: none; */
+    }
+    @media screen and (height < calc(3em + 220px)) {
+        #outer-box {
+            position: absolute;
+            top: 0px;
+        }
     }
     @media screen and (width > 750px) and (height > calc(3em + 425px)) {
         #outer-box-bg {
