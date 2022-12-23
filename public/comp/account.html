@@ -8,15 +8,48 @@
     <div id="profile" class="content-box">
         <h2>PROFILE</h2>
         <div id="profile-box" class="box">Username: <span id="pb_username"></span></div>
+        
+        <div id="profile-cards">
+            <div class="card">
+                <h3>CHANGE USERNAME</h3>
+                <p>With changing your username, the system will delete all your sessions.</p>
+                <button class="button arrowed-button" onclick="popup.open('cu')">
+                    CHANGE
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
+            </div>
+    
+            <div class="card">
+                <h3>CHANGE PASSWORD</h3>
+                <p>With changing your password, the system will delete all your sessions.</p>
+                <button class="button arrowed-button" onclick="popup.open('cp')">
+                    CHANGE
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
+            </div>
+            
+    
+            <div class="card" id="da-card">
+                <h3>DELETE ACCOUNT</h3>
+                <p>With deleting your account, you delete all your data stored in the system. After that, it can't be recovered.</p>
+                <button class="button arrowed-button" onclick="popup.open('da')">
+                    DELETE
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        
 
-        <h3>CHANGE USERNAME</h3>
-        <p>With changing your username, the system will delete all your sessions.</p>
-
-        <h3>CHANGE PASSWORD</h3>
-        <p>With changing your password, the system will delete all your sessions.</p>
-
-        <h3>DELETE ACCOUNT</h3>
-        <p>With deleting your account, you delete all your data stored in the system. After that, it can't be recovered.</p>
         
         <div id="outer-box-bg">
             <div id="outer-box">
@@ -134,7 +167,10 @@
         title: document.querySelector('#ob-title'),
         open: function (v) {
             popup.selfBg.style.display = 'flex';
-            popup.self.style.display = 'block';
+            setTimeout(function () {
+                popup.selfBg.style.opacity = '1';
+            }, 001)
+
             for (let i = 0; i < popup.views.length; i++) {
                 if (popup.views[i] == v) {
                     document.querySelector(`#${popup.views[i]}`).style.display = 'flex';
@@ -143,11 +179,15 @@
                     document.querySelector(`#${popup.views[i]}`).style.display = 'none';
                 }
             }
+
+
         },
         close: function () {
-            popup.selfBg.style.display = 'none';
-            popup.self.style.display = 'none';
-
+            popup.selfBg.style.opacity = '0';
+            setTimeout(function () {
+                popup.selfBg.style.display = 'none';
+                
+            }, 150)
 
             document.querySelector('#da_username').value = '';
             document.querySelector('#da_password').value = '';
@@ -264,7 +304,7 @@
                 document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#si-btn>svg').style.animation = '';
 
-                if (res.jwt) {
+                if (res.jwt && res.eCode == '200xSSI') {
                     localStorage.setItem('jwt', res.jwt);
                     
                     localAccount.applyData(res);
@@ -360,8 +400,8 @@
                 document.querySelector('#su-btn>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#su-btn>svg').style.animation = '';
 
-                if (res.changeView) {
-                    view.change(res.changeView);
+                if (res.eCode == '200xSSU') {
+                    view.change('sign-in');
 
                     document.querySelector('#username_su').value = "";
                     document.querySelector('#password_su').value = "";
@@ -612,9 +652,9 @@
         align-self: flex-end;
         margin-top: 10px;
     }
-    #profile h3 {
+    /* #profile h3 {
         margin-top: 15px;
-    }
+    } */
     #profile-box {
         display: flex;
         flex-direction: row;
@@ -624,6 +664,15 @@
         border-left: 5px red solid;
     }
     #da button {
+        background-color: red;
+    }
+    #da-card {
+        border-top: 0px red solid;
+    }
+    #da-card:hover {
+        border-top: 10px red solid;
+    }
+    #da-card button {
         background-color: red;
     }
     #outer-box-bg {
@@ -638,6 +687,8 @@
         display: none;
         padding: 10px;
         box-sizing: border-box;
+        opacity: 0;
+        transition: 0.1s all;
     }
     #outer-box-title {
         display: flex;
@@ -658,7 +709,7 @@
     #outer-box {
         width: 100%;
         max-width: 400px;
-        display: none;
+        /* display: none; */
     }
     @media screen and (width > 750px) and (height > calc(3em + 425px)) {
         #outer-box-bg {
@@ -671,4 +722,47 @@
             max-width: 550px;
         }
     }
+    #profile-cards {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+    .card {
+        display: flex;
+        max-width: 400px;
+        /* min-width: 300px; */
+        width: auto;
+        flex-direction: column;
+        min-height: 200px;
+        background-color: var(--accent-bg-color);
+        padding: 10px;
+        box-sizing: border-box;
+        transition: 0.1s all;
+        border-top: 0px solid var(--accent-color);
+    }
+    .card:hover {
+        border-top: 10px var(--accent-color) solid;
+    }
+    .card .button {
+        margin-top: auto;
+        align-self: flex-end;
+    }
+
+    /* @keyframes popupIN {
+        0% {
+            
+        }
+        100% {
+            
+        }
+    }
+    @keyframes popupOUT {
+        0% {
+
+        }
+        100% {
+
+        }
+    } */
 </style>

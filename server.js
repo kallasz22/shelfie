@@ -70,7 +70,7 @@ app.post('/account/signin', async function(req, res){
             sessions: user.sessions
         }
 
-        res.status(200).type('application/json').send({message: '', jwt: accessToken, changeView: 'profile', user: userObj});
+        res.status(200).type('application/json').send({eCode: '200xSSI', jwt: accessToken, user: userObj});
     }
     else{
         res.status(404).type('application/json').send({eCode: '404xUNF'});
@@ -104,7 +104,7 @@ app.post('/account/signup', async function(req, res){
         user.houses.push(CIMP.enc(JSON.stringify(houseObj), pkiy));
         await user.save();
 
-        res.status(200).type('application/json').send({message: '', changeView: 'sign-in'});
+        res.status(200).type('application/json').send({eCode: '200xSSU'});
     } else {
         res.status(405).type('application/json').send({eCode: '405xUAU'});
     }
