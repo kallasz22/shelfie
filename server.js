@@ -435,8 +435,9 @@ async function accountOnly(req, res, next) {
         }
         
         let i = 0;
+        let decrypted = {};
         if (i < user.sessions.length) {
-            let decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
+            decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
         }
         while (i < user.sessions.length && decrypted.token != sessionToken) {
             i++;
