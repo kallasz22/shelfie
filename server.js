@@ -184,6 +184,21 @@ app.post('/account/changeusername', accountOnly, async function(req, res){
     await user.save();
     res.status(200).type('application/json').send({eCode: '200xSUC'});
 });
+app.post('/account/deletesession', accountOnly, async function(req, res){
+    let user = req.user;
+
+    let sumList = req.body.sumList.split(',');
+    for (let i = 0; i < user.sessions.length; i++) {
+        const s_id = JSON.parse(CIMP.dec(user.sessions[i], req.jwt.pkiy))._id;
+        if (sumList.includes(s_id)) {
+            user.sessions.splice(i, 1);
+        }
+    }
+
+    await user.save();
+
+    res.status(200).type('application/json').send({eCode: '200xSSD'});
+});
 /*
 app.get('/portal/load', cors, accountOnly, async function(req, res){
     const user = await req.user;
@@ -398,26 +413,7 @@ app.post('/portal/editbook', cors, accountOnly, async function(req, res){
     res.redirect('/portal');
 });
 */
-/*
-app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
-    let user = req.user;
 
-    let i = 0;
-    while (i < user.tokens.length && user.tokens[i]._id != req.body.objectID) {
-        i++;
-    }
-    if (i == user.tokens.length) {
-        res.status(404).send('ERROR');
-        return;
-    }
-
-
-    user.tokens.splice(i, 1);
-    await user.save();
-
-    res.status(200).redirect('/account');
-});
-*/
 async function accountOnly(req, res, next) {
     let accessToken = req.body.jwt;
     let sessionToken = req.body.session;

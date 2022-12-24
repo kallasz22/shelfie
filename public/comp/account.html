@@ -111,16 +111,19 @@
     </div>
     <div id="sessions" class="content-box">
         <h2>SESSIONS</h2>
-        <!-- <div class="session" id="template-session">
-            <input type="checkbox" name="" id="" class="check4delete">
+        <div id="session-head">
             <div>
-                <p class="time">TIME: <span></span></p>
-                <p class="user-agent">USER-AGENT: <span></span></p>
-                <p class="last-activity">LAST ACTIVITY: <span></span></p>
-                <p class="expires">EXPIRES: <span></span></p>
-                <p class="origin">ORIGIN: <span></span></p>
+                <input type="checkbox" name="" id="checkall-session" oninput="sessions.action()">
+                <button class="button arrowed-button" state="disabled" id="delete-selected-sessions" onclick="sessions.delete()">
+                    DELETE SELECTED
+                    <svg width="41" height="70" viewBox="0 0 41 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9C1.34315 7.34315 1.34315 4.65685 3 3V3C4.65685 1.34315 7.34315 1.34314 9 3L38 32C39.6568 33.6568 39.6568 36.3431 38 38V38C36.3431 39.6568 33.6568 39.6568 32 38L3 9Z" fill="black"/>
+                        <path d="M32 32C33.6569 30.3431 36.3431 30.3431 38 32V32C39.6569 33.6569 39.6569 36.3431 38 38L9 67C7.34315 68.6569 4.65685 68.6569 3 67V67C1.34315 65.3431 1.34315 62.6569 3 61L32 32Z" fill="black"/>
+                    </svg>
+                </button>
             </div>
-        </div> -->
+            <p class="error" id="session-error"></p>
+        </div>
 
         <div id="sessions-list"></div>
     </div>
@@ -211,6 +214,7 @@
 
     const localAccount = {
         load: function () {
+            document.querySelector('#sessions-list').innerHTML = '';
             dom.loadingEP.innerHTML = "";
             loading.loading();
             fetch(`${domain.server}/account/load`, {
@@ -765,6 +769,8 @@
                 let check4delete = document.createElement('input');
                 check4delete.setAttribute('type', 'checkbox');
                 check4delete.setAttribute('class', 'check4delete');
+                check4delete.setAttribute('oninput', 'sessions.deletebtn.action()');
+                check4delete.setAttribute('id', sessions[i]._id);
                 session.appendChild(check4delete);
 
                 let session_grid = document.createElement('div');
@@ -785,6 +791,94 @@
                 }
 
                 sessionsList.appendChild(session);
+            }
+        },
+        delete: function () {
+            if (document.querySelector('#delete-selected-sessions').attributes.state.nodeValue != "") {
+                return;
+            }
+            let checkboxes = document.querySelectorAll('.check4delete');
+            let sumList = [];
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    sumList.push(checkboxes[i].id);
+                }
+            }
+            if (!sumList) {
+                return;
+            }
+            document.querySelector('#session-error').innerHTML = '';
+            document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "disabled";
+            document.querySelector('#delete-selected-sessions>svg').outerHTML = loading.svg.loading;
+            document.querySelector('#delete-selected-sessions>svg').style.animation = '1s loading infinite linear';
+            fetch(`${domain.server}/account/deletesession`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `${account.getAuth()}&sumList=${sumList.toString()}`
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                if (res.eCode == '200xSSD') {
+                    localAccount.load();
+                    document.querySelector('#session-error').innerHTML = '';
+                    document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "";
+                    document.querySelector('#delete-selected-sessions>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#delete-selected-sessions>svg').style.animation = '';
+                }
+            })
+            .catch(function () {
+                document.querySelector('#session-error').innerHTML = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
+                document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "";
+                document.querySelector('#delete-selected-sessions>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#delete-selected-sessions>svg').style.animation = '';
+            });
+        },
+        action: function () {
+            let checkboxes = document.querySelectorAll('.check4delete');
+            if (document.querySelector('#checkall-session').checked) {
+                for (let i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = true;
+                }
+                sessions.deletebtn.enable();
+            } else {
+                for (let i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = false;
+                }
+                sessions.deletebtn.disable();
+            }
+        },
+        deletebtn: {
+            enable: function () {
+                document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "";
+            },
+            disable: function () {
+                document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "disabled";
+            },
+            action: function () {
+                let checkboxes = document.querySelectorAll('.check4delete');
+                let db = 0;
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        db++;
+                    }
+                }
+
+                if (db > 0) {
+                    sessions.deletebtn.enable();
+                } else {
+                    sessions.deletebtn.disable();
+                }
+
+                if (db == checkboxes.length) {
+                    document.querySelector('#checkall-session').checked = true;
+                }
+                else {
+                    document.querySelector('#checkall-session').checked = false;
+                }
             }
         }
     }
@@ -1079,5 +1173,14 @@
             'current';
             column-gap: 0px;
         }
+    }
+    #session-head {
+        padding: 10px;
+
+    }
+    #session-head>div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 </style>
