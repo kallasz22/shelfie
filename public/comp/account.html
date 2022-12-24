@@ -219,7 +219,7 @@
                     sessionStorage.removeItem('jwt');
                     localStorage.removeItem('session');
                     sessionStorage.removeItem('session');
-                    
+
                     account.action();
                     view.change('sign-in');
                     document.querySelector('#si-error').innerText = ecodes.lookup(res.eCode);
@@ -494,7 +494,7 @@
                 document.querySelector('#cu-error').innerText = ecodes.lookup(res.eCode);
 
                 document.querySelector('#cu-btn').attributes.state.nodeValue = "";
-                document.querySelector('#cu-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#cu-btn>svg').outerHTML = dom.svg.tick;
                 document.querySelector('#cu-btn>svg').style.animation = '';
                 document.querySelector('#close-popup').style.display = 'flex';
 
@@ -503,7 +503,7 @@
                 if (document.querySelector('#cu-error').innerText == '') {
                     document.querySelector('#cu-error').innerText = 'There was an error, while trying to change username. Please try again later and/or report the bug!';
                     document.querySelector('#cu-btn').attributes.state.nodeValue = "";
-                    document.querySelector('#cu-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#cu-btn>svg').outerHTML = dom.svg.tick;
                     document.querySelector('#cu-btn>svg').style.animation = '';
                     document.querySelector('#close-popup').style.display = 'flex';
                 }
@@ -566,7 +566,7 @@
                 document.querySelector('#cp-error').innerText = ecodes.lookup(res.eCode);
 
                 document.querySelector('#cp-btn').attributes.state.nodeValue = "";
-                document.querySelector('#cp-btn>svg').outerHTML = dom.svg.arrow;
+                document.querySelector('#cp-btn>svg').outerHTML = dom.svg.tick;
                 document.querySelector('#cp-btn>svg').style.animation = '';
                 document.querySelector('#close-popup').style.display = 'flex';
 
@@ -575,7 +575,7 @@
                 if (document.querySelector('#cp-error').innerText == '') {
                     document.querySelector('#cp-error').innerText = 'There was an error, while trying to change password. Please try again later and/or report the bug!';
                     document.querySelector('#cp-btn').attributes.state.nodeValue = "";
-                    document.querySelector('#cp-btn>svg').outerHTML = dom.svg.arrow;
+                    document.querySelector('#cp-btn>svg').outerHTML = dom.svg.tick;
                     document.querySelector('#cp-btn>svg').style.animation = '';
                     document.querySelector('#close-popup').style.display = 'flex';
                 }
