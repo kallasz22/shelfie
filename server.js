@@ -30,7 +30,6 @@ const User = require('./models/user');
 
 //domain
 const domain = require('./public/domain.json');
-const { json } = require('express');
 
 app.use(express.json());
 app.use(cors);
@@ -56,8 +55,7 @@ app.post('/account/signin', async function(req, res){
             return;
         }
 
-        // await user.save();
-
+        
         let userObj = {
             username: user.username,
             pkiy: CIMP.dec(user.pkiy, req.body.password_si)
@@ -65,12 +63,25 @@ app.post('/account/signin', async function(req, res){
 
         const accessToken = jwt.sign(userObj, process.env.jwt_normal_key);
 
+        const sessionToken = crypto.randomUUID();
+        let date = new Date();
+        const sessionObj = {
+            time: date,
+            token: sessionToken,
+            UAG: req.headers['user-agent'],
+            lastActivity: date,
+            expires: date.setDate(date.getDate() + 7),
+            origin: req.headers['origin']
+        }
+        user.sessions.push(CIMP.enc(JSON.stringify(sessionObj), userObj.pkiy));
+        await user.save();
+
         userObj = {
             username: user.username,
             sessions: user.sessions
         }
-
-        res.status(200).type('application/json').send({eCode: '200xSSI', jwt: accessToken, user: userObj});
+        
+        res.status(200).type('application/json').send({eCode: '200xSSI', jwt: accessToken, user: userObj, session: sessionToken});
     }
     else{
         res.status(404).type('application/json').send({eCode: '404xUNF'});
@@ -403,9 +414,10 @@ app.post('/account/deletetoken', cors, accountOnly, async function(req, res){
 });
 */
 async function accountOnly(req, res, next) {
-    let accessToken = req.body.auth;
-    if (!accessToken) {
-        res.status(403).type('application/json').send({eCode: '403xATNF'});
+    let accessToken = req.body.jwt;
+    let sessionToken = req.body.session;
+    if (!accessToken || !sessionToken) {
+        res.status(403).type('application/json').send({eCode: '403xBA'});
         return;
     }
 
@@ -415,14 +427,29 @@ async function accountOnly(req, res, next) {
             return;
         }
 
-        const userExist = await User.findOne({username: data.username});
+        const user = await User.findOne({username: data.username});
 
-        if (!userExist) {
+        if (!user) {
             res.status(404).type('application/json').send({eCode: '404xUNF'});
             return;
         }
 
-        req.user = userExist;
+        let i = 0;
+        let decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
+        while (i < user.sessions.length && decrypted.token != sessionToken) {
+            i++;
+            if (i < user.sessions.length) {
+                decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
+            }
+        }
+        
+        const now = new Date();
+        if (i == user.sessions.length || now > decrypted.expires) {
+            res.status(403).type('application/json').send({eCode: '403xIST'});
+            return;
+        }
+
+        req.user = user;
         req.jwt = data;
         
         next();
@@ -432,7 +459,6 @@ async function accountOnly(req, res, next) {
 async function cors(req, res, next) {
     res.set(
         {
-            // 'Access-Control-Allow-Origin': `*`,
             'Access-Control-Allow-Origin': `${domain.origin}`,
             'Access-Control-Allow-Credentials': true,
             'Access-Control-Allow-Headers': '*',

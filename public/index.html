@@ -74,7 +74,7 @@
 
 <script>
     const ecodes = {
-        '403xATNF': '!ACCESS_TOKEN_NOT_FOUND',
+        '403xBA': '!BAD_AUTH',
         '403xIAT': '!INVALID_ACCESS_TOKEN',
         '404xUNF': 'User not found!',
         '405xWP': 'Wrong password!',
@@ -86,6 +86,7 @@
         '200xSPC': '!SUCCESSFUL_PASSWORD_CHANGE',
         '200xSUC': '!SUCCESSFUL_USERNAME_CHANGE',
         '200xSAL': '!SUCCESSFUL_ACCOUNT_LOAD',
+        '403xIST': '!INVALID_SESSION_TOKEN',
         lookup: function (code) {
             if (ecodes[code] && ecodes[code][0] != '!') {
                 return ecodes[code];
@@ -285,7 +286,7 @@
                                     }
                                     runPagerScripts();
                                 })
-                                .catch(function (e) {
+                                .catch(function () {
                                     loading.error();
                                     dom.loadingEP.innerHTML = 'Error while trying to load domain.json.<br>Retry in: <span id="cd">60</span>';
                                     if (cdrunning) {
@@ -384,7 +385,7 @@
 
     const account = {
         action: function () {
-            if (localStorage.getItem('jwt')) {
+            if (localStorage.getItem('jwt') || sessionStorage.getItem('jwt')) {
                 dom.smallAccountP.innerText = 'You are signed in!';
                 dom.signOutBtn.style.display = 'flex';
             } else {
@@ -395,8 +396,14 @@
         },
         signOut: function () {
             localStorage.removeItem('jwt');
+            sessionStorage.removeItem('jwt');
+            localStorage.removeItem('session');
+            sessionStorage.removeItem('session');
             url.change('?homepage');
             account.action();
+        },
+        getAuth: function () {
+            return `jwt=${localStorage.getItem('jwt') || sessionStorage.getItem('jwt')}&session=${localStorage.getItem('session') || sessionStorage.getItem('session')}`;
         }
     }
     account.action();

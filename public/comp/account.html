@@ -208,14 +208,19 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `auth=${localStorage.getItem('jwt')}`
+                body: `${account.getAuth()}`
             })
             .then(function (res) {
                 return res.json();
             })
             .then(function (res) {
-                if (res.eCode == '404xUNF') {
+                if (res.eCode == '404xUNF' || res.eCode == '403xIST' || res.eCode == '403xIAT') {
                     localStorage.removeItem('jwt');
+                    sessionStorage.removeItem('jwt');
+                    localStorage.removeItem('session');
+                    sessionStorage.removeItem('session');
+                    
+                    account.action();
                     view.change('sign-in');
                     document.querySelector('#si-error').innerText = ecodes.lookup(res.eCode);
                 }
@@ -301,9 +306,16 @@
                 document.querySelector('#si-btn>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#si-btn>svg').style.animation = '';
 
-                if (res.jwt && res.eCode == '200xSSI') {
-                    localStorage.setItem('jwt', res.jwt);
-                    
+                if (res.eCode == '200xSSI') {
+                    if (document.querySelector('#remember7_si').checked) {
+                        localStorage.setItem('jwt', res.jwt);
+                        localStorage.setItem('session', res.session);
+                    }
+                    else {
+                        sessionStorage.setItem('jwt', res.jwt);
+                        sessionStorage.setItem('session', res.session);
+                    }
+
                     localAccount.applyData(res);
                     view.change('profile');
 
@@ -458,7 +470,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `cu_password=${document.querySelector('#cu_password').value}&cu_username=${document.querySelector('#cu_username').value}&auth=${localStorage.getItem('jwt')}`
+                body: `${account.getAuth()}&cu_password=${document.querySelector('#cu_password').value}&cu_username=${document.querySelector('#cu_username').value}`
             })
             .then(function (res) {
                 return res.json();
@@ -533,7 +545,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `cpc_password=${document.querySelector('#cpc_password').value}&cpn_password=${document.querySelector('#cpn_password').value}&auth=${localStorage.getItem('jwt')}`
+                body: `${account.getAuth()}&cpc_password=${document.querySelector('#cpc_password').value}&cpn_password=${document.querySelector('#cpn_password').value}`
             })
             .then(function (res) {
                 return res.json();
@@ -605,7 +617,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `da_username=${document.querySelector('#da_username').value}&da_password=${document.querySelector('#da_password').value}&auth=${localStorage.getItem('jwt')}`
+                body: `${account.getAuth()}&da_username=${document.querySelector('#da_username').value}&da_password=${document.querySelector('#da_password').value}`
             })
             .then(function (res) {
                 return res.json();
@@ -688,7 +700,7 @@
             dom.render.style.display = 'none';
             loading.loading();
             loading.start();
-            if (localStorage.getItem('jwt')) {
+            if (localStorage.getItem('jwt') || sessionStorage.getItem('jwt')) {
                 if (url.searchParams().get('v') && url.searchParams().get('v') != 'sign-up' && url.searchParams().get('v') != 'sign-in') {
                     view.change(url.searchParams().get('v'));
                 }
