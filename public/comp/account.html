@@ -2,7 +2,6 @@
     <div id="title-grid" class="title-grid">
         <button onclick="view.change('profile')" id="profile-btn" state="">PROFILE</button>
         <button onclick="view.change('sessions')" id="sessions-btn" state="">SESSIONS</button>
-        <button onclick="view.change('statistics')" id="statistics-btn" state="">STATISTICS</button>
     </div>
 
     <div id="profile" class="content-box">
@@ -110,9 +109,20 @@
             
         </div>
     </div>
-    <div id="sessions" class="content-box">sessions</div>
-    <div id="statistics" class="content-box">
-        statistics
+    <div id="sessions" class="content-box">
+        <h2>SESSIONS</h2>
+        <!-- <div class="session" id="template-session">
+            <input type="checkbox" name="" id="" class="check4delete">
+            <div>
+                <p class="time">TIME: <span></span></p>
+                <p class="user-agent">USER-AGENT: <span></span></p>
+                <p class="last-activity">LAST ACTIVITY: <span></span></p>
+                <p class="expires">EXPIRES: <span></span></p>
+                <p class="origin">ORIGIN: <span></span></p>
+            </div>
+        </div> -->
+
+        <div id="sessions-list"></div>
     </div>
 
     <div id="sign-in-up">
@@ -316,8 +326,7 @@
                         sessionStorage.setItem('session', res.session);
                     }
 
-                    localAccount.applyData(res);
-                    view.change('profile');
+                    view.init();
 
                     document.querySelector('#username_si').value = "";
                     document.querySelector('#password_si').value = "";
@@ -432,6 +441,9 @@
             }
             if (data.user.username) {
                 document.querySelector('#pb_username').innerText = data.user.username;
+            }
+            if (data.user.sessions) {
+                sessions.init(data.user.sessions);
             }
         },
         changeUsername: function () {
@@ -720,7 +732,7 @@
                 dom.render.style.display = 'block';
             }
         },
-        views: ["sessions", "profile", "statistics", "sign-in", "sign-up"]
+        views: ["sessions", "profile", "sign-in", "sign-up"]
     }
 
     function validateString(text) {
@@ -743,22 +755,48 @@
         return i == a.length;
     }
 
-    function signUp() {
-        
+    const sessions = {
+        init: function (sessions) {
+            const sessionsList = document.querySelector('#sessions-list');
+            for (let i = 0; i < sessions.length; i++) {
+                let session = document.createElement('div');
+                session.setAttribute('class', 'session');
+
+                let check4delete = document.createElement('input');
+                check4delete.setAttribute('type', 'checkbox');
+                check4delete.setAttribute('class', 'check4delete');
+                session.appendChild(check4delete);
+
+                let session_grid = document.createElement('div');
+                session_grid.innerHTML = 
+                `<p class="time">CREATED: <span>${sessions[i].time}</span></p>
+                 <p class="user-agent">USER-AGENT: <span>${sessions[i].UAG}</span></p>
+                 <p class="last-activity">LAST ACTIVITY: <span>${sessions[i].lastActivity}</span></p>
+                 <p class="expires">EXPIRES: <span>${sessions[i].expires}</span></p>
+                 <p class="origin">ORIGIN: <span>${sessions[i].origin}</span></p>`;
+
+                session.appendChild(session_grid);
+                
+                if (sessions[i].token != null) {
+                    let current = document.createElement('p');
+                    current.setAttribute('class', 'error');
+                    current.innerText = 'CURRENT SESSION';
+                    session_grid.appendChild(current);
+                }
+
+                sessionsList.appendChild(session);
+            }
+        }
     }
-
-
 </script>
     
 <style>
     main {
         height: 100%;
         width: 100%;
-        /* max-width: 600px; */
     }
     .title-grid {
         display: none;
-        /* display: flex; */
         overflow-x: auto;
         height: 40px;
     }
@@ -777,7 +815,6 @@
         justify-content: center;
         gap: 5px;
         transition: 0.1s;
-        /* height: 40px; */
     }
     .title-grid button:hover {
         background-color: var(--button-hover-color);
@@ -845,9 +882,6 @@
         padding: 10px 10px 10px 15px;
         cursor: default;
     }
-    /* .siu-form input[state="wrong"] {
-        border: 1px red solid;
-    } */
     #su-pw-div {
         display: flex;
         flex-direction: column;
@@ -883,9 +917,6 @@
         align-self: flex-end;
         margin-top: 10px;
     }
-    /* #profile h3 {
-        margin-top: 15px;
-    } */
     #profile-box {
         display: flex;
         flex-direction: row;
@@ -927,8 +958,6 @@
     }
     #outer-box-title {
         display: flex;
-        /* max-width: 400px;
-        width: 100%; */
         padding-left: 10px;
         justify-content: space-between;
         align-items: center;
@@ -988,5 +1017,67 @@
     .card .button {
         margin-top: auto;
         align-self: flex-end;
+    }
+    .session {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        background-color: var(--accent-bg-color);
+        margin-bottom: 10px;
+        padding: 10px;
+        overflow-x: scroll;
+    }
+    .session>div {
+        display: grid;
+        grid-template-areas: 
+        'time expires'
+        'last-activity last-activity'
+        'user-agent user-agent'
+        'origin current';
+        width: 100%;
+        column-gap: 10px;
+    }
+    .time {
+        grid-area: time;
+    }
+    .user-agent {
+        grid-area: user-agent;
+    }
+    .last-activity {
+        grid-area: last-activity;
+    }
+    .expires {
+        grid-area: expires;
+    }
+    .origin {
+        grid-area: origin;
+    }
+    .session>div>.error {
+        grid-area: current;
+    }
+    @media screen and (width < 910px) and (height > calc(3em + 425px)) {
+        .session>div {
+            grid-template-areas: 
+            'time'
+            'expires'
+            'last-activity'
+            'user-agent'
+            'origin'
+            'current';
+            column-gap: 0px;
+        }
+    }
+    @media screen and (width < 660px) and (height <= calc(3em + 425px)) {
+        .session>div {
+            grid-template-areas: 
+            'time'
+            'expires'
+            'last-activity'
+            'user-agent'
+            'origin'
+            'current';
+            column-gap: 0px;
+        }
     }
 </style>

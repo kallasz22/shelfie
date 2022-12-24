@@ -55,7 +55,6 @@ app.post('/account/signin', async function(req, res){
             return;
         }
 
-        
         let userObj = {
             username: user.username,
             pkiy: CIMP.dec(user.pkiy, req.body.password_si)
@@ -70,18 +69,14 @@ app.post('/account/signin', async function(req, res){
             token: sessionToken,
             UAG: req.headers['user-agent'],
             lastActivity: date,
-            expires: date.setDate(date.getDate() + 7),
-            origin: req.headers['origin']
+            expires: new Date(date.setDate(date.getDate() + 7)),
+            origin: req.headers['origin'],
+            _id: crypto.randomUUID()
         }
         user.sessions.push(CIMP.enc(JSON.stringify(sessionObj), userObj.pkiy));
         await user.save();
-
-        userObj = {
-            username: user.username,
-            sessions: user.sessions
-        }
         
-        res.status(200).type('application/json').send({eCode: '200xSSI', jwt: accessToken, user: userObj, session: sessionToken});
+        res.status(200).type('application/json').send({eCode: '200xSSI', jwt: accessToken, session: sessionToken});
     }
     else{
         res.status(404).type('application/json').send({eCode: '404xUNF'});
@@ -124,7 +119,17 @@ app.post('/account/load', accountOnly, async function(req, res) {
 
     let uObj = {
         username: user.username,
+        sessions: []
     }
+
+    for (let i = 0; i < user.sessions.length; i++) {
+        const JSONsession = JSON.parse(CIMP.dec(user.sessions[i], req.jwt.pkiy));
+        if (JSONsession.token != req.session) {
+            JSONsession.token = null;
+        }
+        uObj.sessions.push(JSONsession);
+    }
+
     res.status(200).type('application/json').send({eCode: '200xSAL', user: uObj});
 });
 app.post('/account/delete', accountOnly, async function(req, res){
@@ -454,6 +459,7 @@ async function accountOnly(req, res, next) {
 
         req.user = user;
         req.jwt = data;
+        req.session = sessionToken;
         
         next();
     });
