@@ -217,6 +217,7 @@
             document.querySelector('#sessions-list').innerHTML = '';
             dom.loadingEP.innerHTML = "";
             loading.loading();
+            loading.start();
             fetch(`${domain.server}/account/load`, {
                 method: 'POST',
                 headers: {
@@ -1120,7 +1121,7 @@
         background-color: var(--accent-bg-color);
         margin-bottom: 10px;
         padding: 10px;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
     .session>div {
         display: grid;
