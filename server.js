@@ -433,9 +433,11 @@ async function accountOnly(req, res, next) {
             res.status(404).type('application/json').send({eCode: '404xUNF'});
             return;
         }
-
+        
         let i = 0;
-        let decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
+        if (i < user.sessions.length) {
+            let decrypted = JSON.parse(CIMP.dec(user.sessions[i], data.pkiy));
+        }
         while (i < user.sessions.length && decrypted.token != sessionToken) {
             i++;
             if (i < user.sessions.length) {
