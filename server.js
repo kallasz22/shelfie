@@ -188,10 +188,20 @@ app.post('/account/deletesession', accountOnly, async function(req, res){
     let user = req.user;
 
     let sumList = req.body.sumList.split(',');
-    for (let i = 0; i < user.sessions.length; i++) {
-        const s_id = JSON.parse(CIMP.dec(user.sessions[i], req.jwt.pkiy))._id;
-        if (sumList.includes(s_id)) {
-            user.sessions.splice(i, 1);
+    // for (let i = 0; i < user.sessions.length; i++) {
+    //     const s_id = JSON.parse(CIMP.dec(user.sessions[i], req.jwt.pkiy))._id;
+    //     if (sumList.includes(s_id)) {
+    //         user.sessions.splice(i, 1);
+    //     }
+    // }
+
+    for (let i = 0; i < sumList.length; i++) {
+        let j = 0;
+        while (j < user.sessions.length && JSON.parse(CIMP.dec(user.sessions[j], req.jwt.pkiy))._id != sumList[i]) {
+            j++;
+        }
+        if (j < user.sessions.length) {
+            user.sessions.splice(j, 1);
         }
     }
 
