@@ -64,12 +64,15 @@ app.post('/account/signin', async function(req, res){
 
         const sessionToken = crypto.randomUUID();
         let date = new Date();
+        let expires = new Date();
+        expires = new Date(expires.setDate(date.getDate() + 7));
+        console.log(expires);
         const sessionObj = {
             time: date,
             token: sessionToken,
             UAG: req.headers['user-agent'],
             lastActivity: date,
-            expires: new Date(date.setDate(date.getDate() + 7)),
+            expires: expires,
             origin: req.headers['origin'],
             _id: crypto.randomUUID()
         }
@@ -188,12 +191,6 @@ app.post('/account/deletesession', accountOnly, async function(req, res){
     let user = req.user;
 
     let sumList = req.body.sumList.split(',');
-    // for (let i = 0; i < user.sessions.length; i++) {
-    //     const s_id = JSON.parse(CIMP.dec(user.sessions[i], req.jwt.pkiy))._id;
-    //     if (sumList.includes(s_id)) {
-    //         user.sessions.splice(i, 1);
-    //     }
-    // }
 
     for (let i = 0; i < sumList.length; i++) {
         let j = 0;
