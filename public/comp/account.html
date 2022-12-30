@@ -215,6 +215,9 @@
     const localAccount = {
         load: function () {
             document.querySelector('#sessions-list').innerHTML = '';
+            document.querySelector('#checkall-session').checked = false;
+            sessions.deletebtn.disable();
+
             dom.loadingEP.innerHTML = "";
             loading.loading();
             loading.start();
@@ -777,9 +780,9 @@
                 let session_grid = document.createElement('div');
                 session_grid.innerHTML = 
                 `<p class="time">CREATED: <span>${sessions[i].time}</span></p>
-                 <p class="user-agent">USER-AGENT: <span>${sessions[i].UAG}</span></p>
-                 <p class="last-activity">LAST ACTIVITY: <span>${sessions[i].lastActivity}</span></p>
-                 <p class="expires">EXPIRES: <span>${sessions[i].expires}</span></p>
+                <p class="expires">EXPIRES: <span>${sessions[i].expires}</span></p>
+                <p class="last-activity">LAST ACTIVITY: <span>${sessions[i].lastActivity}</span></p>
+                <p class="user-agent">USER-AGENT: <span>${sessions[i].UAG}</span></p>
                  <p class="origin">ORIGIN: <span>${sessions[i].origin}</span></p>`;
 
                 session.appendChild(session_grid);
@@ -832,7 +835,7 @@
                 }
             })
             .catch(function () {
-                document.querySelector('#session-error').innerHTML = 'There was an error, while trying to sign in. Please try again later and/or report the bug!';
+                document.querySelector('#session-error').innerHTML = 'There was an error, while trying to delete sessions. Please try again later and/or report the bug!';
                 document.querySelector('#delete-selected-sessions').attributes.state.nodeValue = "";
                 document.querySelector('#delete-selected-sessions>svg').outerHTML = dom.svg.arrow;
                 document.querySelector('#delete-selected-sessions>svg').style.animation = '';

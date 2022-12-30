@@ -66,7 +66,6 @@ app.post('/account/signin', async function(req, res){
         let date = new Date();
         let expires = new Date();
         expires = new Date(expires.setDate(date.getDate() + 7));
-        console.log(expires);
         const sessionObj = {
             time: date,
             token: sessionToken,
