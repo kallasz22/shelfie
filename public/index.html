@@ -253,7 +253,7 @@
             }
         },
         load: function () {
-            if (url.lastPage != url.page()) {
+            if (url.lastPage != url.page() || url.popstate) {
                 dom.render.innerHTML = '';
                 fetchPage();
                 function fetchPage(params) {
@@ -316,7 +316,6 @@
                             loading.stop();
                             dom.render.innerHTML = html;
                             dom.render.style.display = 'block';
-
 
                             if (document.querySelector('#script') != null) {
                                 document.querySelector('#rScript').innerHTML = document.querySelector('#script').innerHTML;
@@ -415,13 +414,16 @@
 
     window.addEventListener('popstate', function () {
         url.popstate = true;
-        console.log('popstate triggered');
-        if (url.lastPage != url.page()) {
-            url.action();
-            url.lastPage = url.page();
-        } else {
-            runPagerScripts();
-        }
+
+        url.load();//yeah this works but, in account
+
+        // console.log('popstate triggered');
+        // if (url.lastPage != url.page()) {
+        //     url.action();
+        //     url.lastPage = url.page();
+        // } else {
+        //     runPagerScripts();
+        // }
         url.popstate = false;
     });
 
@@ -469,12 +471,11 @@
         src: url('/Lexend-Regular.ttf');
         font-display: swap;
     }
-    html * {/*applying font to all html element*/
+    html * {/*applying font + scrollbar (in fire) to all html element*/
         font-family: 'Lexend', sans-serif;
         color: var(--color);
         scrollbar-color: var(--accent-color) var(--render-bg-color);
         scrollbar-width: thin;
-        
     }
     ::-webkit-scrollbar {
         width: 8px;

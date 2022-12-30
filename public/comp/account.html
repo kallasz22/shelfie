@@ -1,4 +1,6 @@
 <main>
+    <script type="text/javascript" src="ua-parser.min.js"></script>
+
     <div id="title-grid" class="title-grid">
         <button onclick="view.change('profile')" id="profile-btn" state="">PROFILE</button>
         <button onclick="view.change('sessions')" id="sessions-btn" state="">SESSIONS</button>
@@ -712,8 +714,11 @@
                     document.querySelector(`#${view.views[i]}-btn`).attributes.state.nodeValue = "";
                 }
             }
-            if (!url.popstate) {
+            if (!url.popstate && url.url.search != '?account') {
                 url.change(`?account&v=${v}`);
+            }
+            else {
+                url.replace(`?account&v=${v}`);
             }
         },
         init: function () {
@@ -778,11 +783,14 @@
                 session.appendChild(check4delete);
 
                 let session_grid = document.createElement('div');
+                let time = new Date(sessions[i].time);
+                let expires = new Date(sessions[i].expires);
+                let lastActivity = new Date(sessions[i].lastActivity);
                 session_grid.innerHTML = 
-                `<p class="time">CREATED: <span>${sessions[i].time}</span></p>
-                <p class="expires">EXPIRES: <span>${sessions[i].expires}</span></p>
-                <p class="last-activity">LAST ACTIVITY: <span>${sessions[i].lastActivity}</span></p>
-                <p class="user-agent">USER-AGENT: <span>${sessions[i].UAG}</span></p>
+                `<p class="time">CREATED: <span>${time.toLocaleString()}</span></p>
+                 <p class="expires">EXPIRES: <span>${expires.toLocaleString()}</span></p>
+                 <p class="last-activity">LAST ACTIVITY: <span>${lastActivity.toLocaleString()} (not working yet bruh)</span></p>
+                 <p class="user-agent">USER-AGENT: <span>${sessions[i].UAG}</span></p>
                  <p class="origin">ORIGIN: <span>${sessions[i].origin}</span></p>`;
 
                 session.appendChild(session_grid);

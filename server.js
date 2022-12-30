@@ -93,7 +93,7 @@ app.post('/account/signup', async function(req, res){
 
         const hash = await bcrypt.hash(req.body.password_su, 10);
         user.password = hash;
-        pkiy = crypto.randomBytes(64).toString('hex');
+        pkiy = crypto.randomBytes(256).toString('hex');
         user.pkiy = CIMP.enc(pkiy, req.body.password_su);
 
         let houseObj = {
